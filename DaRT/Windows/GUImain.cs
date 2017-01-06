@@ -62,7 +62,9 @@ namespace DaRT
         private ListViewColumnSorter playerDatabaseSorter;
         public uint refreshTimer = 0;
         bool menuOpened = false;
-        StreamWriter writer;
+        StreamWriter consoleWriter;
+        StreamWriter chatWriter;
+        StreamWriter logWriter;
         String url = "";
         public IWebProxy proxy;
         bool pendingConnect = false;
@@ -1041,10 +1043,20 @@ namespace DaRT
             }
 
             // Closing log file writer
-            if (writer != null)
+            if (consoleWriter != null)
             {
-                writer.Close();
-                writer.Dispose();
+                consoleWriter.Close();
+                consoleWriter.Dispose();
+            }
+            if (chatWriter != null)
+            {
+                chatWriter.Close();
+                chatWriter.Dispose();
+            }
+            if (logWriter != null)
+            {
+                logWriter.Close();
+                logWriter.Dispose();
             }
         }
         private void tabControl_SelectedIndexChanged(object sender, EventArgs args)
@@ -1098,57 +1110,10 @@ namespace DaRT
                     filter.Items.Add("Comment");
                     filter.SelectedIndex = 0;
 
-                    try
-                    {
-                        command = new SqliteCommand(connection);
-                        command.CommandText = "SELECT id, lastip, lastseen, guid, name, lastseenon FROM players ORDER BY id ASC";
+                    List<ListViewItem> items = GetPlayersList(filter.SelectedItem.ToString(), search.Text);
+                    playerDBList.Items.Clear();
+                    playerDBList.Items.AddRange(items.ToArray());
 
-                        SqliteDataReader reader = command.ExecuteReader();
-
-                        List<Player> playersDB = new List<Player>();
-                        while (reader.Read())
-                        {
-                            int id = reader.GetInt32(0);
-                            String lastip = this.GetSafeString(reader, 1);
-                            String lastseen = this.GetSafeString(reader, 2);
-                            String guid = this.GetSafeString(reader, 3);
-                            String name = this.GetSafeString(reader, 4);
-                            String lastseenon = this.GetSafeString(reader, 5);
-
-                            // Get comment for GUID
-                            SqliteCommand commentCommand = new SqliteCommand(connection);
-                            commentCommand.CommandText = "SELECT comment FROM comments WHERE guid = @guid";
-                            commentCommand.Parameters.Add(new SqliteParameter("@guid", guid));
-
-                            SqliteDataReader commentReader = commentCommand.ExecuteReader();
-
-                            String comment = "";
-                            if (commentReader.Read())
-                                comment = this.GetSafeString(commentReader, 0);
-                            commentReader.Close();
-                            commentReader.Dispose();
-                            commentCommand.Dispose();
-
-                            playersDB.Add(new Player(id, lastip, lastseen, guid, name, lastseenon, comment, true));
-                        }
-                        reader.Close();
-                        reader.Dispose();
-                        command.Dispose();
-
-                        playerDBList.Items.Clear();
-
-                        for (int i = 0; i < playersDB.Count; i++)
-                        {
-                            String[] items = { playersDB[i].number.ToString(), playersDB[i].ip, playersDB[i].lastseen, playersDB[i].guid, playersDB[i].name, playersDB[i].lastseenon, playersDB[i].comment };
-                            ListViewItem item = new ListViewItem(items);
-                            playerDBList.Items.Add(item);
-                        }
-                    }
-                    catch(Exception e)
-                    {
-                        this.Log(e.Message, LogType.Debug, false);
-                        this.Log(e.StackTrace, LogType.Debug, false);
-                    }
                 }
             }
             catch(Exception e)
@@ -1282,10 +1247,11 @@ namespace DaRT
                             Thread threadPlayer = new Thread(new ThreadStart(thread_Player));
                             threadPlayer.IsBackground = true;
                             threadPlayer.Start();
-                            Thread.Sleep(50);
+                            Thread.Sleep(1000);
                             Thread threadBans = new Thread(new ThreadStart(thread_Bans));
                             threadBans.IsBackground = true;
                             threadBans.Start();
+                            Thread.Sleep(1000);
                             Thread threadAdmins = new Thread(new ThreadStart(thread_Admins));
                             threadAdmins.IsBackground = true;
                             threadAdmins.Start();
@@ -1354,7 +1320,7 @@ namespace DaRT
 
                 players = rcon.getPlayers();
 
-                if (players != null)
+                if (players != null && players.Count > 0)
                 {
                     ImageList imageList = new ImageList();
                     imageList.ColorDepth = ColorDepth.Depth32Bit;
@@ -1400,6 +1366,7 @@ namespace DaRT
 
                     this.Invoke((MethodInvoker)delegate
                     {
+                        this.Log("Update players, get " + players.Count.ToString() + " players.", LogType.Debug, false);
                         setPlayerCount(players.Count);
                     });
 
@@ -1529,8 +1496,8 @@ namespace DaRT
                         using (TcpClient client = new TcpClient())
                         {
                             client.Connect(IPAddress.Parse(host.Text), Int32.Parse(port.Text));
-                            client.SendTimeout = 5000;
-                            client.ReceiveTimeout = 5000;
+                            client.SendTimeout = 15000;
+                            client.ReceiveTimeout = 15000;
 
                             Socket socket = client.Client;
 
@@ -1566,13 +1533,11 @@ namespace DaRT
                                 while ((line = reader.ReadLine()) != null)
                                 {
                                     String[] items = line.Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-
-                                    if (items.Length == 3)
+                                    if (items.Length > 0)
                                     {
                                         String ipguid = items[0];
                                         String time = items[1];
-                                        String reason = items[2];
-
+                                        String reason = "(No reason)";
                                         if (time == "-1")
                                             time = "perm";
                                         else
@@ -1583,53 +1548,22 @@ namespace DaRT
                                                 time = "expired";
                                         }
 
-                                        bool hasLetters = false;
-                                        bool hasDigits = false;
-                                        foreach(char character in ipguid)
-                                        {
-                                            if(char.IsLetter(character))
-                                                hasLetters = true;
-                                            else if(char.IsDigit(character))
-                                                hasDigits = true;
-                                        }
+                                        if (items.Length >= 3) reason = items[2];
 
-                                        if (hasLetters && hasDigits)
+                                        if (ipguid.IndexOf('.') == -1)
                                         {
                                             bans.Add(new Ban(number.ToString(), ipguid, time, reason));
                                             number++;
                                         }
                                     }
-                                    else if (items.Length == 2)
-                                    {
-                                        String ipguid = items[0];
-                                        String time = items[1];
-                                        
-                                        if (time == "-1")
-                                            time = "perm";
 
-                                        bool hasLetters = false;
-                                        bool hasDigits = false;
-                                        foreach (char character in ipguid)
-                                        {
-                                            if (char.IsLetter(character))
-                                                hasLetters = true;
-                                            else if (char.IsDigit(character))
-                                                hasDigits = true;
-                                        }
-
-                                        if (hasLetters && hasDigits)
-                                        {
-                                            bans.Add(new Ban(number.ToString(), ipguid, time, "(No reason)"));
-                                            number++;
-                                        }
-                                    }
                                 }
                             }
                         }
                         #endregion
                     }
 
-                    if (bans != null)
+                    if (bans != null && bans.Count > 0)
                     {
                         bansList.Invoke((MethodInvoker)delegate
                         {
@@ -1669,6 +1603,7 @@ namespace DaRT
 
                         this.Invoke((MethodInvoker)delegate
                         {
+                            this.Log("Update bans, get "+bans.Count.ToString()+" bans.", LogType.Debug, false);
                             setBanCount(bans.Count);
                         });
 
@@ -1710,40 +1645,6 @@ namespace DaRT
                     searchButton.Text = "Search";
                 });
                 
-                // Select everything from the player database
-                List<Player> playersDB = new List<Player>();
-                using (command = new SqliteCommand("SELECT id, lastip, lastseen, guid, name, lastseenon FROM players ORDER BY id ASC", connection))
-                {
-                    using (SqliteDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            // Add every entry to the playersDB list
-                            int id = reader.GetInt32(0);
-                            string lastip = this.GetSafeString(reader, 1);
-                            string lastseen = this.GetSafeString(reader, 2);
-                            string guid = this.GetSafeString(reader, 3);
-                            string name = this.GetSafeString(reader, 4);
-                            string lastseenon = this.GetSafeString(reader, 5);
-                            string comment = "";
-
-                            // Get comment for GUID
-                            using (command = new SqliteCommand("SELECT comment FROM comments WHERE guid = @guid", connection))
-                            {
-                                command.Parameters.Add(new SqliteParameter("@guid", guid));
-
-                                using (SqliteDataReader commentReader = command.ExecuteReader())
-                                {
-                                    if (commentReader.Read())
-                                        comment = this.GetSafeString(commentReader, 0);
-                                }
-                            }
-
-                            playersDB.Add(new Player(id, lastip, lastseen, guid, name, lastseenon, comment, true));
-                        }
-                    }
-                }
-
                 // Clear cache, set virtual list size
 
                 playerDBList.Invoke((MethodInvoker)delegate
@@ -1752,18 +1653,12 @@ namespace DaRT
                     playerDBList.Items.Clear();
                 });
 
-                List<ListViewItem> items = new List<ListViewItem>();
-                for (int i = 0; i < playersDB.Count; i++)
-                {
-                    // Add every entry from list to cache
-                    String[] entries = { playersDB[i].number.ToString(), playersDB[i].ip, playersDB[i].lastseen, playersDB[i].guid, playersDB[i].name, playersDB[i].lastseenon, playersDB[i].comment };
-                    ListViewItem item = new ListViewItem(entries);
-                    items.Add(item);
-                }
+                List<ListViewItem> items = GetPlayersList("","");
+
                 playerDBList.Invoke((MethodInvoker)delegate
                 {
                     playerDBList.Items.AddRange(items.ToArray());
-                    playerDBList.ListViewItemSorter = banSorter;
+                    playerDBList.ListViewItemSorter = playerDatabaseSorter;
                 });
 
                 pendingDatabase = false;
@@ -1777,12 +1672,9 @@ namespace DaRT
         }
         private void thread_Admins()
         {
-            int admins = 0;
-            admins = rcon.getAdmins();
-
             this.Invoke((MethodInvoker)delegate
             {
-                setAdminCount(admins);
+                setAdminCount(rcon.getAdmins().Count);
             });
         }
         private void thread_Banner()
@@ -2191,12 +2083,11 @@ namespace DaRT
                 });
             }
 
-            // Save log to file if necessary
-            if (Settings.Default.saveLog && writer != null)
-                writer.WriteLine(message);
-
             if (type == LogType.Console)
+            {
                 this.AddMessage(console, new LogItem(type, message, important), false, false);
+                if (Settings.Default.saveLog && consoleWriter != null) consoleWriter.WriteLine(DateTime.Now.ToString("[yyyy-MM-dd | HH:mm:ss]") + " " + message);
+            }
 
             else if
                 (
@@ -2209,7 +2100,10 @@ namespace DaRT
                 type == LogType.UnknownChat ||
                 type == LogType.AdminChat
                 )
+            {
                 this.AddMessage(chat, new LogItem(type, message, important), true, false);
+                if (Settings.Default.saveLog && chatWriter != null) chatWriter.WriteLine(DateTime.Now.ToString("[yyyy-MM-dd | HH:mm:ss]") + " " + message);
+            }
 
             else if
                 (
@@ -2234,10 +2128,15 @@ namespace DaRT
                 type == LogType.WaypointConditionLog ||
                 type == LogType.WaypointStatementLog
                 )
+            {
                 this.AddMessage(logs, new LogItem(type, message, important), false, true);
+                if (Settings.Default.saveLog && logWriter != null) logWriter.WriteLine(DateTime.Now.ToString("[yyyy-MM-dd | HH:mm:ss]") + " " + message);
+            }
 
             else if (Settings.Default.showDebug && type == LogType.Debug)
+            {
                 this.AddMessage(console, new LogItem(type, message, important), false, false);
+            }
         }
 
         private List<LogItem> _queue;
@@ -2526,6 +2425,71 @@ namespace DaRT
                 this.Log(e.StackTrace, LogType.Debug, false);
                 return "?";
             }
+        }
+
+        public List<ListViewItem> GetPlayersList(String filter , String searchtext)
+        {
+            List<ListViewItem> items = new List<ListViewItem>();
+            try
+            {
+                command = new SqliteCommand(connection);
+
+                command.CommandText = "SELECT players.id, players.lastip, players.lastseen, players.guid, players.name, players.lastseenon, comments.comment FROM players LEFT JOIN comments ON players.guid = comments.guid ";
+
+                if (searchtext != "")
+                {
+                    searchtext = "%" + searchtext + "%";
+                    switch (filter)
+                    {
+                        case "Name":
+                            command.CommandText += "WHERE players.name LIKE(@name) ";
+                            command.Parameters.Add(new SqliteParameter("@name", searchtext));
+                            break;
+
+                        case "GUID":
+                            command.CommandText += "WHERE players.guid LIKE(@guid) ";
+                            command.Parameters.Add(new SqliteParameter("@guid", searchtext));
+                            break;
+
+                        case "IP":
+                            command.CommandText += "WHERE players.lastip LIKE(@lastip) ";
+                            command.Parameters.Add(new SqliteParameter("@lastip", searchtext));
+                            break;
+
+                        case "Comment":
+                            command.CommandText += "WHERE comments.comment LIKE(@comment) ";
+                            command.Parameters.Add(new SqliteParameter("@comment", searchtext));
+                            break;
+                    }
+                }
+
+                command.CommandText += "ORDER BY id ASC";
+
+                SqliteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    int id = reader.GetInt32(0);
+                    String lastip = this.GetSafeString(reader, 1);
+                    String lastseen = this.GetSafeString(reader, 2);
+                    String guid = this.GetSafeString(reader, 3);
+                    String name = this.GetSafeString(reader, 4);
+                    String lastseenon = this.GetSafeString(reader, 5);
+                    String comment = this.GetSafeString(reader, 6);
+
+                    String[] row = { id.ToString(), lastip, lastseen, guid, name, lastseenon, comment };
+                    items.Add(new ListViewItem(row));
+                }
+                reader.Close();
+                reader.Dispose();
+                command.Dispose();
+            }
+            catch (Exception e)
+            {
+                this.Log(e.Message, LogType.Debug, false);
+                this.Log(e.StackTrace, LogType.Debug, false);
+            }
+            return items;
         }
         #endregion 
 
@@ -3143,10 +3107,14 @@ namespace DaRT
             {
                 try
                 {
-                    writer = new StreamWriter("console.log", true, Encoding.Unicode);
-                    writer.AutoFlush = true;
+                    consoleWriter = new StreamWriter("console.log", true, Encoding.Unicode);
+                    consoleWriter.AutoFlush = true;
+                    chatWriter = new StreamWriter("chat.log", true, Encoding.Unicode);
+                    chatWriter.AutoFlush = true;
+                    logWriter = new StreamWriter("report.log", true, Encoding.Unicode);
+                    logWriter.AutoFlush = true;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     this.Log("An error occured while accessing the log file.", LogType.Console, false);
                     this.Log(e.Message, LogType.Debug, false);
@@ -3479,153 +3447,12 @@ namespace DaRT
             #region Player Database
             else if (tabControl.SelectedTab.Text == "Player Database")
             {
-                if (search.Text != "")
-                {
-                    try
-                    {
-                        command = new SqliteCommand(connection);
+                List<ListViewItem> items = GetPlayersList(filter.SelectedItem.ToString(), search.Text);
+                playerDBList.ListViewItemSorter = null;
+                playerDBList.Items.Clear();
+                playerDBList.Items.AddRange(items.ToArray());
+                playerDBList.ListViewItemSorter = playerDatabaseSorter;
 
-                        command.CommandText = "SELECT id, lastip, lastseen, guid, name, lastseenon FROM players ORDER BY id ASC";
-
-                        SqliteDataReader reader = command.ExecuteReader();
-
-                        List<Player> playersDB = new List<Player>();
-                        while (reader.Read())
-                        {
-                            int id = reader.GetInt32(0);
-                            String lastip = this.GetSafeString(reader, 1);
-                            String lastseen = this.GetSafeString(reader, 2);
-                            String guid = this.GetSafeString(reader, 3);
-                            String name = this.GetSafeString(reader, 4);
-                            String lastseenon = this.GetSafeString(reader, 5);
-
-                            // Get comment for GUID
-                            SqliteCommand commentCommand = new SqliteCommand(connection);
-                            commentCommand.CommandText = "SELECT comment FROM comments WHERE guid = @guid";
-                            commentCommand.Parameters.Add(new SqliteParameter("@guid", guid));
-
-                            SqliteDataReader commentReader = commentCommand.ExecuteReader();
-
-                            String comment = "";
-                            if (commentReader.Read())
-                                comment = this.GetSafeString(commentReader, 0);
-                            commentReader.Close();
-                            commentReader.Dispose();
-                            commentCommand.Dispose();
-
-                            playersDB.Add(new Player(id, lastip, lastseen, guid, name, lastseenon, comment, true));
-                        }
-                        reader.Close();
-                        reader.Dispose();
-                        command.Dispose();
-
-                        playerDBList.Items.Clear();
-                        for (int i = 0; i < playersDB.Count; i++)
-                        {
-                            String[] items = { playersDB[i].number.ToString(), playersDB[i].ip, playersDB[i].lastseen, playersDB[i].guid, playersDB[i].name, playersDB[i].lastseenon, playersDB[i].comment };
-                            ListViewItem item = new ListViewItem(items);
-                            playerDBList.Items.Add(item);
-                        }
-                    }
-                    catch(Exception e)
-                    {
-                        this.Log(e.Message, LogType.Debug, false);
-                        this.Log(e.StackTrace, LogType.Debug, false);
-                    }
-
-                    List<ListViewItem> foundItems = new List<ListViewItem>();
-
-                    foreach (ListViewItem item in playerDBList.Items)
-                    {
-                        if (filter.SelectedItem.ToString() == "Name")
-                        {
-                            if (item.SubItems[4].Text.ToLower().Contains(search.Text.ToLower()))
-                            {
-                                foundItems.Add(item);
-                            }
-                        }
-                        else if (filter.SelectedItem.ToString() == "GUID")
-                        {
-                            if (item.SubItems[3].Text.ToLower().Contains(search.Text.ToLower()))
-                            {
-                                foundItems.Add(item);
-                            }
-                        }
-                        else if (filter.SelectedItem.ToString() == "IP")
-                        {
-                            if (item.SubItems[1].Text.ToLower().Contains(search.Text.ToLower()))
-                            {
-                                foundItems.Add(item);
-                            }
-                        }
-                        else if (filter.SelectedItem.ToString() == "Comment")
-                        {
-                            if (item.SubItems[6].Text.ToLower().Contains(search.Text.ToLower()))
-                            {
-                                foundItems.Add(item);
-                            }
-                        }
-                    }
-
-                    playerDBList.Items.Clear();
-
-                    for (int i = 0; i < foundItems.Count; i++)
-                    {
-                        playerDBList.Items.Add(foundItems[i]);
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        command = new SqliteCommand(connection);
-
-                        command.CommandText = "SELECT id, lastip, lastseen, guid, name, lastseenon FROM players ORDER BY id ASC";
-
-                        SqliteDataReader reader = command.ExecuteReader();
-
-                        List<Player> playersDB = new List<Player>();
-                        while (reader.Read())
-                        {
-                            int id = reader.GetInt32(0);
-                            String lastip = this.GetSafeString(reader, 1);
-                            String lastseen = this.GetSafeString(reader, 2);
-                            String guid = this.GetSafeString(reader, 3);
-                            String name = this.GetSafeString(reader, 4);
-                            String lastseenon = this.GetSafeString(reader, 5);
-
-                            // Get comment for GUID
-                            SqliteCommand commentCommand = new SqliteCommand(connection);
-                            commentCommand.CommandText = "SELECT comment FROM comments WHERE guid = @guid";
-                            commentCommand.Parameters.Add(new SqliteParameter("@guid", guid));
-
-                            SqliteDataReader commentReader = commentCommand.ExecuteReader();
-
-                            String comment = "";
-                            if (commentReader.Read())
-                                comment = this.GetSafeString(commentReader, 0);
-                            commentReader.Close();
-                            commentReader.Dispose();
-                            commentCommand.Dispose();
-
-                            playersDB.Add(new Player(id, lastip, lastseen, guid, name, lastseenon, comment, true));
-                        }
-                        command.Dispose();
-
-                        playerDBList.Items.Clear();
-                        for (int i = 0; i < playersDB.Count; i++)
-                        {
-                            String[] items = { playersDB[i].number.ToString(), playersDB[i].ip, playersDB[i].lastseen, playersDB[i].guid, playersDB[i].name, playersDB[i].lastseenon, playersDB[i].comment };
-                            ListViewItem item = new ListViewItem(items);
-                            playerDBList.Items.Add(item);
-                        }
-                    }
-                    catch(Exception e)
-                    {
-                        this.Log(e.Message, LogType.Debug, false);
-                        this.Log(e.StackTrace, LogType.Debug, false);
-                    }
-                }
             }
             #endregion
         }

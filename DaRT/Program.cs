@@ -11,7 +11,7 @@ namespace DaRT
 {
     static class Program
     {
-        static String version = "v2.1";
+        static String version;
         static GUImain gui;
         static StreamWriter writer;
 
@@ -31,6 +31,9 @@ namespace DaRT
         [STAThread]
         static void Main(string[] args)
         {
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            version = "v"+fvi.FileVersion;
             if (args.Length == 0)
             {
                 if (Debugger.IsAttached)
@@ -210,7 +213,7 @@ namespace DaRT
                             }
                             if (c.Contains("%a"))
                             {
-                                admins = rcon.getAdmins();
+                                admins = rcon.getAdmins().Count;
                                 exec = c.Replace("%a", admins.ToString());
                             }
                             if (c.Contains("%b"))

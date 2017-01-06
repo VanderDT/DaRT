@@ -27,6 +27,9 @@ namespace DaRT
         private List<int> _sent = new List<int>();
         private Dictionary<int, string> _received = new Dictionary<int, string>();
         private GUImain _form;
+        private List<String> _admins = new List<String>();
+        private List<Player> _players = new List<Player>();
+        private List<Ban> _bans = new List<Ban>();
 
         public bool Connected
         {
@@ -234,7 +237,6 @@ namespace DaRT
         }
         public List<Player> getPlayers()
         {
-            List<Player> players = new List<Player>();
 
             int id = this.Send(BattlEyeCommand.Players);
 
@@ -243,75 +245,24 @@ namespace DaRT
             while ((response = this.GetResponse(id)) == null && ticks < Settings.Default.playerTicks)
             {
                 Thread.Sleep(10);
+                if(ticks > Settings.Default.playerTicks/2) id = this.Send(BattlEyeCommand.Players);
                 ticks++;
             }
 
             if (response == null)
             {
+                if(_players.Count > 0) return _players;
                 if (!_reconnecting)
                     _form.Log("Player request timed out.", LogType.Console, false);
-                return players;
+                return _players;
             }
+            this.parsePlayers(response);
 
-            using (StringReader reader = new StringReader(response))
-            {
-                string line;
-                int row = 0;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    row++;
-                    if (row > 3 && !line.StartsWith("(") && line.Length > 0)
-                    {
-                        String[] items = line.Split(new char[] { ' ' }, 5, StringSplitOptions.RemoveEmptyEntries);
-
-                        if (items.Length == 5)
-                        {
-                            int number = Int32.Parse(items[0]);
-                            String ip = items[1].Split(':')[0];
-                            String ping = items[2];
-                            String guid = items[3].Replace("(OK)", "").Replace("(?)", "");
-                            String name = items[4];
-                            String status = "Unknown";
-
-                            if (guid.Length == 32)
-                            {
-                                if (guid == "-")
-                                {
-                                    status = "Initializing";
-                                }
-
-                                if (name.EndsWith(" (Lobby)"))
-                                {
-                                    name = name.Replace(" (Lobby)", "");
-                                    status = "Lobby";
-                                }
-                                else
-                                    status = "Ingame";
-
-                                players.Add(new Player(number, ip, ping, guid, name, status));
-                            }
-                            else
-                            {
-                                // Received malformed player list
-                                return new List<Player>();
-                            }
-                        }
-                        else
-                        {
-                            // Received malformed player list
-                            return new List<Player>();
-                        }
-                    }
-                }
-            }
-
-            return players;
+            return _players;
         }
 
         public List<Ban> getBans()
         {
-            List<Ban> bans = new List<Ban>();
-
             int id = this.Send(BattlEyeCommand.Bans);
 
             string response;
@@ -319,55 +270,19 @@ namespace DaRT
             while ((response = this.GetResponse(id)) == null && ticks < Settings.Default.banTicks)
             {
                 Thread.Sleep(10);
+                if (ticks > Settings.Default.banTicks / 2) id = this.Send(BattlEyeCommand.Bans);
                 ticks++;
             }
-
+            
             if (response == null)
             {
+                if (_bans.Count > 0) return _bans;
                 if (!_reconnecting)
                     _form.Log("Ban request timed out.", LogType.Console, false);
-                return bans;
+                return _bans;
             }
-
-            using (StringReader reader = new StringReader(response))
-            {
-                String line;
-                int row = 0;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    row++;
-                    if (row > 3 && !line.StartsWith("IP Bans:") && !line.StartsWith("[#]") && !line.StartsWith("----------------------------------------------") && line.Length > 0)
-                    {
-                        String[] items = line.Split(new char[] { ' ' }, 4, StringSplitOptions.RemoveEmptyEntries);
-
-                        if (items.Length == 4)
-                        {
-                            String number = items[0];
-                            String ipguid = items[1];
-                            String time = items[2];
-                            String reason = items[3];
-
-                            if (time == "-")
-                                time = "expired";
-
-                            bans.Add(new Ban(number, ipguid, time, reason));
-                        }
-                        else if (items.Length == 3)
-                        {
-                            String number = items[0];
-                            String ipguid = items[1];
-                            String time = items[2];
-
-                            if (time == "-")
-                                time = "expired";
-
-                            bans.Add(new Ban(number, ipguid, time, "(No reason)"));
-                        }
-                    }
-                }
-            }
-
-            return bans;
+            this.parseBans(response);
+            return _bans;
         }
 
         public List<String> getRawPlayers()
@@ -436,9 +351,8 @@ namespace DaRT
             }
             */
         }
-        public int getAdmins()
+        public List<String> getAdmins()
         {
-            int admins = 0;
 
             int id = this.Send(BattlEyeCommand.Admins);
 
@@ -447,6 +361,7 @@ namespace DaRT
             while ((response = this.GetResponse(id)) == null && ticks < Settings.Default.playerTicks)
             {
                 Thread.Sleep(10);
+                if (ticks > Settings.Default.playerTicks / 2) id = this.Send(BattlEyeCommand.Admins);
                 ticks++;
             }
 
@@ -454,28 +369,12 @@ namespace DaRT
             {
                 if (!_reconnecting)
                     _form.Log("Admin request timed out.", LogType.Console, false);
-                return admins;
+                return _admins;
             }
 
-            List<String> ips = new List<String>();
-            using (StringReader reader = new StringReader(response))
-            {
-                string line;
-                int row = 0;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    row++;
-                    if (row > 3)
-                    {
-                        String ip = line.Split(' ')[1].Split(':')[0];
-                        if (!ips.Contains(ip))
-                            ips.Add(ip);
-                    }
-                }
-            }
-            admins = ips.Count;
+            this.parseAdmins(response);
 
-            return admins;
+            return _admins;
         }
 
         public List<String> getRawAdmins()
@@ -512,6 +411,107 @@ namespace DaRT
 
             return admins;
             */
+        }
+        private void parseAdmins(String message)
+        {
+            StringReader reader = new StringReader(message);
+            _admins.Clear();
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                String[] row = line.Split(' ');
+                int id;
+                if(row.Count() >= 2 && int.TryParse(row[0],out id))_admins.Add(row[1]);
+            }
+        }
+
+        private void parsePlayers(String response)
+        {
+            _players.Clear();
+            _form.Log("reciving players", LogType.Debug, false);
+            using (StringReader reader = new StringReader(response))
+            {
+                string line;
+                int row = 0;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    row++;
+                    if (row > 3 && !line.StartsWith("(") && line.Length > 0)
+                    {
+                        String[] items = line.Split(new char[] { ' ' }, 5, StringSplitOptions.RemoveEmptyEntries);
+                        int number;
+                        if (items.Length == 5 && int.TryParse(items[0],out number))
+                        {
+                            String ip = items[1].Split(':')[0];
+                            String ping = items[2];
+                            String guid = items[3].Replace("(OK)", "").Replace("(?)", "");
+                            String name = items[4];
+                            String status = "Unknown";
+
+                            if (guid.Length == 32)
+                            {
+                                if (guid == "-")
+                                {
+                                    status = "Initializing";
+                                }
+
+                                if (name.EndsWith(" (Lobby)"))
+                                {
+                                    name = name.Replace(" (Lobby)", "");
+                                    status = "Lobby";
+                                }
+                                else
+                                    status = "Ingame";
+
+                                _players.Add(new Player(number, ip, ping, guid, name, status));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void parseBans(String response)
+        {
+            _bans.Clear();
+            _form.Log("reciving bans", LogType.Debug, false);
+            using (StringReader reader = new StringReader(response))
+            {
+                String line;
+                int row = 0;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    row++;
+                    if (row > 3 && !line.StartsWith("IP Bans:") && !line.StartsWith("[#]") && !line.StartsWith("----------------------------------------------") && line.Length > 0)
+                    {
+                        String[] items = line.Split(new char[] { ' ' }, 4, StringSplitOptions.RemoveEmptyEntries);
+
+                        if (items.Length == 4)
+                        {
+                            String number = items[0];
+                            String ipguid = items[1];
+                            String time = items[2];
+                            String reason = items[3];
+
+                            if (time == "-")
+                                time = "expired";
+
+                            _bans.Add(new Ban(number, ipguid, time, reason));
+                        }
+                        else if (items.Length == 3)
+                        {
+                            String number = items[0];
+                            String ipguid = items[1];
+                            String time = items[2];
+
+                            if (time == "-")
+                                time = "expired";
+
+                            _bans.Add(new Ban(number, ipguid, time, "(No reason)"));
+                        }
+                    }
+                }
+            }
         }
 
         public void scripts()
@@ -631,9 +631,11 @@ namespace DaRT
         private void HandleMessage(BattlEyeMessageEventArgs args)
         {
             string message = args.Message;
-
             if (_initialized)
             {
+                if (message.Contains("Connected RCon admins:")) this.parseAdmins(message);
+                if (message.Contains("Players on server:")) this.parsePlayers(message);
+                if (message.StartsWith("GUID Bans:")) this.parseBans(message);
                 // Message filtering
                 if (args.Id != 256)
                     this.Received(args.Id, message);
