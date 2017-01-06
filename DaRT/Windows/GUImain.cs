@@ -46,8 +46,6 @@ namespace DaRT
         public RCon rcon;
         private List<Player> players = new List<Player>();
         private List<Ban> bans = new List<Ban>();
-        private List<ListViewItem> bansCache = new List<ListViewItem>();
-        private List<ListViewItem> dbCache = new List<ListViewItem>();
         private List<Location> locations = new List<Location>();
         private SqliteConnection connection;
         private SqliteCommand command;
@@ -485,7 +483,7 @@ namespace DaRT
             rcon.Disconnect();
             rcon.Reconnecting = false;
             playerList.Items.Clear();
-            bansCache.Clear();
+            bansList.Items.Clear();
             nextRefresh.Value = 0;
             setPlayerCount(0);
             setAdminCount(0);
@@ -524,7 +522,7 @@ namespace DaRT
                 }
                 else if (tabControl.SelectedTab.Text == "Bans")
                 {
-                    ListViewItem item = bansCache[bansList.SelectedIndices[0]];
+                    ListViewItem item = bansList.SelectedItems[0];
                     String name = "";
                     String guid = item.SubItems[1].Text;
                     if (guid.Length == 32)
@@ -539,7 +537,7 @@ namespace DaRT
                 }
                 else if (tabControl.SelectedTab.Text == "Player Database")
                 {
-                    ListViewItem item = dbCache[playerDBList.SelectedIndices[0]];
+                    ListViewItem item = playerDBList.SelectedItems[0];
                     String name = item.SubItems[4].Text;
                     String guid = item.SubItems[3].Text;
                     gui.Comment(this, connection, name, guid, "player database");
@@ -556,7 +554,7 @@ namespace DaRT
         private void delete_click(object sender, EventArgs args)
         {
             // Get selected item from player database
-            ListViewItem item = dbCache[playerDBList.SelectedIndices[0]];
+            ListViewItem item = playerDBList.SelectedItems[0];
 
             // Read GUID and Name from the list
             String guid = item.SubItems[3].Text;
@@ -572,8 +570,7 @@ namespace DaRT
 
             command.Dispose();
 
-            // ...and from cache
-            dbCache.RemoveAt(playerDBList.SelectedIndices[0]);
+            playerDBList.Items.Remove(item);
 
             this.Log("Entry was removed", LogType.Console, false);
         }
@@ -658,7 +655,7 @@ namespace DaRT
         {
             try
             {
-                ListViewItem item = dbCache[playerDBList.SelectedIndices[0]];
+                ListViewItem item = playerDBList.SelectedItems[0];
                 String guid = item.SubItems[3].Text;
                 String name = item.SubItems[4].Text;
 
@@ -675,7 +672,7 @@ namespace DaRT
         private void unban_click(object sender, EventArgs args)
         {
             // Getting selected item from cache
-            ListViewItem item = bansCache[bansList.SelectedIndices[0]];
+            ListViewItem item = bansList.SelectedItems[0];
             
             // Getting ban ID
             String id = item.SubItems[0].Text;
@@ -684,15 +681,13 @@ namespace DaRT
             rcon.unban(id);
 
             // Removing entry from cache
-            bansCache.RemoveAt(bansList.SelectedIndices[0]);
-            for (int i = bansList.SelectedIndices[0]; i < bansCache.Count; i++)
+            bansList.Items.Remove(item);
+            for (int i = bansList.SelectedIndices[0]; i < bansList.Items.Count; i++)
             {
                 // Increasing ban ID for each ban after the removed one
-                int number = Int32.Parse(bansCache[i].SubItems[0].Text);
-                bansCache[i].SubItems[0].Text = (number - 1).ToString();
+                int number = Int32.Parse(bansList.Items[i].SubItems[0].Text);
+                bansList.Items[i].SubItems[0].Text = (number - 1).ToString();
             }
-            // Setting virtual list size again
-            bansList.VirtualListSize = bansCache.Count;
         }
         private void expired_click(object sender, EventArgs args)
         {
@@ -776,7 +771,7 @@ namespace DaRT
             // Copying GUID to clipboard
             try
             {
-                ListViewItem item = bansCache[bansList.SelectedIndices[0]];
+                ListViewItem item = bansList.SelectedItems[0];
                 String guid = item.SubItems[1].Text;
                 Clipboard.SetText(guid);
             }
@@ -793,7 +788,7 @@ namespace DaRT
             // Copying everything to clipboard
             try
             {
-                ListViewItem item = dbCache[playerDBList.SelectedIndices[0]];
+                ListViewItem item = playerDBList.SelectedItems[0];
                 String ip = item.SubItems[1].Text;
                 String guid = item.SubItems[3].Text;
                 String name = item.SubItems[4].Text;
@@ -811,7 +806,7 @@ namespace DaRT
             // Copying IP to clipboard
             try
             {
-                ListViewItem item = dbCache[playerDBList.SelectedIndices[0]];
+                ListViewItem item = playerDBList.SelectedItems[0];
                 String ip = item.SubItems[1].Text;
                 Clipboard.SetText(ip);
             }
@@ -827,7 +822,7 @@ namespace DaRT
             // Copying GUID to clipboard
             try
             {
-                ListViewItem item = dbCache[playerDBList.SelectedIndices[0]];
+                ListViewItem item = playerDBList.SelectedItems[0];
                 String guid = item.SubItems[3].Text;
                 Clipboard.SetText(guid);
             }
@@ -843,7 +838,7 @@ namespace DaRT
             //Copying name to clipboard
             try
             {
-                ListViewItem item = dbCache[playerDBList.SelectedIndices[0]];
+                ListViewItem item = playerDBList.SelectedItems[0];
                 String name = item.SubItems[4].Text;
                 Clipboard.SetText(name);
             }
@@ -1140,14 +1135,13 @@ namespace DaRT
                         reader.Dispose();
                         command.Dispose();
 
-                        dbCache.Clear();
-                        playerDBList.VirtualListSize = playersDB.Count;
+                        playerDBList.Items.Clear();
 
                         for (int i = 0; i < playersDB.Count; i++)
                         {
                             String[] items = { playersDB[i].number.ToString(), playersDB[i].ip, playersDB[i].lastseen, playersDB[i].guid, playersDB[i].name, playersDB[i].lastseenon, playersDB[i].comment };
                             ListViewItem item = new ListViewItem(items);
-                            dbCache.Add(item);
+                            playerDBList.Items.Add(item);
                         }
                     }
                     catch(Exception e)
@@ -1535,7 +1529,6 @@ namespace DaRT
                         using (TcpClient client = new TcpClient())
                         {
                             client.Connect(IPAddress.Parse(host.Text), Int32.Parse(port.Text));
-                            //client.Connect(IPAddress.Parse("127.0.0.1"), 2301);
                             client.SendTimeout = 5000;
                             client.ReceiveTimeout = 5000;
 
@@ -1641,13 +1634,11 @@ namespace DaRT
                         bansList.Invoke((MethodInvoker)delegate
                         {
                             bansList.ListViewItemSorter = null;
-                            bansList.VirtualListSize = bans.Count;
-                            //bansList.Items.Clear();
+                            bansList.Items.Clear();
                         });
 
 
-                        bansCache.Clear();
-                        //List<ListViewItem> items = new List<ListViewItem>();
+                        List<ListViewItem> items = new List<ListViewItem>();
                         for (int i = 0; i < bans.Count; i++)
                         {
                             String comment = "";
@@ -1668,19 +1659,17 @@ namespace DaRT
                             }
 
                             String[] entries = { bans[i].number, bans[i].ipguid, bans[i].time, bans[i].reason, comment };
-                            //items.Add(new ListViewItem(entries));
-                            bansCache.Add(new ListViewItem(entries));
+                            items.Add(new ListViewItem(entries));
                         }
                         bansList.Invoke((MethodInvoker)delegate
                         {
-                            //bansList.Items.AddRange(items.ToArray());
+                            bansList.Items.AddRange(items.ToArray());
                             bansList.ListViewItemSorter = banSorter;
                         });
 
                         this.Invoke((MethodInvoker)delegate
                         {
                             setBanCount(bans.Count);
-                            bansList.VirtualListSize = bans.Count;
                         });
 
                         if (bans.Count > 3000 && !Settings.Default.showedBanWarning && !Settings.Default.dartbrs)
@@ -1756,21 +1745,26 @@ namespace DaRT
                 }
 
                 // Clear cache, set virtual list size
-                dbCache.Clear();
-                this.Invoke((MethodInvoker)delegate
+
+                playerDBList.Invoke((MethodInvoker)delegate
                 {
-                    playerDBList.VirtualListSize = playersDB.Count;
+                    playerDBList.ListViewItemSorter = null;
+                    playerDBList.Items.Clear();
                 });
 
+                List<ListViewItem> items = new List<ListViewItem>();
                 for (int i = 0; i < playersDB.Count; i++)
                 {
                     // Add every entry from list to cache
-                    String[] items = { playersDB[i].number.ToString(), playersDB[i].ip, playersDB[i].lastseen, playersDB[i].guid, playersDB[i].name, playersDB[i].lastseenon, playersDB[i].comment };
-                    ListViewItem item = new ListViewItem(items);
-                    dbCache.Add(item);
+                    String[] entries = { playersDB[i].number.ToString(), playersDB[i].ip, playersDB[i].lastseen, playersDB[i].guid, playersDB[i].name, playersDB[i].lastseenon, playersDB[i].comment };
+                    ListViewItem item = new ListViewItem(entries);
+                    items.Add(item);
                 }
-
-                playerDBList.Invalidate();
+                playerDBList.Invoke((MethodInvoker)delegate
+                {
+                    playerDBList.Items.AddRange(items.ToArray());
+                    playerDBList.ListViewItemSorter = banSorter;
+                });
 
                 pendingDatabase = false;
             }
@@ -1876,7 +1870,7 @@ namespace DaRT
             this.Log("Starting player database sync...", LogType.Console, false);
             this.Log("This could take a while depending on how many players are in the database.", LogType.Console, false);
             this.Log("Please do not close DaRT during the process.", LogType.Console, false);
-            dbCache.Clear();
+            playerDBList.Items.Clear();
 
             try
             {
@@ -3207,10 +3201,8 @@ namespace DaRT
 
         private void bansList_ColumnClick(object sender, ColumnClickEventArgs args)
         {
-            this.Log("Sorting ban list is disabled in this version, sorry.", LogType.Console, false);
-            Array.Sort(bansCache.ToArray(), banSorter);
-            /*
-            if (e.Column == banSorter.SortColumn)
+
+            if (args.Column == banSorter.SortColumn)
             {
                 if (banSorter.Order == SortOrder.Ascending)
                 {
@@ -3223,21 +3215,18 @@ namespace DaRT
             }
             else
             {
-                banSorter.SortColumn = e.Column;
+                banSorter.SortColumn = args.Column;
                 banSorter.Order = SortOrder.Ascending;
             }
-            //TODO
-            //this.bansList.Sort();
 
-            bansCache.Sort();
-            */
+            this.bansList.Sort();
+            
         }
 
         private void playerDBList_ColumnClick(object sender, ColumnClickEventArgs args)
         {
-            this.Log("Sorting player database is disabled in this version, sorry.", LogType.Console, false);
-            /*
-            if (e.Column == playerDatabaseSorter.SortColumn)
+            
+            if (args.Column == playerDatabaseSorter.SortColumn)
             {
                 if (playerDatabaseSorter.Order == SortOrder.Ascending)
                 {
@@ -3250,12 +3239,12 @@ namespace DaRT
             }
             else
             {
-                playerDatabaseSorter.SortColumn = e.Column;
+                playerDatabaseSorter.SortColumn = args.Column;
                 playerDatabaseSorter.Order = SortOrder.Ascending;
             }
 
             this.playerDBList.Sort();
-            */
+            
         }
 
         private void execute_Click(object sender, EventArgs args)
@@ -3398,7 +3387,7 @@ namespace DaRT
             {
                 if (search.Text != "")
                 {
-                    bansCache.Clear();
+                    bansList.Items.Clear();
 
                     for (int i = 0; i < bans.Count; i++)
                     {
@@ -3422,12 +3411,12 @@ namespace DaRT
                         String[] items = { bans[i].number, bans[i].ipguid, bans[i].time, bans[i].reason, comment };
                         ListViewItem item = new ListViewItem(items);
 
-                        bansCache.Add(item);
+                        bansList.Items.Add(item);
                     }
 
                     List<ListViewItem> foundItems = new List<ListViewItem>();
 
-                    foreach (ListViewItem item in bansCache)
+                    foreach (ListViewItem item in bansList.Items)
                     {
                         if (item.SubItems[1].Text.ToLower().Contains(search.Text.ToLower()))
                         {
@@ -3449,18 +3438,16 @@ namespace DaRT
                         }
                     }
 
-                    bansList.VirtualListSize = foundItems.Count;
-                    bansCache.Clear();
+                    bansList.Items.Clear();
 
                     for (int i = 0; i < foundItems.Count; i++)
                     {
-                        bansCache.Add(foundItems[i]);
+                        bansList.Items.Add(foundItems[i]);
                     }
                 }
                 else
                 {
-                    bansList.VirtualListSize = bans.Count;
-                    bansCache.Clear();
+                    bansList.Items.Clear();
 
                     for (int i = 0; i < bans.Count; i++)
                     {
@@ -3484,7 +3471,7 @@ namespace DaRT
                         String[] items = { bans[i].number, bans[i].ipguid, bans[i].time, bans[i].reason, comment };
                         ListViewItem item = new ListViewItem(items);
 
-                        bansCache.Add(item);
+                        bansList.Items.Add(item);
                     }
                 }
             }
@@ -3532,14 +3519,13 @@ namespace DaRT
                         reader.Dispose();
                         command.Dispose();
 
-                        dbCache.Clear();
+                        playerDBList.Items.Clear();
                         for (int i = 0; i < playersDB.Count; i++)
                         {
                             String[] items = { playersDB[i].number.ToString(), playersDB[i].ip, playersDB[i].lastseen, playersDB[i].guid, playersDB[i].name, playersDB[i].lastseenon, playersDB[i].comment };
                             ListViewItem item = new ListViewItem(items);
-                            dbCache.Add(item);
+                            playerDBList.Items.Add(item);
                         }
-                        playerDBList.VirtualListSize = playersDB.Count;
                     }
                     catch(Exception e)
                     {
@@ -3549,7 +3535,7 @@ namespace DaRT
 
                     List<ListViewItem> foundItems = new List<ListViewItem>();
 
-                    foreach (ListViewItem item in dbCache)
+                    foreach (ListViewItem item in playerDBList.Items)
                     {
                         if (filter.SelectedItem.ToString() == "Name")
                         {
@@ -3581,13 +3567,12 @@ namespace DaRT
                         }
                     }
 
-                    dbCache.Clear();
+                    playerDBList.Items.Clear();
 
                     for (int i = 0; i < foundItems.Count; i++)
                     {
-                        dbCache.Add(foundItems[i]);
+                        playerDBList.Items.Add(foundItems[i]);
                     }
-                    playerDBList.VirtualListSize = foundItems.Count;
                 }
                 else
                 {
@@ -3627,14 +3612,13 @@ namespace DaRT
                         }
                         command.Dispose();
 
-                        dbCache.Clear();
+                        playerDBList.Items.Clear();
                         for (int i = 0; i < playersDB.Count; i++)
                         {
                             String[] items = { playersDB[i].number.ToString(), playersDB[i].ip, playersDB[i].lastseen, playersDB[i].guid, playersDB[i].name, playersDB[i].lastseenon, playersDB[i].comment };
                             ListViewItem item = new ListViewItem(items);
-                            dbCache.Add(item);
+                            playerDBList.Items.Add(item);
                         }
-                        playerDBList.VirtualListSize = playersDB.Count;
                     }
                     catch(Exception e)
                     {
@@ -3644,25 +3628,6 @@ namespace DaRT
                 }
             }
             #endregion
-        }
-        private void bansList_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs args)
-        {
-            try
-            {
-                if (args.ItemIndex < bansCache.Count)
-                    args.Item = bansCache[args.ItemIndex];
-                else
-                {
-                    bansList.VirtualListSize = bansCache.Count;
-                    String[] items = { "", "", "", "", "" };
-                    args.Item = new ListViewItem(items);
-                }
-            }
-            catch(Exception e)
-            {
-                this.Log(e.Message, LogType.Debug, false);
-                this.Log(e.StackTrace, LogType.Debug, false);
-            }
         }
 
         private void options_SelectedIndexChanged(object sender, EventArgs args)
@@ -3677,25 +3642,6 @@ namespace DaRT
             }
         }
 
-        private void playerDBList_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs args)
-        {
-            try
-            {
-                if (args.ItemIndex < dbCache.Count)
-                    args.Item = dbCache[args.ItemIndex];
-                else
-                {
-                    playerDBList.VirtualListSize = dbCache.Count;
-                    String[] items = { "", "", "", "", "", "", "" };
-                    args.Item = new ListViewItem(items);
-                }
-            }
-            catch(Exception e)
-            {
-                this.Log(e.Message, LogType.Debug, false);
-                this.Log(e.StackTrace, LogType.Debug, false);
-            }
-        }
 
         private void input_TextChanged(object sender, EventArgs e)
         {

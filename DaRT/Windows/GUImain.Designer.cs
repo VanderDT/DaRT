@@ -394,9 +394,7 @@
             this.bansList.TabIndex = 10;
             this.bansList.UseCompatibleStateImageBehavior = false;
             this.bansList.View = System.Windows.Forms.View.Details;
-            this.bansList.VirtualMode = true;
             this.bansList.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.bansList_ColumnClick);
-            this.bansList.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.bansList_RetrieveVirtualItem);
             this.bansList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.bansList_MouseDown);
             // 
             // playerdatabaseTab
@@ -423,9 +421,7 @@
             this.playerDBList.TabIndex = 11;
             this.playerDBList.UseCompatibleStateImageBehavior = false;
             this.playerDBList.View = System.Windows.Forms.View.Details;
-            this.playerDBList.VirtualMode = true;
             this.playerDBList.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.playerDBList_ColumnClick);
-            this.playerDBList.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.playerDBList_RetrieveVirtualItem);
             this.playerDBList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.playerDBList_MouseDown);
             // 
             // playerCounter
