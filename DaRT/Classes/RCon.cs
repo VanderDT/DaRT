@@ -534,7 +534,7 @@ namespace DaRT
                 bool found = false;
                 try
                 {
-                    found = new System.Text.RegularExpressions.Regex(item).IsMatch(message);
+                    found = new System.Text.RegularExpressions.Regex(item.ToLower()).IsMatch(message.ToLower());
                 }
                 catch
                 {
@@ -552,14 +552,14 @@ namespace DaRT
                     {
                         if (ban)
                         {
-                            _form.Log("AutoBan " + player.name + " for " + item, LogType.Console, true);
-                            Ban _ban = new Ban(player.number, player.name, player.guid, "", -1, "AutoBanned for " + item , true);
+                            _form.Log(String.Format("AutoBan {0} for {1}" ,player.name ,item), LogType.Console, true);
+                            Ban _ban = new Ban(player.number, player.name, player.guid, "", -1, String.Format("AutoBanned for {0}",item) , true);
                             this.Ban(_ban);
                         }
                         else
                         {
-                            _form.Log("AutoKick " + player.name + " for " + item, LogType.Console, true);
-                            Kick _kick = new Kick(player.number, player.name, "AutoKick for "+item);
+                            _form.Log(String.Format("AutoKick {0} for {1}",player.name,item), LogType.Console, true);
+                            Kick _kick = new Kick(player.number, player.name, String.Format("AutoKick for {0}",item));
                             this.kick(_kick);
                         }
                     }
@@ -579,7 +579,7 @@ namespace DaRT
         {
             _client.SendCommand("loadBans");
             if(_form != null) _form.Log("Reloaded Bans!", LogType.Console, false);
-        }
+        } 
         public void events()
         {
             _client.SendCommand("loadEvents");

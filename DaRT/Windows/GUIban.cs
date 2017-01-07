@@ -25,10 +25,7 @@ namespace DaRT
 
             _ban = new Ban(id, name, guid, ip, online);
 
-            if (_ban.Online)
-                this.Text = "Ban " + _ban.Name;
-            else
-                this.Text = "Ban " + _ban.Name + " (Offline)";
+            this.Text = Resources.Strings.Ban +" " + _ban.Name;
 
             try
             {
@@ -66,7 +63,7 @@ namespace DaRT
             }
             catch
             {
-                MessageBox.Show("Duration must be a number!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Resources.Strings.Duration_num, Resources.Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -90,7 +87,7 @@ namespace DaRT
             }
             else
             {
-                if (MessageBox.Show("The player you were about to ban left the game.\r\nPress OK to ban him offline (GUID only) instead.", "Attention!", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+                if (MessageBox.Show(Resources.Strings.Offline_ban_note, Resources.Strings.Attention, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
                 {
                     _ban.Online = false;
                     _rcon.Ban(_ban);

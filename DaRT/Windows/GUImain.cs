@@ -22,6 +22,7 @@ namespace DaRT
         #region Initialize
         public GUImain(String version)
         {
+            
             // Initializing DaRT
             Thread.CurrentThread.CurrentCulture = new CultureInfo(Settings.Default.Language);
             this.version = version;
@@ -222,27 +223,27 @@ namespace DaRT
             // Initializing filter box
             options.SelectedIndex = 0;
 
-            filter.Items.Add("Name");
+            filter.Items.Add(Resources.Strings.Name);
             filter.Items.Add("GUID");
             filter.Items.Add("IP");
-            filter.Items.Add("Comment");
+            filter.Items.Add(Resources.Strings.Comment);
             filter.SelectedIndex = 0;
         }
         private void InitializePlayerList()
         {
             // Initializing context menu of player database
             playerContextMenu = new ContextMenuStrip();
-            playerContextMenu.Items.Add("Copy");
-            (playerContextMenu.Items[0] as ToolStripMenuItem).DropDownItems.Add("All", null, playerCopyAll_click);
+            playerContextMenu.Items.Add(Resources.Strings.Copy);
+            (playerContextMenu.Items[0] as ToolStripMenuItem).DropDownItems.Add(Resources.Strings.All, null, playerCopyAll_click);
             (playerContextMenu.Items[0] as ToolStripMenuItem).DropDownItems.Add("IP", null, playerCopyIP_click);
             (playerContextMenu.Items[0] as ToolStripMenuItem).DropDownItems.Add("GUID", null, playerCopyGUID_click);
-            (playerContextMenu.Items[0] as ToolStripMenuItem).DropDownItems.Add("Name", null, playerCopyName_click);
-            playerContextMenu.Items.Add("Set comment", null, comment_click);
+            (playerContextMenu.Items[0] as ToolStripMenuItem).DropDownItems.Add(Resources.Strings.Name, null, playerCopyName_click);
+            playerContextMenu.Items.Add(Resources.Strings.Comment, null, comment_click);
             playerContextMenu.Items.Add("-");
-            playerContextMenu.Items.Add("Message", null, say_click);
-            playerContextMenu.Items.Add("Kick", null, kick_click);
-            playerContextMenu.Items.Add("Ban", null, ban_click);
-            playerContextMenu.Items.Add("Quick Ban", null, quickBan_click);
+            playerContextMenu.Items.Add(Resources.Strings.Message, null, say_click);
+            playerContextMenu.Items.Add(Resources.Strings.Kick, null, kick_click);
+            playerContextMenu.Items.Add(Resources.Strings.Ban, null, ban_click);
+            playerContextMenu.Items.Add(Resources.Strings.Quick_Ban, null, quickBan_click);
 
             // Attaching event handlers to detect state of context menu
             playerContextMenu.Opened += new System.EventHandler(this.menu_Opened);
@@ -252,11 +253,11 @@ namespace DaRT
             playerList.Columns.Add("", 45);
             playerList.Columns.Add("#", 30);
             playerList.Columns.Add("IP", 150);
-            playerList.Columns.Add("Ping", 50);
+            playerList.Columns.Add(Resources.Strings.Ping, 50);
             playerList.Columns.Add("GUID", 250);
-            playerList.Columns.Add("Name", 180);
-            playerList.Columns.Add("Status", 100);
-            playerList.Columns.Add("Comment", 210);
+            playerList.Columns.Add(Resources.Strings.Name, 180);
+            playerList.Columns.Add(Resources.Strings.Status, 100);
+            playerList.Columns.Add(Resources.Strings.Comment, 210);
 
             // Initializing the player sorter used to sort the player list
             playerSorter = new ListViewColumnSorter();
@@ -276,11 +277,11 @@ namespace DaRT
         {
             // Initializing context menu of ban list
             bansContextMenu = new ContextMenuStrip();
-            bansContextMenu.Items.Add("Copy GUID/IP", null, bansCopyGUIDIP_click);
-            bansContextMenu.Items.Add("Set comment", null, comment_click);
-            bansContextMenu.Items.Add("Unban", null, unban_click);
+            bansContextMenu.Items.Add(Resources.Strings.Copy, null, bansCopyGUIDIP_click);
+            bansContextMenu.Items.Add(Resources.Strings.Comment, null, comment_click);
+            bansContextMenu.Items.Add(Resources.Strings.Unban, null, unban_click);
             bansContextMenu.Items.Add("-");
-            bansContextMenu.Items.Add("Remove all expired bans", null, expired_click);
+            bansContextMenu.Items.Add(String.Format("{0} {1} {2}",Resources.Strings.Delete,Resources.Strings.All,Resources.Strings.Bans), null, expired_click);
 
             // Attaching event handlers to detect state of context menu
             bansContextMenu.Opened += new System.EventHandler(this.menu_Opened);
@@ -289,9 +290,9 @@ namespace DaRT
             // Adding the columns to the ban list
             bansList.Columns.Add("#", 50);
             bansList.Columns.Add("GUID/IP", 250);
-            bansList.Columns.Add("Minutes left", 100);
-            bansList.Columns.Add("Reason", 300);
-            bansList.Columns.Add("Comment", 315);
+            bansList.Columns.Add(Resources.Strings.Ban_duration, 100);
+            bansList.Columns.Add(Resources.Strings.Reason, 300);
+            bansList.Columns.Add(Resources.Strings.Comment, 315);
 
             // Initializing the ban sorter used to sort the ban list
             banSorter = new ListViewColumnSorter();
@@ -301,27 +302,27 @@ namespace DaRT
         {
             // Initializing the context menu for the player database
             playerDBContextMenu = new ContextMenuStrip();
-            playerDBContextMenu.Items.Add("Copy");
-            (playerDBContextMenu.Items[0] as ToolStripMenuItem).DropDownItems.Add("All", null, playerDBCopyAll_click);
-            (playerDBContextMenu.Items[0] as ToolStripMenuItem).DropDownItems.Add("Last IP", null, playerDBCopyIP_click);
+            playerDBContextMenu.Items.Add(Resources.Strings.Copy);
+            (playerDBContextMenu.Items[0] as ToolStripMenuItem).DropDownItems.Add(Resources.Strings.All, null, playerDBCopyAll_click);
+            (playerDBContextMenu.Items[0] as ToolStripMenuItem).DropDownItems.Add("IP", null, playerDBCopyIP_click);
             (playerDBContextMenu.Items[0] as ToolStripMenuItem).DropDownItems.Add("GUID", null, playerDBCopyGUID_click);
-            (playerDBContextMenu.Items[0] as ToolStripMenuItem).DropDownItems.Add("Name", null, playerDBCopyName_click);
+            (playerDBContextMenu.Items[0] as ToolStripMenuItem).DropDownItems.Add(Resources.Strings.Name, null, playerDBCopyName_click);
             playerDBContextMenu.Items.Add("-");
-            playerDBContextMenu.Items.Add("Ban (GUID only)", null, banOffline_click);
-            playerDBContextMenu.Items.Add("Set comment", null, comment_click);
+            playerDBContextMenu.Items.Add(Resources.Strings.Ban, null, banOffline_click);
+            playerDBContextMenu.Items.Add(Resources.Strings.Comment, null, comment_click);
             playerDBContextMenu.Items.Add("-");
-            playerDBContextMenu.Items.Add("Delete entry", null, delete_click);
+            playerDBContextMenu.Items.Add(Resources.Strings.Delete, null, delete_click);
             playerDBContextMenu.Opened += new System.EventHandler(this.menu_Opened);
             playerDBContextMenu.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.menu_Closed);
 
             // Adding the columns to the player database
             playerDBList.Columns.Add("#", 50);
-            playerDBList.Columns.Add("Last IP", 150);
-            playerDBList.Columns.Add("Last seen", 150);
+            playerDBList.Columns.Add("IP", 150);
+            playerDBList.Columns.Add(Resources.Strings.Date, 150);
             playerDBList.Columns.Add("GUID", 250);
-            playerDBList.Columns.Add("Name", 200);
-            playerDBList.Columns.Add("Last seen on", 95);
-            playerDBList.Columns.Add("Comment", 120);
+            playerDBList.Columns.Add(Resources.Strings.Name, 200);
+            playerDBList.Columns.Add(Resources.Strings.Host, 95);
+            playerDBList.Columns.Add(Resources.Strings.Comment, 120);
 
             // Initializing the sorter for the player database
             playerDatabaseSorter = new ListViewColumnSorter();
@@ -346,17 +347,17 @@ namespace DaRT
         {
             // Initializing context menus of consoles
             allContextMenu = new ContextMenuStrip();
-            allContextMenu.Items.Add("Clear", null, clear_click);
-            allContextMenu.Items.Add("Clear All", null, clearAll_click);
+            allContextMenu.Items.Add(Resources.Strings.Clear, null, clear_click);
+            allContextMenu.Items.Add(Resources.Strings.Clear_all, null, clearAll_click);
             consoleContextMenu = new ContextMenuStrip();
-            consoleContextMenu.Items.Add("Clear", null, clear_click);
-            consoleContextMenu.Items.Add("Clear All", null, clearAll_click);
+            consoleContextMenu.Items.Add(Resources.Strings.Clear, null, clear_click);
+            consoleContextMenu.Items.Add(Resources.Strings.Clear_all, null, clearAll_click);
             chatContextMenu = new ContextMenuStrip();
-            chatContextMenu.Items.Add("Clear", null, clear_click);
-            chatContextMenu.Items.Add("Clear All", null, clearAll_click);
+            chatContextMenu.Items.Add(Resources.Strings.Clear, null, clear_click);
+            chatContextMenu.Items.Add(Resources.Strings.Clear_all, null, clearAll_click);
             logContextMenu = new ContextMenuStrip();
-            logContextMenu.Items.Add("Clear", null, clear_click);
-            logContextMenu.Items.Add("Clear All", null, clearAll_click);
+            logContextMenu.Items.Add(Resources.Strings.Clear, null, clear_click);
+            logContextMenu.Items.Add(Resources.Strings.Clear_all, null, clearAll_click);
         }
         private void InitializeBanner()
         {
@@ -499,7 +500,7 @@ namespace DaRT
             minutes = 0;
             hours = 0;
             refreshTimer = 0;
-            lastRefresh.Text = "Last refresh: 0s ago";
+            lastRefresh.Text = String.Format(Resources.Strings.Last_refresh_s,0);
         }
         private void reloadScripts_Click(object sender, EventArgs args)
         {
@@ -935,7 +936,7 @@ namespace DaRT
                 if (input.Text != "")
                 {
                         // Say it in global chat if option is specified...
-                        if (options.SelectedItem.ToString() == "Say Global")
+                        if (options.SelectedIndex == 0)
                         {
                             // Check if more then 3 characters were entered
                             if (input.Text.Length > 3)
@@ -945,7 +946,7 @@ namespace DaRT
                             else
                                 this.Log("You need to enter atleast 4 characters.", LogType.Console, false);
                         }
-                    else if(options.SelectedItem.ToString() == "Say Private" && playerList.SelectedItems.Count > 0)
+                    else if(options.SelectedIndex == 1 && playerList.SelectedItems.Count > 0)
                     {
                         if (input.Text.Length > 3)
                         {
@@ -959,7 +960,7 @@ namespace DaRT
                             this.Log("You need to enter atleast 4 characters.", LogType.Console, false);
                     }
                         // ... or send it as command if in console mode
-                        else if (options.SelectedItem.ToString() == "Console")
+                        else if (options.SelectedIndex == 2)
                         {
                             if (!input.Text.StartsWith("players") && !input.Text.StartsWith("bans") && !input.Text.StartsWith("admins"))
                                 rcon.execute(input.Text);
@@ -1074,7 +1075,7 @@ namespace DaRT
         }
         private void tabControl_SelectedIndexChanged(object sender, EventArgs args)
         {
-            try
+          try
             {
                 // Reset sorter
                 playerSorter.Order = SortOrder.None;
@@ -1088,10 +1089,10 @@ namespace DaRT
                     if (connect.Enabled)
                         refresh.Enabled = false;
                     filter.Items.Clear();
-                    filter.Items.Add("Name");
+                    filter.Items.Add(Resources.Strings.Name);
                     filter.Items.Add("GUID");
                     filter.Items.Add("IP");
-                    filter.Items.Add("Comment");
+                    filter.Items.Add(Resources.Strings.Comment);
                     filter.SelectedIndex = 0;
 
                     // Adding all the player flags
@@ -1106,8 +1107,8 @@ namespace DaRT
                         refresh.Enabled = false;
                     filter.Items.Clear();
                     filter.Items.Add("GUID/IP");
-                    filter.Items.Add("Reason");
-                    filter.Items.Add("Comment");
+                    filter.Items.Add(Resources.Strings.Reason);
+                    filter.Items.Add(Resources.Strings.Comment);
                     filter.SelectedIndex = 0;
                 }
                 else if (tabControl.SelectedTab.Name == "playerdatabaseTab")
@@ -1117,10 +1118,10 @@ namespace DaRT
                     if (!refresh.Enabled)
                         refresh.Enabled = true;
                     filter.Items.Clear();
-                    filter.Items.Add("Name");
+                    filter.Items.Add(Resources.Strings.Name);
                     filter.Items.Add("GUID");
                     filter.Items.Add("IP");
-                    filter.Items.Add("Comment");
+                    filter.Items.Add(Resources.Strings.Comment);
                     filter.SelectedIndex = 0;
 
                     List<ListViewItem> items = GetPlayersList(filter.SelectedItem.ToString(), search.Text);
@@ -1275,7 +1276,7 @@ namespace DaRT
                             // Starting timer
                             this.Invoke((MethodInvoker)delegate
                             {
-                                lastRefresh.Text = "Last refresh: 0s ago";
+                                lastRefresh.Text = String.Format(Resources.Strings.Last_refresh_s, 0);
                                 seconds = 0;
                                 minutes = 0;
                                 hours = 0;
@@ -1461,7 +1462,7 @@ namespace DaRT
 
                 this.Invoke((MethodInvoker)delegate
                 {
-                    lastRefresh.Text = "Last refresh: 0s ago";
+                    lastRefresh.Text = String.Format(Resources.Strings.Last_refresh_s, 0);
                     timer.Start();
                 });
 
@@ -2283,15 +2284,15 @@ namespace DaRT
 
         public void setPlayerCount(int amount)
         {
-            playerCounter.Text = String.Format("Players: {0}",amount);
+            playerCounter.Text = String.Format(Resources.Strings.Players_c,amount);
         }
         public void setBanCount(int amount)
         {
-            banCounter.Text = String.Format("Bans: {0}",amount);
+            banCounter.Text = String.Format(Resources.Strings.Bans_c,amount);
         }
         public void setAdminCount(int amount)
         {
-            adminCounter.Text = String.Format("Admins: {0}",amount);
+            adminCounter.Text = String.Format(Resources.Strings.Admins_c,amount);
         }
         
         public Location GetLocation(IPAddress ip)
@@ -2538,21 +2539,21 @@ namespace DaRT
                 if (hours >= 60)
                 {
                     timer.Stop();
-                    lastRefresh.Text = "Last refresh: 60h+ ago";
+                    lastRefresh.Text = String.Format(Resources.Strings.Last_refresh_h, "XX");
                 }
                 else
                 {
                     if (hours > 0)
                     {
-                        lastRefresh.Text = String.Format("Last refresh: {0}h ago",hours);
+                        lastRefresh.Text = String.Format(Resources.Strings.Last_refresh_h, hours);
                     }
                     else if (minutes > 0)
                     {
-                        lastRefresh.Text = String.Format("Last refresh: {0}m ago",minutes);
+                        lastRefresh.Text = String.Format(Resources.Strings.Last_refresh_m, minutes);
                     }
                     else
                     {
-                        lastRefresh.Text = String.Format("Last refresh: {0}s ago",seconds);
+                        lastRefresh.Text = String.Format(Resources.Strings.Last_refresh_s, seconds);
                     }
                 }
             }
@@ -2724,37 +2725,37 @@ namespace DaRT
             if (logTabs.SelectedIndex == 0)
             {
                 all.Clear();
-                all.AppendText(String.Format("DaRT {0} initialized!",version));
+                all.AppendText(String.Format(Resources.Strings.InitApp,version));
             }
             else if (logTabs.SelectedIndex == 1)
             {
                 console.Clear();
-                console.AppendText(String.Format("DaRT {0} initialized!", version));
+                console.AppendText(String.Format(Resources.Strings.InitApp, version));
             }
             else if (logTabs.SelectedIndex == 2)
             {
                 chat.Clear();
-                chat.AppendText(String.Format("DaRT {0} initialized!", version));
+                chat.AppendText(String.Format(Resources.Strings.InitApp, version));
             }
             else if (logTabs.SelectedIndex == 3)
             {
                 logs.Clear();
-                logs.AppendText(String.Format("DaRT {0} initialized!", version));
+                logs.AppendText(String.Format(Resources.Strings.InitApp, version));
             }
         }
         private void clearAll_click(object sender, EventArgs args)
         {
             all.Clear();
-            all.AppendText(String.Format("DaRT {0} initialized!", version));
+            all.AppendText(String.Format(Resources.Strings.InitApp, version));
 
             console.Clear();
-            console.AppendText(String.Format("DaRT {0} initialized!", version));
+            console.AppendText(String.Format(Resources.Strings.InitApp, version));
 
             chat.Clear();
-            chat.AppendText(String.Format("DaRT {0} initialized!", version));
+            chat.AppendText(String.Format(Resources.Strings.InitApp, version));
 
             logs.Clear();
-            logs.AppendText(String.Format("DaRT {0} initialized!", version));
+            logs.AppendText(String.Format(Resources.Strings.InitApp, version));
         }
 
         private void console_MouseDown(object sender, MouseEventArgs args)
@@ -2798,11 +2799,11 @@ namespace DaRT
             InitializeProgressBar();
             InitializeFonts();
             InitializeTooltips();
-            Console.WriteLine(String.Format("DaRT {0} initialized!", version));
-            all.AppendText(String.Format("DaRT {0} initialized!", version));
-            console.AppendText(String.Format("DaRT {0} initialized!", version));
-            chat.AppendText(String.Format("DaRT {0} initialized!", version));
-            logs.AppendText(String.Format("DaRT {0} initialized!", version));
+            Console.WriteLine(String.Format(Resources.Strings.InitApp, version));
+            all.AppendText(String.Format(Resources.Strings.InitApp, version));
+            console.AppendText(String.Format(Resources.Strings.InitApp, version));
+            chat.AppendText(String.Format(Resources.Strings.InitApp, version));
+            logs.AppendText(String.Format(Resources.Strings.InitApp, version));
 
             if (Settings.Default.firstStart)
             {

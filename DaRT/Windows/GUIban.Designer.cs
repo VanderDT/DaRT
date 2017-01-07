@@ -47,7 +47,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(179, 13);
             this.label1.TabIndex = 4;
-            this.label1.Text = "Why do you want to ban this player?";
+            this.label1.Text = Resources.Strings.Reason;
             // 
             // reason
             // 
@@ -55,7 +55,7 @@
             this.reason.Name = "reason";
             this.reason.Size = new System.Drawing.Size(324, 20);
             this.reason.TabIndex = 7;
-            this.reason.Text = "Admin Ban";
+            this.reason.Text = Resources.Strings.Ban;
             // 
             // label2
             // 
@@ -64,7 +64,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(70, 13);
             this.label2.TabIndex = 8;
-            this.label2.Text = "Ban duration:";
+            this.label2.Text = Resources.Strings.Ban_duration;
             // 
             // duration
             // 
@@ -82,7 +82,7 @@
             this.banButton.Name = "banButton";
             this.banButton.Size = new System.Drawing.Size(220, 23);
             this.banButton.TabIndex = 10;
-            this.banButton.Text = "Ban";
+            this.banButton.Text = Resources.Strings.Ban;
             this.banButton.UseVisualStyleBackColor = true;
             this.banButton.Click += new System.EventHandler(this.ban_Click);
             // 
@@ -92,7 +92,7 @@
             this.abort.Name = "abort";
             this.abort.Size = new System.Drawing.Size(98, 23);
             this.abort.TabIndex = 11;
-            this.abort.Text = "Abort";
+            this.abort.Text = Resources.Strings.Close;
             this.abort.UseVisualStyleBackColor = true;
             this.abort.Click += new System.EventHandler(this.abort_Click);
             // 
@@ -117,7 +117,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(52, 13);
             this.label3.TabIndex = 15;
-            this.label3.Text = "Ban type:";
+            this.label3.Text = Resources.Strings.Ban_type+":";
             // 
             // mode
             // 
@@ -151,7 +151,7 @@
             this.MaximizeBox = false;
             this.Name = "GUIban";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Ban player";
+            this.Text = Resources.Strings.Ban;
             this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
