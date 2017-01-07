@@ -61,10 +61,6 @@ namespace DaRT
         public RCon(GUImain form)
         {
             _form = form;
-            string[] strArray = new string[Settings.Default.hilight.Count];
-            Settings.Default.hilight.CopyTo(strArray, 0);
-
-            _hilight = strArray;
 
             // Initializing date
             this.lastsent = new DateTime();
@@ -160,6 +156,11 @@ namespace DaRT
 
             _initialized = true;
             _client.Connect();
+            string[] strArray = new string[Settings.Default.hilight.Count];
+            Settings.Default.hilight.CopyTo(strArray, 0);
+
+            _hilight = strArray;
+
         }
 
         public void Disconnect()
@@ -250,7 +251,6 @@ namespace DaRT
             while ((response = this.GetResponse(id)) == null && ticks < Settings.Default.playerTicks)
             {
                 Thread.Sleep(10);
-                if(ticks > Settings.Default.playerTicks/2) id = this.Send(BattlEyeCommand.Players);
                 ticks++;
             }
 
@@ -275,7 +275,6 @@ namespace DaRT
             while ((response = this.GetResponse(id)) == null && ticks < Settings.Default.banTicks)
             {
                 Thread.Sleep(10);
-                if (ticks > Settings.Default.banTicks / 2) id = this.Send(BattlEyeCommand.Bans);
                 ticks++;
             }
             
@@ -366,7 +365,6 @@ namespace DaRT
             while ((response = this.GetResponse(id)) == null && ticks < Settings.Default.playerTicks)
             {
                 Thread.Sleep(10);
-                if (ticks > Settings.Default.playerTicks / 2) id = this.Send(BattlEyeCommand.Admins);
                 ticks++;
             }
 
@@ -519,6 +517,59 @@ namespace DaRT
             }
         }
 
+        private void checkMessage(string message, bool ban)
+        {
+            string[] check;
+            if (ban)
+            {
+                check = new string[Settings.Default.autoBan.Count];
+                Settings.Default.autoBan.CopyTo(check, 0);
+            } else
+            {
+                check = new string[Settings.Default.autoKick.Count];
+                Settings.Default.autoKick.CopyTo(check, 0);
+            }
+            foreach(string item in check)
+            {
+                bool found = false;
+                try
+                {
+                    found = new System.Text.RegularExpressions.Regex(item).IsMatch(message);
+                }
+                catch
+                {
+                    found = false;
+                }
+                if (found)
+                {
+                    string name = message.Split(' ')[1].Replace(":", "");
+                    Player player = null;
+
+                    foreach(Player p in _players)
+                        if (!name.Equals("") && p.name.Equals(name)) { player = p; break; }
+
+                    if(player != null)
+                    {
+                        if (ban)
+                        {
+                            _form.Log("AutoBan " + player.name + " for " + item, LogType.Console, true);
+                            Ban _ban = new Ban(player.number, player.name, player.guid, "", -1, "AutoBanned for " + item , true);
+                            this.Ban(_ban);
+                        }
+                        else
+                        {
+                            _form.Log("AutoKick " + player.name + " for " + item, LogType.Console, true);
+                            Kick _kick = new Kick(player.number, player.name, "AutoKick for "+item);
+                            this.kick(_kick);
+                        }
+                    }
+                    break;
+                }
+                
+            }
+
+        }
+
         public void scripts()
         {
             _client.SendCommand("loadScripts");
@@ -641,6 +692,8 @@ namespace DaRT
                 if (message.Contains("Connected RCon admins:")) this.parseAdmins(message);
                 if (message.Contains("Players on server:")) this.parsePlayers(message);
                 if (message.StartsWith("GUID Bans:")) this.parseBans(message);
+                if (Settings.Default.autoKicks && message.StartsWith("(")) this.checkMessage(message, false);
+                if (Settings.Default.autoBans && message.StartsWith("(")) this.checkMessage(message, true);
                 // Message filtering
                 if (args.Id != 256)
                     this.Received(args.Id, message);

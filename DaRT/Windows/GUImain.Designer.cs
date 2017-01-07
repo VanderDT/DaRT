@@ -620,7 +620,6 @@
             this.search.Name = "search";
             this.search.Size = new System.Drawing.Size(534, 20);
             this.search.TabIndex = 13;
-            this.search.TextChanged += new System.EventHandler(this.search_TextChanged);
             this.search.KeyDown += new System.Windows.Forms.KeyEventHandler(this.search_KeyDown);
             // 
             // searchButton
@@ -653,7 +652,6 @@
             this.filter.Name = "filter";
             this.filter.Size = new System.Drawing.Size(136, 21);
             this.filter.TabIndex = 14;
-            this.filter.SelectedIndexChanged += new System.EventHandler(this.filter_SelectedIndexChanged);
             // 
             // searchLabel
             // 

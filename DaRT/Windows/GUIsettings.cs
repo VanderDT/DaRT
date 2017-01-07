@@ -93,9 +93,19 @@ namespace DaRT
             buffer.Text = Settings.Default.buffer.ToString();
             name.Text = Settings.Default.name;
             connectOnStartup.Checked = Settings.Default.connectOnStartup;
-            string[] strArray = new string[Settings.Default.hilight.Count];
-            Settings.Default.hilight.CopyTo(strArray, 0);
-            hilight.Lines = strArray;
+            string[] hilightArray = new string[Settings.Default.hilight.Count];
+            Settings.Default.hilight.CopyTo(hilightArray, 0);
+            hilight.Lines = hilightArray;
+
+            autoBans.Checked = Settings.Default.autoBans;
+            autoKicks.Checked = Settings.Default.autoKicks;
+            string[] kickArray = new string[Settings.Default.autoKick.Count];
+            Settings.Default.autoKick.CopyTo(kickArray, 0);
+            autoKick.Lines = kickArray;
+            string[] banArray = new string[Settings.Default.autoBan.Count];
+            Settings.Default.autoBan.CopyTo(banArray, 0);
+            autoBan.Lines = banArray;
+
 
             showLogErrors.Checked = Settings.Default.showLogErrors;
             showScriptsLog.Checked = Settings.Default.showScriptsLog;
@@ -154,7 +164,13 @@ namespace DaRT
             Settings.Default.connectOnStartup = connectOnStartup.Checked;
             Settings.Default.hilight.Clear();
             Settings.Default.hilight.AddRange(hilight.Lines);
-            
+
+            Settings.Default.autoBans = autoBans.Checked;
+            Settings.Default.autoKicks = autoKicks.Checked;
+            Settings.Default.autoKick.Clear();
+            Settings.Default.autoKick.AddRange(autoKick.Lines);
+            Settings.Default.autoBan.Clear();
+            Settings.Default.autoBan.AddRange(autoBan.Lines);
 
             Settings.Default.showLogErrors = showLogErrors.Checked;
             Settings.Default.showScriptsLog = showScriptsLog.Checked;

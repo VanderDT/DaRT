@@ -73,10 +73,11 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.useNameForAdminCalls = new System.Windows.Forms.CheckBox();
-            this.showAdminCalls = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.showAdminCalls = new System.Windows.Forms.CheckBox();
+            this.hilight = new System.Windows.Forms.TextBox();
             this.showUnknownChat = new System.Windows.Forms.CheckBox();
             this.showDebug = new System.Windows.Forms.CheckBox();
             this.showPlayerConnectMessages = new System.Windows.Forms.CheckBox();
@@ -106,7 +107,7 @@
             this.showPublicVariableValLog = new System.Windows.Forms.CheckBox();
             this.showDeleteVehicleLog = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
             this.dart = new System.Windows.Forms.LinkLabel();
             this.label19 = new System.Windows.Forms.Label();
             this.epm = new System.Windows.Forms.LinkLabel();
@@ -116,12 +117,16 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.hilight = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.autoKicks = new System.Windows.Forms.CheckBox();
+            this.autoBans = new System.Windows.Forms.CheckBox();
+            this.autoKick = new System.Windows.Forms.TextBox();
+            this.autoBan = new System.Windows.Forms.TextBox();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -442,6 +447,7 @@
             this.tabControl.Controls.Add(this.tabPage2);
             this.tabControl.Controls.Add(this.tabPage3);
             this.tabControl.Controls.Add(this.tabPage4);
+            this.tabControl.Controls.Add(this.tabPage5);
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Margin = new System.Windows.Forms.Padding(0);
             this.tabControl.Name = "tabControl";
@@ -462,7 +468,6 @@
             this.tabPage1.Controls.Add(this.label11);
             this.tabPage1.Controls.Add(this.label9);
             this.tabPage1.Controls.Add(this.useNameForAdminCalls);
-            this.tabPage1.Controls.Add(this.showAdminCalls);
             this.tabPage1.Controls.Add(this.label8);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.savePlayers);
@@ -596,16 +601,6 @@
             this.useNameForAdminCalls.Text = "Use my name for admin calls too";
             this.useNameForAdminCalls.UseVisualStyleBackColor = true;
             // 
-            // showAdminCalls
-            // 
-            this.showAdminCalls.AutoSize = true;
-            this.showAdminCalls.Location = new System.Drawing.Point(15, 201);
-            this.showAdminCalls.Name = "showAdminCalls";
-            this.showAdminCalls.Size = new System.Drawing.Size(122, 17);
-            this.showAdminCalls.TabIndex = 44;
-            this.showAdminCalls.Text = "Highlight admin calls";
-            this.showAdminCalls.UseVisualStyleBackColor = true;
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -628,7 +623,7 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.label22);
+            this.tabPage2.Controls.Add(this.showAdminCalls);
             this.tabPage2.Controls.Add(this.hilight);
             this.tabPage2.Controls.Add(this.showUnknownChat);
             this.tabPage2.Controls.Add(this.showDebug);
@@ -654,6 +649,26 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Local filters";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // showAdminCalls
+            // 
+            this.showAdminCalls.AutoSize = true;
+            this.showAdminCalls.Location = new System.Drawing.Point(237, 177);
+            this.showAdminCalls.Name = "showAdminCalls";
+            this.showAdminCalls.Size = new System.Drawing.Size(94, 17);
+            this.showAdminCalls.TabIndex = 45;
+            this.showAdminCalls.Text = "Highlight calls:";
+            this.showAdminCalls.UseVisualStyleBackColor = true;
+            // 
+            // hilight
+            // 
+            this.hilight.Location = new System.Drawing.Point(237, 200);
+            this.hilight.Multiline = true;
+            this.hilight.Name = "hilight";
+            this.hilight.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.hilight.Size = new System.Drawing.Size(251, 92);
+            this.hilight.TabIndex = 44;
+            this.hilight.WordWrap = false;
             // 
             // showUnknownChat
             // 
@@ -965,23 +980,23 @@
             this.label10.TabIndex = 33;
             this.label10.Text = "Server filters";
             // 
-            // tabPage4
+            // tabPage5
             // 
-            this.tabPage4.Controls.Add(this.dart);
-            this.tabPage4.Controls.Add(this.label19);
-            this.tabPage4.Controls.Add(this.epm);
-            this.tabPage4.Controls.Add(this.battlenet);
-            this.tabPage4.Controls.Add(this.dartthread);
-            this.tabPage4.Controls.Add(this.label18);
-            this.tabPage4.Controls.Add(this.label17);
-            this.tabPage4.Controls.Add(this.label16);
-            this.tabPage4.Controls.Add(this.label15);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(495, 298);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "About";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.tabPage5.Controls.Add(this.dart);
+            this.tabPage5.Controls.Add(this.label19);
+            this.tabPage5.Controls.Add(this.epm);
+            this.tabPage5.Controls.Add(this.battlenet);
+            this.tabPage5.Controls.Add(this.dartthread);
+            this.tabPage5.Controls.Add(this.label18);
+            this.tabPage5.Controls.Add(this.label17);
+            this.tabPage5.Controls.Add(this.label16);
+            this.tabPage5.Controls.Add(this.label15);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(495, 298);
+            this.tabPage5.TabIndex = 3;
+            this.tabPage5.Text = "About";
+            this.tabPage5.UseVisualStyleBackColor = true;
             // 
             // dart
             // 
@@ -1090,24 +1105,56 @@
             this.label15.TabIndex = 34;
             this.label15.Text = resources.GetString("label15.Text");
             // 
-            // hilight
+            // tabPage4
             // 
-            this.hilight.Location = new System.Drawing.Point(237, 200);
-            this.hilight.Multiline = true;
-            this.hilight.Name = "hilight";
-            this.hilight.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.hilight.Size = new System.Drawing.Size(251, 92);
-            this.hilight.TabIndex = 44;
-            this.hilight.WordWrap = false;
+            this.tabPage4.Controls.Add(this.autoBan);
+            this.tabPage4.Controls.Add(this.autoKick);
+            this.tabPage4.Controls.Add(this.autoBans);
+            this.tabPage4.Controls.Add(this.autoKicks);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(495, 298);
+            this.tabPage4.TabIndex = 4;
+            this.tabPage4.Text = "Automate";
+            this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // label22
+            // autoKicks
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(234, 181);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(79, 13);
-            this.label22.TabIndex = 45;
-            this.label22.Text = "Hilight phrases:";
+            this.autoKicks.AutoSize = true;
+            this.autoKicks.Location = new System.Drawing.Point(8, 14);
+            this.autoKicks.Name = "autoKicks";
+            this.autoKicks.Size = new System.Drawing.Size(133, 17);
+            this.autoKicks.TabIndex = 0;
+            this.autoKicks.Text = "Autokick for messages";
+            this.autoKicks.UseVisualStyleBackColor = true;
+            // 
+            // autoBans
+            // 
+            this.autoBans.AutoSize = true;
+            this.autoBans.Location = new System.Drawing.Point(251, 14);
+            this.autoBans.Name = "autoBans";
+            this.autoBans.Size = new System.Drawing.Size(131, 17);
+            this.autoBans.TabIndex = 1;
+            this.autoBans.Text = "Autoban for messages";
+            this.autoBans.UseVisualStyleBackColor = true;
+            // 
+            // autoKick
+            // 
+            this.autoKick.Location = new System.Drawing.Point(3, 37);
+            this.autoKick.Multiline = true;
+            this.autoKick.Name = "autoKick";
+            this.autoKick.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.autoKick.Size = new System.Drawing.Size(242, 258);
+            this.autoKick.TabIndex = 2;
+            // 
+            // autoBan
+            // 
+            this.autoBan.Location = new System.Drawing.Point(251, 37);
+            this.autoBan.Multiline = true;
+            this.autoBan.Name = "autoBan";
+            this.autoBan.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.autoBan.Size = new System.Drawing.Size(241, 258);
+            this.autoBan.TabIndex = 3;
             // 
             // GUIsettings
             // 
@@ -1129,6 +1176,8 @@
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
@@ -1173,7 +1222,6 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.CheckBox useNameForAdminCalls;
-        private System.Windows.Forms.CheckBox showAdminCalls;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label9;
@@ -1185,7 +1233,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label16;
@@ -1224,7 +1272,12 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.CheckBox showUnknownChat;
         private System.Windows.Forms.LinkLabel dart;
-        private System.Windows.Forms.Label label22;
         private System.Windows.Forms.TextBox hilight;
+        private System.Windows.Forms.CheckBox showAdminCalls;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TextBox autoBan;
+        private System.Windows.Forms.TextBox autoKick;
+        private System.Windows.Forms.CheckBox autoBans;
+        private System.Windows.Forms.CheckBox autoKicks;
     }
 }

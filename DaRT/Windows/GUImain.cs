@@ -23,7 +23,7 @@ namespace DaRT
         public GUImain(String version)
         {
             // Initializing DaRT
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en");
+            Thread.CurrentThread.CurrentCulture = new CultureInfo(Settings.Default.Language);
             this.version = version;
 
             // Upgrading configuration
@@ -419,9 +419,9 @@ namespace DaRT
         }
         private void refresh_Click(object sender, EventArgs args)
         {
-            if (!(tabControl.SelectedTab.Text == "Player Database"))
+            if (!(tabControl.SelectedTab.Name == "playerdatabaseTab"))
             {
-                if (tabControl.SelectedTab.Text == "Players")
+                if (tabControl.SelectedTab.Name == "playersTab")
                 {
                     // Refresh if BattleNET is connected and no request is pending
                     if (rcon.Connected && !pendingPlayers)
@@ -438,7 +438,7 @@ namespace DaRT
                         this.Log("There already is a pending player list request, please wait for it to finish!", LogType.Console, false);
                     }
                 }
-                else if (tabControl.SelectedTab.Text == "Bans")
+                else if (tabControl.SelectedTab.Name == "bansTab")
                 {
                     // Refresh bans if no other request is pending
                     if (!pendingBans)
@@ -515,14 +515,14 @@ namespace DaRT
 
             try
             {
-                if (tabControl.SelectedTab.Text == "Players")
+                if (tabControl.SelectedTab.Name == "playersTab")
                 {
                     ListViewItem item = playerList.SelectedItems[0];
                     String name = item.SubItems[5].Text;
                     String guid = item.SubItems[4].Text;
                     gui.Comment(this, connection, name, guid, "players");
                 }
-                else if (tabControl.SelectedTab.Text == "Bans")
+                else if (tabControl.SelectedTab.Name == "bansTab")
                 {
                     ListViewItem item = bansList.SelectedItems[0];
                     String name = "";
@@ -537,7 +537,7 @@ namespace DaRT
                         return;
                     }
                 }
-                else if (tabControl.SelectedTab.Text == "Player Database")
+                else if (tabControl.SelectedTab.Name == "playerdatabaseTab")
                 {
                     ListViewItem item = playerDBList.SelectedItems[0];
                     String name = item.SubItems[4].Text;
@@ -643,7 +643,7 @@ namespace DaRT
                 String name = item.SubItems[5].Text;
                 
                 rcon.Pending = name;
-                Ban ban = new Ban(id, name, guid, "", Settings.Default.quickBan, "Banned for " + Settings.Default.quickBan + " minute(s).", true);
+                Ban ban = new Ban(id, name, guid, "", Settings.Default.quickBan, String.Format("Banned for {0} minute(s).",Settings.Default.quickBan), true);
                 rcon.Ban(ban);
             }
             catch(Exception e)
@@ -1081,7 +1081,7 @@ namespace DaRT
                 banSorter.Order = SortOrder.None;
                 playerDatabaseSorter.Order = SortOrder.None;
 
-                if (tabControl.SelectedTab.Text == "Players")
+                if (tabControl.SelectedTab.Name == "playersTab")
                 {
                     // Switching everything to player tab
                     search.Text = "";
@@ -1098,7 +1098,7 @@ namespace DaRT
                     for (int i = 0; i < players.Count; i++)
                         playerList.Items[i].Text = " " + locations[i].location.ToUpper();
                 }
-                else if (tabControl.SelectedTab.Text == "Bans")
+                else if (tabControl.SelectedTab.Name == "bansTab")
                 {
                     // Switching to bans tab
                     search.Text = "";
@@ -1110,7 +1110,7 @@ namespace DaRT
                     filter.Items.Add("Comment");
                     filter.SelectedIndex = 0;
                 }
-                else if (tabControl.SelectedTab.Text == "Player Database")
+                else if (tabControl.SelectedTab.Name == "playerdatabaseTab")
                 {
                     // Switching to player database tab
                     search.Text = "";
@@ -1168,7 +1168,7 @@ namespace DaRT
                 {
                     // Connecting using BattleNET
                     if (Settings.Default.showConnectMessages)
-                        this.Log("Connecting to " + host.Text + ":" + port.Text + "...", LogType.Console, false);
+                        this.Log(String.Format("Connecting to {0}:{1}...", host.Text, port.Text), LogType.Console, false);
                     rcon.Connect(ip, Int32.Parse(port.Text), password.Text);
 
                     while (!rcon.Connected && !rcon.Error)
@@ -1257,14 +1257,15 @@ namespace DaRT
                         // Request players, bans and admins when enabled
                         if (Settings.Default.requestOnConnect && rcon.Connected)
                         {
+                            Thread.Sleep(3000);
                             Thread threadPlayer = new Thread(new ThreadStart(thread_Player));
                             threadPlayer.IsBackground = true;
                             threadPlayer.Start();
-                            Thread.Sleep(1000);
+                            Thread.Sleep(5000);
                             Thread threadBans = new Thread(new ThreadStart(thread_Bans));
                             threadBans.IsBackground = true;
                             threadBans.Start();
-                            Thread.Sleep(1000);
+                            Thread.Sleep(5000);
                             Thread threadAdmins = new Thread(new ThreadStart(thread_Admins));
                             threadAdmins.IsBackground = true;
                             threadAdmins.Start();
@@ -1309,13 +1310,6 @@ namespace DaRT
             try
             {
                 pendingPlayers = true;
-
-                // Resetting search
-                search.Invoke((MethodInvoker)delegate
-                {
-                    search.Text = "";
-                    searchButton.Text = "Search";
-                });
 
                 this.Invoke((MethodInvoker)delegate
                 {
@@ -1487,13 +1481,6 @@ namespace DaRT
             {
                 pendingBans = true;
 
-                // Resetting search
-                search.Invoke((MethodInvoker)delegate
-                {
-                    search.Text = "";
-                    searchButton.Text = "Search";
-                });
-
                 if (disconnect.Enabled)
                 {
                     if (Settings.Default.showRefreshMessages)
@@ -1651,12 +1638,6 @@ namespace DaRT
             try
             {
                 pendingDatabase = true;
-                // Resetting search
-                search.Invoke((MethodInvoker)delegate
-                {
-                    search.Text = "";
-                    searchButton.Text = "Search";
-                });
                 
                 // Clear cache, set virtual list size
 
@@ -1819,7 +1800,7 @@ namespace DaRT
                 command.Dispose();
 
                 this.Log("Contacting master server...", LogType.Console, false);
-                this.Log("Syncing " + sync.Count + " players from database...", LogType.Console, false);
+                this.Log(String.Format("Syncing {0} players from database...", sync.Count), LogType.Console, false);
 
                 foreach (Player player in sync)
                 {
@@ -2302,15 +2283,15 @@ namespace DaRT
 
         public void setPlayerCount(int amount)
         {
-            playerCounter.Text = "Players: " + amount;
+            playerCounter.Text = String.Format("Players: {0}",amount);
         }
         public void setBanCount(int amount)
         {
-            banCounter.Text = "Bans: " + amount;
+            banCounter.Text = String.Format("Bans: {0}",amount);
         }
         public void setAdminCount(int amount)
         {
-            adminCounter.Text = "Admins: " + amount;
+            adminCounter.Text = String.Format("Admins: {0}",amount);
         }
         
         public Location GetLocation(IPAddress ip)
@@ -2563,15 +2544,15 @@ namespace DaRT
                 {
                     if (hours > 0)
                     {
-                        lastRefresh.Text = "Last refresh: " + hours + "h ago";
+                        lastRefresh.Text = String.Format("Last refresh: {0}h ago",hours);
                     }
                     else if (minutes > 0)
                     {
-                        lastRefresh.Text = "Last refresh: " + minutes + "m ago";
+                        lastRefresh.Text = String.Format("Last refresh: {0}m ago",minutes);
                     }
                     else
                     {
-                        lastRefresh.Text = "Last refresh: " + seconds + "s ago";
+                        lastRefresh.Text = String.Format("Last refresh: {0}s ago",seconds);
                     }
                 }
             }
@@ -2598,11 +2579,11 @@ namespace DaRT
             {
                 search.Text = "";
 
-                if (!(tabControl.SelectedTab.Text == "Player Database"))
+                if (!(tabControl.SelectedTab.Name == "playerdatabaseTab"))
                 {
                     if (disconnect.Enabled)
                     {
-                        if (tabControl.SelectedTab.Text == "Players" && rcon.Connected && !pendingPlayers)
+                        if (tabControl.SelectedTab.Name == "playersTab" && rcon.Connected && !pendingPlayers)
                         {
                             Thread thread = new Thread(new ThreadStart(thread_Player));
                             thread.IsBackground = true;
@@ -2611,7 +2592,7 @@ namespace DaRT
                             banner.IsBackground = true;
                             banner.Start();
                         }
-                        else if (tabControl.SelectedTab.Text == "Bans" && !pendingBans)
+                        else if (tabControl.SelectedTab.Name == "bansTab" && !pendingBans)
                         {
                             Thread thread = new Thread(new ThreadStart(thread_Bans));
                             thread.IsBackground = true;
@@ -2686,288 +2667,6 @@ namespace DaRT
                 konami = 0;
         }
 
-        private void search_TextChanged(object sender, EventArgs args)
-        {
-            // Marked for removal
-        }
-
-        private void filter_SelectedIndexChanged(object sender, EventArgs args)
-        {
-            #region Players
-            /*
-            if (tabControl.SelectedTab.Text == "Players")
-            {
-                if (search.Text != "")
-                {
-                    playerList.Items.Clear();
-
-                    for (int i = 0; i < players.Count; i++)
-                    {
-                        String[] items = { "", players[i].number, players[i].ip, players[i].ping, players[i].guid, players[i].name, players[i].status };
-                        ListViewItem item = new ListViewItem(items);
-                        item.ImageIndex = i;
-
-                        playerList.Items.Add(item);
-                    }
-
-                    List<ListViewItem> foundItems = new List<ListViewItem>();
-
-                    foreach (ListViewItem item in playerList.Items)
-                    {
-                        if (filter.SelectedItem.ToString() == "Name")
-                        {
-                            if (item.SubItems[5].Text.ToLower().Contains(search.Text.ToLower()))
-                            {
-                                foundItems.Add(item);
-                            }
-                        }
-                        else if (filter.SelectedItem.ToString() == "GUID")
-                        {
-                            if (item.SubItems[4].Text.ToLower().Contains(search.Text.ToLower()))
-                            {
-                                foundItems.Add(item);
-                            }
-                        }
-                        else if (filter.SelectedItem.ToString() == "IP")
-                        {
-                            if (item.SubItems[2].Text.ToLower().Contains(search.Text.ToLower()))
-                            {
-                                foundItems.Add(item);
-                            }
-                        }
-                    }
-
-                    playerList.Items.Clear();
-
-                    for (int i = 0; i < foundItems.Count; i++)
-                    {
-                        playerList.Items.Add(foundItems[i]);
-                    }
-
-                }
-                else
-                {
-                    playerList.Items.Clear();
-
-                    for (int i = 0; i < players.Count; i++)
-                    {
-                        String[] items = { "", players[i].number, players[i].ip, players[i].ping, players[i].guid, players[i].name, players[i].status };
-                        ListViewItem item = new ListViewItem(items);
-                        item.ImageIndex = i;
-
-                        playerList.Items.Add(item);
-                    }
-                }
-            }
-             * */
-            #endregion
-            #region Bans
-            /*
-            if (tabControl.SelectedTab.Text == "Bans")
-            {
-                /*
-                if (search.Text != "")
-                {
-                    bansList.Items.Clear();
-
-                    for (int i = 0; i < bans.Count; i++)
-                    {
-                        String[] items = { bans[i].number, bans[i].ipguid, bans[i].time, bans[i].reason };
-                        ListViewItem item = new ListViewItem(items);
-
-                        bansList.Items.Add(item);
-                    }
-
-                    List<ListViewItem> foundItems = new List<ListViewItem>();
-
-                    foreach (ListViewItem item in bansList.Items)
-                    {
-                        if (filter.SelectedItem.ToString() == "GUID/IP")
-                        {
-                            if (item.SubItems[1].Text.ToLower().Contains(search.Text.ToLower()))
-                            {
-                                foundItems.Add(item);
-                            }
-                        }
-                        else if (filter.SelectedItem.ToString() == "Reason")
-                        {
-                            if (item.SubItems[3].Text.ToLower().Contains(search.Text.ToLower()))
-                            {
-                                foundItems.Add(item);
-                            }
-                        }
-                    }
-
-                    bansList.Items.Clear();
-
-                    for (int i = 0; i < foundItems.Count; i++)
-                    {
-                        bansList.Items.Add(foundItems[i]);
-                    }
-
-                }
-                else
-                {
-                    bansList.Items.Clear();
-
-                    for (int i = 0; i < bans.Count; i++)
-                    {
-                        String[] items = { bans[i].number, bans[i].ipguid, bans[i].time, bans[i].reason };
-                        ListViewItem item = new ListViewItem(items);
-
-                        //bansList.Items.Add(item);
-                    }
-                }
-            }
-             * */
-            #endregion
-            #region Player Database
-            /*
-            else if (tabControl.SelectedTab.Text == "Player Database")
-            {
-                if (search.Text != "")
-                {
-                    try
-                    {
-                        command = new SqliteCommand(connection);
-
-                        command.CommandText = "SELECT id, lastip, lastseen, guid, name, lastseenon FROM players ORDER BY id ASC";
-
-                        SqliteDataReader reader = command.ExecuteReader();
-
-                        List<Player> playersDB = new List<Player>();
-                        while (reader.Read())
-                        {
-                            String id = reader[0].ToString();
-                            String lastip = reader[1].ToString();
-                            String lastseen = reader[2].ToString();
-                            String guid = reader[3].ToString();
-                            String name = reader[4].ToString();
-                            String lastseenon = reader[5].ToString();
-                            
-                            // Get comment for GUID
-                            SqliteCommand commentCommand = new SqliteCommand(commentsConnection);
-                            commentCommand.CommandText = "SELECT comment FROM comments WHERE guid = @guid";
-                            commentCommand.Parameters.Add(new SqliteParameter("@guid", guid));
-
-                            SqliteDataReader commentReader = commentCommand.ExecuteReader();
-
-                            String comment = "";
-                            if (commentReader.Read())
-                                comment = commentReader[0].ToString();
-                            commentReader.Close();
-                            commentReader.Dispose();
-                            commentCommand.Dispose();
-
-                            playersDB.Add(new Player(id, lastip, lastseen, guid, name, lastseenon, comment, true));
-                        }
-                        command.Dispose();
-
-                        dbCache.Clear();
-
-                        for (int i = 0; i < playersDB.Count; i++)
-                        {
-                            String[] items = { playersDB[i].number, playersDB[i].ip, playersDB[i].lastseen, playersDB[i].guid, playersDB[i].name, playersDB[i].lastseenon, playersDB[i].comment };
-                            ListViewItem item = new ListViewItem(items);
-                            dbCache.Add(item);
-                        }
-
-                        playerDBList.VirtualListSize = playersDB.Count;
-
-                        List<ListViewItem> foundItems = new List<ListViewItem>();
-
-                        foreach (ListViewItem item in dbCache)
-                        {
-                            if (filter.SelectedItem.ToString() == "Name")
-                            {
-                                if (item.SubItems[4].Text.ToLower().Contains(search.Text.ToLower()))
-                                {
-                                    foundItems.Add(item);
-                                }
-                            }
-                            else if (filter.SelectedItem.ToString() == "GUID")
-                            {
-                                if (item.SubItems[3].Text.ToLower().Contains(search.Text.ToLower()))
-                                {
-                                    foundItems.Add(item);
-                                }
-                            }
-                            else if (filter.SelectedItem.ToString() == "IP")
-                            {
-                                if (item.SubItems[1].Text.ToLower().Contains(search.Text.ToLower()))
-                                {
-                                    foundItems.Add(item);
-                                }
-                            }
-                        }
-
-                        dbCache.Clear();
-
-                        for (int i = 0; i < foundItems.Count; i++)
-                        {
-                            dbCache.Add(foundItems[i]);
-                        }
-                    }
-                    catch(Exception e)
-                    {
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        command = new SqliteCommand(connection);
-                        command.CommandText = "SELECT id, lastip, lastseen, guid, name, lastseenon FROM players ORDER BY id ASC";
-
-                        SqliteDataReader reader = command.ExecuteReader();
-
-                        List<Player> playersDB = new List<Player>();
-                        while (reader.Read())
-                        {
-                            String id = reader[0].ToString();
-                            String lastip = reader[1].ToString();
-                            String lastseen = reader[2].ToString();
-                            String guid = reader[3].ToString();
-                            String name = reader[4].ToString();
-                            String lastseenon = reader[5].ToString();
-
-                            // Get comment for GUID
-                            SqliteCommand commentCommand = new SqliteCommand(commentsConnection);
-                            commentCommand.CommandText = "SELECT comment FROM comments WHERE guid = @guid";
-                            commentCommand.Parameters.Add(new SqliteParameter("@guid", guid));
-
-                            SqliteDataReader commentReader = commentCommand.ExecuteReader();
-
-                            String comment = "";
-                            if (commentReader.Read())
-                                comment = commentReader[0].ToString();
-                            commentReader.Close();
-                            commentReader.Dispose();
-                            commentCommand.Dispose();
-
-                            playersDB.Add(new Player(id, lastip, lastseen, guid, name, lastseenon, comment, true));
-                        }
-                        command.Dispose();
-
-                        dbCache.Clear();
-                        playerDBList.VirtualListSize = playersDB.Count;
-
-                        for (int i = 0; i < playersDB.Count; i++)
-                        {
-                            String[] items = { playersDB[i].number, playersDB[i].ip, playersDB[i].lastseen, playersDB[i].guid, playersDB[i].name, playersDB[i].lastseenon, playersDB[i].comment };
-                            ListViewItem item = new ListViewItem(items);
-                            dbCache.Add(item);
-                        }
-                    }
-                    catch(Exception e)
-                    {
-                    }
-                }
-            }
-             */
-            #endregion
-        }
-
         private void console_LinkClicked(object sender, LinkClickedEventArgs args)
         {
             Process.Start(args.LinkText);
@@ -3025,37 +2724,37 @@ namespace DaRT
             if (logTabs.SelectedIndex == 0)
             {
                 all.Clear();
-                all.AppendText("DaRT " + version + " initialized!");
+                all.AppendText(String.Format("DaRT {0} initialized!",version));
             }
             else if (logTabs.SelectedIndex == 1)
             {
                 console.Clear();
-                console.AppendText("DaRT " + version + " initialized!");
+                console.AppendText(String.Format("DaRT {0} initialized!", version));
             }
             else if (logTabs.SelectedIndex == 2)
             {
                 chat.Clear();
-                chat.AppendText("DaRT " + version + " initialized!");
+                chat.AppendText(String.Format("DaRT {0} initialized!", version));
             }
             else if (logTabs.SelectedIndex == 3)
             {
                 logs.Clear();
-                logs.AppendText("DaRT " + version + " initialized!");
+                logs.AppendText(String.Format("DaRT {0} initialized!", version));
             }
         }
         private void clearAll_click(object sender, EventArgs args)
         {
             all.Clear();
-            all.AppendText("DaRT " + version + " initialized!");
+            all.AppendText(String.Format("DaRT {0} initialized!", version));
 
             console.Clear();
-            console.AppendText("DaRT " + version + " initialized!");
+            console.AppendText(String.Format("DaRT {0} initialized!", version));
 
             chat.Clear();
-            chat.AppendText("DaRT " + version + " initialized!");
+            chat.AppendText(String.Format("DaRT {0} initialized!", version));
 
             logs.Clear();
-            logs.AppendText("DaRT " + version + " initialized!");
+            logs.AppendText(String.Format("DaRT {0} initialized!", version));
         }
 
         private void console_MouseDown(object sender, MouseEventArgs args)
@@ -3099,11 +2798,11 @@ namespace DaRT
             InitializeProgressBar();
             InitializeFonts();
             InitializeTooltips();
-            Console.WriteLine("DaRT " + version + " initialized!");
-            all.AppendText("DaRT " + version + " initialized!");
-            console.AppendText("DaRT " + version + " initialized!");
-            chat.AppendText("DaRT " + version + " initialized!");
-            logs.AppendText("DaRT " + version + " initialized!");
+            Console.WriteLine(String.Format("DaRT {0} initialized!", version));
+            all.AppendText(String.Format("DaRT {0} initialized!", version));
+            console.AppendText(String.Format("DaRT {0} initialized!", version));
+            chat.AppendText(String.Format("DaRT {0} initialized!", version));
+            logs.AppendText(String.Format("DaRT {0} initialized!", version));
 
             if (Settings.Default.firstStart)
             {
@@ -3251,19 +2950,8 @@ namespace DaRT
 
         private void searchButton_Click(object sender, EventArgs args)
         {
-            if (searchButton.Text != "Clear")
-            {
-                if (search.Text != "")
-                    searchButton.Text = "Clear";
-            }
-            else
-            {
-                search.Text = "";
-                searchButton.Text = "Search";
-            }
-
             #region Players
-            if (tabControl.SelectedTab.Text == "Players")
+            if (tabControl.SelectedTab.Name == "playersTab")
             {
                 if (search.Text != "")
                 {
@@ -3296,28 +2984,28 @@ namespace DaRT
 
                     foreach (ListViewItem item in playerList.Items)
                     {
-                        if (filter.SelectedItem.ToString() == "Name")
+                        if (filter.SelectedIndex == 0)
                         {
                             if (item.SubItems[5].Text.ToLower().Contains(search.Text.ToLower()))
                             {
                                 foundItems.Add(item);
                             }
                         }
-                        else if (filter.SelectedItem.ToString() == "GUID")
+                        else if (filter.SelectedIndex == 1)
                         {
                             if (item.SubItems[4].Text.ToLower().Contains(search.Text.ToLower()))
                             {
                                 foundItems.Add(item);
                             }
                         }
-                        else if (filter.SelectedItem.ToString() == "IP")
+                        else if (filter.SelectedIndex == 2)
                         {
                             if (item.SubItems[2].Text.ToLower().Contains(search.Text.ToLower()))
                             {
                                 foundItems.Add(item);
                             }
                         }
-                        else if (filter.SelectedItem.ToString() == "Comment")
+                        else if (filter.SelectedIndex == 3)
                         {
                             if (item.SubItems[7].Text.ToLower().Contains(search.Text.ToLower()))
                             {
@@ -3364,7 +3052,7 @@ namespace DaRT
             }
             #endregion
             #region Bans
-            if (tabControl.SelectedTab.Text == "Bans")
+            if (tabControl.SelectedTab.Name == "bansTab")
             {
                 if (search.Text != "")
                 {
@@ -3403,14 +3091,14 @@ namespace DaRT
                         {
                             foundItems.Add(item);
                         }
-                        else if (filter.SelectedItem.ToString() == "Reason")
+                        else if (filter.SelectedIndex == 1)
                         {
                             if (item.SubItems[3].Text.ToLower().Contains(search.Text.ToLower()))
                             {
                                 foundItems.Add(item);
                             }
                         }
-                        else if (filter.SelectedItem.ToString() == "Comment")
+                        else if (filter.SelectedIndex == 2)
                         {
                             if (item.SubItems[4].Text.ToLower().Contains(search.Text.ToLower()))
                             {
@@ -3458,7 +3146,7 @@ namespace DaRT
             }
             #endregion
             #region Player Database
-            else if (tabControl.SelectedTab.Text == "Player Database")
+            else if (tabControl.SelectedTab.Name == "playerdatabaseTab")
             {
                 List<ListViewItem> items = GetPlayersList(filter.SelectedItem.ToString(), search.Text);
                 playerDBList.ListViewItemSorter = null;
