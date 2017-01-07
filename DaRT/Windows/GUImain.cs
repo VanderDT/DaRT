@@ -945,6 +945,19 @@ namespace DaRT
                             else
                                 this.Log("You need to enter atleast 4 characters.", LogType.Console, false);
                         }
+                    else if(options.SelectedItem.ToString() == "Say Private" && playerList.SelectedItems.Count > 0)
+                    {
+                        if (input.Text.Length > 3)
+                        {
+                            ListViewItem item = playerList.SelectedItems[0];
+                            int id = Int32.Parse(item.SubItems[1].Text);
+                            String name = item.SubItems[5].Text;
+                            Message message = new Message(id, name, input.Text);
+                            rcon.sayPrivate(message);
+                        }
+                        else
+                            this.Log("You need to enter atleast 4 characters.", LogType.Console, false);
+                    }
                         // ... or send it as command if in console mode
                         else if (options.SelectedItem.ToString() == "Console")
                         {

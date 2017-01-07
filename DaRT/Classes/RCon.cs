@@ -30,6 +30,7 @@ namespace DaRT
         private List<String> _admins = new List<String>();
         private List<Player> _players = new List<Player>();
         private List<Ban> _bans = new List<Ban>();
+        private string[] _hilight;
 
         public bool Connected
         {
@@ -60,6 +61,10 @@ namespace DaRT
         public RCon(GUImain form)
         {
             _form = form;
+            string[] strArray = new string[Settings.Default.hilight.Count];
+            Settings.Default.hilight.CopyTo(strArray, 0);
+
+            _hilight = strArray;
 
             // Initializing date
             this.lastsent = new DateTime();
@@ -928,7 +933,8 @@ namespace DaRT
                 {
                     message = message.Split(new char[] { ':' }, 2, StringSplitOptions.RemoveEmptyEntries)[1];
 
-                    bool important = message.IndexOf("admin", StringComparison.OrdinalIgnoreCase) >= 0;
+                    bool important = false;
+                    foreach (string test in _hilight) important = important || message.IndexOf(test, StringComparison.OrdinalIgnoreCase) >= 0;
 
                     if (Settings.Default.useNameForAdminCalls && !string.IsNullOrEmpty(Settings.Default.name) && !important)
                         important = important || message.IndexOf(Settings.Default.name, StringComparison.OrdinalIgnoreCase) >= 0;

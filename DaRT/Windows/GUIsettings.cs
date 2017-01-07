@@ -93,6 +93,9 @@ namespace DaRT
             buffer.Text = Settings.Default.buffer.ToString();
             name.Text = Settings.Default.name;
             connectOnStartup.Checked = Settings.Default.connectOnStartup;
+            string[] strArray = new string[Settings.Default.hilight.Count];
+            Settings.Default.hilight.CopyTo(strArray, 0);
+            hilight.Lines = strArray;
 
             showLogErrors.Checked = Settings.Default.showLogErrors;
             showScriptsLog.Checked = Settings.Default.showScriptsLog;
@@ -149,6 +152,9 @@ namespace DaRT
             Settings.Default.flash = flash.Checked;
             Settings.Default.dartbrs = dartbrs.Checked;
             Settings.Default.connectOnStartup = connectOnStartup.Checked;
+            Settings.Default.hilight.Clear();
+            Settings.Default.hilight.AddRange(hilight.Lines);
+            
 
             Settings.Default.showLogErrors = showLogErrors.Checked;
             Settings.Default.showScriptsLog = showScriptsLog.Checked;

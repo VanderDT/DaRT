@@ -360,6 +360,7 @@
             this.playerList.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.playerList.FullRowSelect = true;
             this.playerList.GridLines = true;
+            this.playerList.HideSelection = false;
             this.playerList.Location = new System.Drawing.Point(0, 0);
             this.playerList.MultiSelect = false;
             this.playerList.Name = "playerList";
@@ -523,6 +524,7 @@
             // 
             // all
             // 
+            this.all.BackColor = System.Drawing.SystemColors.Window;
             this.all.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.all.Dock = System.Windows.Forms.DockStyle.Fill;
             this.all.Font = new System.Drawing.Font("Segoe UI", 8.5F);
@@ -547,6 +549,7 @@
             // 
             // console
             // 
+            this.console.BackColor = System.Drawing.SystemColors.Window;
             this.console.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.console.Dock = System.Windows.Forms.DockStyle.Fill;
             this.console.Font = new System.Drawing.Font("Segoe UI", 8.5F);
@@ -571,6 +574,7 @@
             // 
             // chat
             // 
+            this.chat.BackColor = System.Drawing.SystemColors.Window;
             this.chat.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.chat.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chat.Font = new System.Drawing.Font("Segoe UI", 8.5F);
@@ -595,6 +599,7 @@
             // 
             // logs
             // 
+            this.logs.BackColor = System.Drawing.SystemColors.Window;
             this.logs.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.logs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.logs.Font = new System.Drawing.Font("Segoe UI", 8.5F);
@@ -704,6 +709,7 @@
             this.options.FormattingEnabled = true;
             this.options.Items.AddRange(new object[] {
             "Say Global",
+            "Say Private",
             "Console"});
             this.options.Location = new System.Drawing.Point(3, 214);
             this.options.Name = "options";
@@ -718,9 +724,9 @@
             // 
             // GUImain
             // 
-            //this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1184, 571);
+            this.ClientSize = new System.Drawing.Size(1184, 572);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;

@@ -107,6 +107,7 @@
             this.showDeleteVehicleLog = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.dart = new System.Windows.Forms.LinkLabel();
             this.label19 = new System.Windows.Forms.Label();
             this.epm = new System.Windows.Forms.LinkLabel();
             this.battlenet = new System.Windows.Forms.LinkLabel();
@@ -115,7 +116,8 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.dart = new System.Windows.Forms.LinkLabel();
+            this.hilight = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -626,6 +628,8 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label22);
+            this.tabPage2.Controls.Add(this.hilight);
             this.tabPage2.Controls.Add(this.showUnknownChat);
             this.tabPage2.Controls.Add(this.showDebug);
             this.tabPage2.Controls.Add(this.showPlayerConnectMessages);
@@ -979,6 +983,19 @@
             this.tabPage4.Text = "About";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // dart
+            // 
+            this.dart.AutoSize = true;
+            this.dart.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.dart.Location = new System.Drawing.Point(150, 258);
+            this.dart.Margin = new System.Windows.Forms.Padding(10);
+            this.dart.Name = "dart";
+            this.dart.Size = new System.Drawing.Size(73, 13);
+            this.dart.TabIndex = 43;
+            this.dart.TabStop = true;
+            this.dart.Text = "DaRT GitHub";
+            this.dart.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.dart_LinkClicked);
+            // 
             // label19
             // 
             this.label19.AutoSize = true;
@@ -1073,18 +1090,24 @@
             this.label15.TabIndex = 34;
             this.label15.Text = resources.GetString("label15.Text");
             // 
-            // dart
+            // hilight
             // 
-            this.dart.AutoSize = true;
-            this.dart.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.dart.Location = new System.Drawing.Point(150, 258);
-            this.dart.Margin = new System.Windows.Forms.Padding(10);
-            this.dart.Name = "dart";
-            this.dart.Size = new System.Drawing.Size(73, 13);
-            this.dart.TabIndex = 43;
-            this.dart.TabStop = true;
-            this.dart.Text = "DaRT GitHub";
-            this.dart.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.dart_LinkClicked);
+            this.hilight.Location = new System.Drawing.Point(237, 200);
+            this.hilight.Multiline = true;
+            this.hilight.Name = "hilight";
+            this.hilight.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.hilight.Size = new System.Drawing.Size(251, 92);
+            this.hilight.TabIndex = 44;
+            this.hilight.WordWrap = false;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(234, 181);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(79, 13);
+            this.label22.TabIndex = 45;
+            this.label22.Text = "Hilight phrases:";
             // 
             // GUIsettings
             // 
@@ -1201,5 +1224,7 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.CheckBox showUnknownChat;
         private System.Windows.Forms.LinkLabel dart;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.TextBox hilight;
     }
 }

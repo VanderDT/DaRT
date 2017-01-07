@@ -125,6 +125,7 @@
     <Compile Include="Classes\LogItem.cs" />
     <Compile Include="Enums\LogTypes.cs" />
     <Compile Include="Helpers\ColumnSorter.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Windows\GUImanualBans.cs">
       <SubType>Form</SubType>
     </Compile>
