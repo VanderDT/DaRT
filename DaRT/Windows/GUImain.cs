@@ -993,13 +993,13 @@ namespace DaRT
             {
                 try
                 {
-                    String ip = host.Text + ":" + port.Text;
+                    String ip = String.Format("{0}:{1}",host.Text, Int32.Parse(port.Text)+1);
                     String url = String.Format(Settings.Default.bannerUrl, ip);
                     Process.Start(url);
                 }
                 catch(Exception e)
                 {
-                    this.Log("An error occurred, please try again.", LogType.Console, false);
+                    this.Log(Resources.Strings.Error_occ, LogType.Console, false);
                     this.Log(e.Message, LogType.Debug, false);
                     this.Log(e.StackTrace, LogType.Debug, false);
                 }
@@ -1132,7 +1132,7 @@ namespace DaRT
                     filter.Items.Add(Resources.Strings.Comment);
                     filter.SelectedIndex = 0;
 
-                    List<ListViewItem> items = GetPlayersList(filter.SelectedItem.ToString(), search.Text);
+                    List<ListViewItem> items = GetPlayersList(filter.SelectedIndex, search.Text);
                     playerDBList.Items.Clear();
                     playerDBList.Items.AddRange(items.ToArray());
 
@@ -1656,7 +1656,7 @@ namespace DaRT
                     playerDBList.Items.Clear();
                 });
 
-                List<ListViewItem> items = GetPlayersList("","");
+                List<ListViewItem> items = GetPlayersList(-1,"");
 
                 playerDBList.Invoke((MethodInvoker)delegate
                 {
@@ -2432,7 +2432,7 @@ namespace DaRT
             }
         }
 
-        public List<ListViewItem> GetPlayersList(String filter , String searchtext)
+        public List<ListViewItem> GetPlayersList(int filter , String searchtext)
         {
             List<ListViewItem> items = new List<ListViewItem>();
             try
@@ -2441,27 +2441,27 @@ namespace DaRT
 
                 command.CommandText = "SELECT players.id, players.lastip, players.lastseen, players.guid, players.name, players.lastseenon, comments.comment FROM players LEFT JOIN comments ON players.guid = comments.guid ";
 
-                if (searchtext != "")
+                if (filter != -1 && searchtext != "")
                 {
                     searchtext = "%" + searchtext + "%";
                     switch (filter)
                     {
-                        case "Name":
+                        case 0:
                             command.CommandText += "WHERE players.name LIKE(@name) ";
                             command.Parameters.Add(new SqliteParameter("@name", searchtext));
                             break;
 
-                        case "GUID":
+                        case 1:
                             command.CommandText += "WHERE players.guid LIKE(@guid) ";
                             command.Parameters.Add(new SqliteParameter("@guid", searchtext));
                             break;
 
-                        case "IP":
+                        case 2:
                             command.CommandText += "WHERE players.lastip LIKE(@lastip) ";
                             command.Parameters.Add(new SqliteParameter("@lastip", searchtext));
                             break;
 
-                        case "Comment":
+                        case 3:
                             command.CommandText += "WHERE comments.comment LIKE(@comment) ";
                             command.Parameters.Add(new SqliteParameter("@comment", searchtext));
                             break;
@@ -3159,7 +3159,7 @@ namespace DaRT
             #region Player Database
             else if (tabControl.SelectedTab.Name == "playerdatabaseTab")
             {
-                List<ListViewItem> items = GetPlayersList(filter.SelectedItem.ToString(), search.Text);
+                List<ListViewItem> items = GetPlayersList(filter.SelectedIndex, search.Text);
                 playerDBList.ListViewItemSorter = null;
                 playerDBList.Items.Clear();
                 playerDBList.Items.AddRange(items.ToArray());

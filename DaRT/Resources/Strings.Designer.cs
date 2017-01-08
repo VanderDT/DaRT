@@ -61,6 +61,15 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Admin request timed out..
+        /// </summary>
+        internal static string Admin_timeout {
+            get {
+                return ResourceManager.GetString("Admin_timeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Admins: {0}.
         /// </summary>
         internal static string Admins_c {
@@ -115,6 +124,24 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на AutoBan {0} for phrase {1}.
+        /// </summary>
+        internal static string Autoban_for {
+            get {
+                return ResourceManager.GetString("Autoban_for", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на AutoKick {0} for phrase {1}.
+        /// </summary>
+        internal static string Autokick_for {
+            get {
+                return ResourceManager.GetString("Autokick_for", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Ban.
         /// </summary>
         internal static string Ban {
@@ -133,11 +160,38 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Removed Ban!.
+        /// </summary>
+        internal static string Ban_removed {
+            get {
+                return ResourceManager.GetString("Ban_removed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ban request timed out..
+        /// </summary>
+        internal static string Ban_timeout {
+            get {
+                return ResourceManager.GetString("Ban_timeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Ban type.
         /// </summary>
         internal static string Ban_type {
             get {
                 return ResourceManager.GetString("Ban_type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Banned {0} from the server!.
+        /// </summary>
+        internal static string Banned {
+            get {
+                return ResourceManager.GetString("Banned", resourceCulture);
             }
         }
         
@@ -254,6 +308,15 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Connected!.
+        /// </summary>
+        internal static string Connected {
+            get {
+                return ResourceManager.GetString("Connected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Console.
         /// </summary>
         internal static string Console {
@@ -354,11 +417,38 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Connection to server was lost. Attempting to reconnect....
+        /// </summary>
+        internal static string Error_conlost {
+            get {
+                return ResourceManager.GetString("Error_conlost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Failed to connect. Please make sure that you properly set a password in beserver.cfg and the server is running..
+        /// </summary>
+        internal static string Error_connect {
+            get {
+                return ResourceManager.GetString("Error_connect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Comments can&apos;t be assigned to IPs..
         /// </summary>
         internal static string Error_ip_com {
             get {
                 return ResourceManager.GetString("Error_ip_com", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Login invalid!.
+        /// </summary>
+        internal static string Error_login {
+            get {
+                return ResourceManager.GetString("Error_login", resourceCulture);
             }
         }
         
@@ -413,6 +503,15 @@ namespace DaRT.Resources {
         internal static string Error_port {
             get {
                 return ResourceManager.GetString("Error_port", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на It appears that the server went down. Attempting to reconnect....
+        /// </summary>
+        internal static string Error_sdown {
+            get {
+                return ResourceManager.GetString("Error_sdown", resourceCulture);
             }
         }
         
@@ -526,6 +625,15 @@ namespace DaRT.Resources {
         internal static string Kick {
             get {
                 return ResourceManager.GetString("Kick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Kicked {0} from the server!.
+        /// </summary>
+        internal static string Kicked {
+            get {
+                return ResourceManager.GetString("Kicked", resourceCulture);
             }
         }
         
@@ -666,6 +774,15 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Player request timed out..
+        /// </summary>
+        internal static string Player_timeout {
+            get {
+                return ResourceManager.GetString("Player_timeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Players.
         /// </summary>
         internal static string Players {
@@ -734,6 +851,15 @@ namespace DaRT.Resources {
         internal static string Recon {
             get {
                 return ResourceManager.GetString("Recon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Reconnected!.
+        /// </summary>
+        internal static string Reconnected {
+            get {
+                return ResourceManager.GetString("Reconnected", resourceCulture);
             }
         }
         
@@ -842,6 +968,60 @@ namespace DaRT.Resources {
         internal static string Send {
             get {
                 return ResourceManager.GetString("Send", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Server is now locked!.
+        /// </summary>
+        internal static string Server_locked {
+            get {
+                return ResourceManager.GetString("Server_locked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Reloaded Bans!.
+        /// </summary>
+        internal static string Server_relbans {
+            get {
+                return ResourceManager.GetString("Server_relbans", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Reloaded Events!.
+        /// </summary>
+        internal static string Server_relevent {
+            get {
+                return ResourceManager.GetString("Server_relevent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Reloaded Scripts!.
+        /// </summary>
+        internal static string Server_relscripts {
+            get {
+                return ResourceManager.GetString("Server_relscripts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Server is shutting down!.
+        /// </summary>
+        internal static string Server_shutdown {
+            get {
+                return ResourceManager.GetString("Server_shutdown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Server is now unlocked.
+        /// </summary>
+        internal static string Server_unlocked {
+            get {
+                return ResourceManager.GetString("Server_unlocked", resourceCulture);
             }
         }
         

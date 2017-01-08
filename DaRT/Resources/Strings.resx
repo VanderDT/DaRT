@@ -271,11 +271,29 @@ Press OK to ban him offline (GUID only) instead.</value>
   <data name="Unban" xml:space="preserve">
     <value>Unban</value>
   </data>
+  <data name="Admin_timeout" xml:space="preserve">
+    <value>Admin request timed out.</value>
+  </data>
   <data name="Apply" xml:space="preserve">
     <value>Apply</value>
   </data>
+  <data name="Autoban_for" xml:space="preserve">
+    <value>AutoBan {0} for phrase {1}</value>
+  </data>
+  <data name="Autokick_for" xml:space="preserve">
+    <value>AutoKick {0} for phrase {1}</value>
+  </data>
+  <data name="Banned" xml:space="preserve">
+    <value>Banned {0} from the server!</value>
+  </data>
   <data name="Bans_timeout" xml:space="preserve">
     <value>Ban request timed out!</value>
+  </data>
+  <data name="Ban_removed" xml:space="preserve">
+    <value>Removed Ban!</value>
+  </data>
+  <data name="Ban_timeout" xml:space="preserve">
+    <value>Ban request timed out.</value>
   </data>
   <data name="Big_banlist" xml:space="preserve">
     <value>It appears you are using a pretty big ban list.
@@ -290,6 +308,9 @@ You can find more informations (including a setup guide) about BRS on the DaRT d
   <data name="Conn" xml:space="preserve">
     <value>Connecting to {0}:{1}...</value>
   </data>
+  <data name="Connected" xml:space="preserve">
+    <value>Connected!</value>
+  </data>
   <data name="Deleted" xml:space="preserve">
     <value>Entry {0} was removed</value>
   </data>
@@ -303,8 +324,17 @@ You can find more informations (including a setup guide) about BRS on the DaRT d
   <data name="Error_brs" xml:space="preserve">
     <value>This server is not running BRS or the server configuration is faulty!</value>
   </data>
+  <data name="Error_conlost" xml:space="preserve">
+    <value>Connection to server was lost. Attempting to reconnect...</value>
+  </data>
+  <data name="Error_connect" xml:space="preserve">
+    <value>Failed to connect. Please make sure that you properly set a password in beserver.cfg and the server is running.</value>
+  </data>
   <data name="Error_ip_com" xml:space="preserve">
     <value>Comments can't be assigned to IPs.</value>
+  </data>
+  <data name="Error_login" xml:space="preserve">
+    <value>Login invalid!</value>
   </data>
   <data name="Error_news" xml:space="preserve">
     <value>Could not retrieve news!</value>
@@ -323,6 +353,9 @@ You can find more informations (including a setup guide) about BRS on the DaRT d
   </data>
   <data name="Error_port" xml:space="preserve">
     <value>Please enter a valid port!</value>
+  </data>
+  <data name="Error_sdown" xml:space="preserve">
+    <value>It appears that the server went down. Attempting to reconnect...</value>
   </data>
   <data name="Error_sel_host" xml:space="preserve">
     <value>Please select a host first.</value>
@@ -353,6 +386,9 @@ Please continue to start the migration process.
   <data name="Hosts_note" xml:space="preserve">
     <value>All hosts you ever connected to are listed below</value>
   </data>
+  <data name="Kicked" xml:space="preserve">
+    <value>Kicked {0} from the server!</value>
+  </data>
   <data name="Lock_server" xml:space="preserve">
     <value>Lock server</value>
   </data>
@@ -365,11 +401,17 @@ Please continue to start the migration process.
   <data name="Players_timeout" xml:space="preserve">
     <value>Player request timed out!</value>
   </data>
+  <data name="Player_timeout" xml:space="preserve">
+    <value>Player request timed out.</value>
+  </data>
   <data name="Quick_reason" xml:space="preserve">
     <value>Banned for {0} minute(s).</value>
   </data>
   <data name="Recon" xml:space="preserve">
     <value>Reconnecting...</value>
+  </data>
+  <data name="Reconnected" xml:space="preserve">
+    <value>Reconnected!</value>
   </data>
   <data name="Refr_bans" xml:space="preserve">
     <value>Refreshing bans...</value>
@@ -394,6 +436,24 @@ Please continue to start the migration process.
   </data>
   <data name="Send" xml:space="preserve">
     <value>Send</value>
+  </data>
+  <data name="Server_locked" xml:space="preserve">
+    <value>Server is now locked!</value>
+  </data>
+  <data name="Server_relbans" xml:space="preserve">
+    <value>Reloaded Bans!</value>
+  </data>
+  <data name="Server_relevent" xml:space="preserve">
+    <value>Reloaded Events!</value>
+  </data>
+  <data name="Server_relscripts" xml:space="preserve">
+    <value>Reloaded Scripts!</value>
+  </data>
+  <data name="Server_shutdown" xml:space="preserve">
+    <value>Server is shutting down!</value>
+  </data>
+  <data name="Server_unlocked" xml:space="preserve">
+    <value>Server is now unlocked</value>
   </data>
   <data name="Shutdown" xml:space="preserve">
     <value>Shutdown</value>

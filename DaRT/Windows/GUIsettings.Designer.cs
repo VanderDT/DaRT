@@ -107,6 +107,11 @@
             this.showPublicVariableValLog = new System.Windows.Forms.CheckBox();
             this.showDeleteVehicleLog = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.autoBan = new System.Windows.Forms.TextBox();
+            this.autoKick = new System.Windows.Forms.TextBox();
+            this.autoBans = new System.Windows.Forms.CheckBox();
+            this.autoKicks = new System.Windows.Forms.CheckBox();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.dart = new System.Windows.Forms.LinkLabel();
             this.label19 = new System.Windows.Forms.Label();
@@ -117,17 +122,12 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.autoKicks = new System.Windows.Forms.CheckBox();
-            this.autoBans = new System.Windows.Forms.CheckBox();
-            this.autoKick = new System.Windows.Forms.TextBox();
-            this.autoBan = new System.Windows.Forms.TextBox();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            this.tabPage5.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -980,6 +980,57 @@
             this.label10.TabIndex = 33;
             this.label10.Text = "Server filters";
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.autoBan);
+            this.tabPage4.Controls.Add(this.autoKick);
+            this.tabPage4.Controls.Add(this.autoBans);
+            this.tabPage4.Controls.Add(this.autoKicks);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(495, 298);
+            this.tabPage4.TabIndex = 4;
+            this.tabPage4.Text = "Automate";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // autoBan
+            // 
+            this.autoBan.Location = new System.Drawing.Point(251, 37);
+            this.autoBan.Multiline = true;
+            this.autoBan.Name = "autoBan";
+            this.autoBan.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.autoBan.Size = new System.Drawing.Size(241, 258);
+            this.autoBan.TabIndex = 3;
+            // 
+            // autoKick
+            // 
+            this.autoKick.Location = new System.Drawing.Point(3, 37);
+            this.autoKick.Multiline = true;
+            this.autoKick.Name = "autoKick";
+            this.autoKick.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.autoKick.Size = new System.Drawing.Size(242, 258);
+            this.autoKick.TabIndex = 2;
+            // 
+            // autoBans
+            // 
+            this.autoBans.AutoSize = true;
+            this.autoBans.Location = new System.Drawing.Point(251, 14);
+            this.autoBans.Name = "autoBans";
+            this.autoBans.Size = new System.Drawing.Size(131, 17);
+            this.autoBans.TabIndex = 1;
+            this.autoBans.Text = "Autoban for messages";
+            this.autoBans.UseVisualStyleBackColor = true;
+            // 
+            // autoKicks
+            // 
+            this.autoKicks.AutoSize = true;
+            this.autoKicks.Location = new System.Drawing.Point(8, 14);
+            this.autoKicks.Name = "autoKicks";
+            this.autoKicks.Size = new System.Drawing.Size(133, 17);
+            this.autoKicks.TabIndex = 0;
+            this.autoKicks.Text = "Autokick for messages";
+            this.autoKicks.UseVisualStyleBackColor = true;
+            // 
             // tabPage5
             // 
             this.tabPage5.Controls.Add(this.dart);
@@ -1065,7 +1116,7 @@
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(354, 148);
+            this.label18.Location = new System.Drawing.Point(354, 170);
             this.label18.Margin = new System.Windows.Forms.Padding(10);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(96, 13);
@@ -1076,7 +1127,7 @@
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(9, 104);
+            this.label17.Location = new System.Drawing.Point(9, 124);
             this.label17.Margin = new System.Windows.Forms.Padding(10);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(454, 50);
@@ -1090,7 +1141,7 @@
             this.label16.Location = new System.Drawing.Point(15, 10);
             this.label16.Margin = new System.Windows.Forms.Padding(10);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(423, 91);
+            this.label16.Size = new System.Drawing.Size(423, 104);
             this.label16.TabIndex = 35;
             this.label16.Text = resources.GetString("label16.Text");
             // 
@@ -1098,63 +1149,12 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(15, 194);
+            this.label15.Location = new System.Drawing.Point(10, 194);
             this.label15.Margin = new System.Windows.Forms.Padding(10);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(329, 52);
             this.label15.TabIndex = 34;
             this.label15.Text = resources.GetString("label15.Text");
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.autoBan);
-            this.tabPage4.Controls.Add(this.autoKick);
-            this.tabPage4.Controls.Add(this.autoBans);
-            this.tabPage4.Controls.Add(this.autoKicks);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(495, 298);
-            this.tabPage4.TabIndex = 4;
-            this.tabPage4.Text = "Automate";
-            this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // autoKicks
-            // 
-            this.autoKicks.AutoSize = true;
-            this.autoKicks.Location = new System.Drawing.Point(8, 14);
-            this.autoKicks.Name = "autoKicks";
-            this.autoKicks.Size = new System.Drawing.Size(133, 17);
-            this.autoKicks.TabIndex = 0;
-            this.autoKicks.Text = "Autokick for messages";
-            this.autoKicks.UseVisualStyleBackColor = true;
-            // 
-            // autoBans
-            // 
-            this.autoBans.AutoSize = true;
-            this.autoBans.Location = new System.Drawing.Point(251, 14);
-            this.autoBans.Name = "autoBans";
-            this.autoBans.Size = new System.Drawing.Size(131, 17);
-            this.autoBans.TabIndex = 1;
-            this.autoBans.Text = "Autoban for messages";
-            this.autoBans.UseVisualStyleBackColor = true;
-            // 
-            // autoKick
-            // 
-            this.autoKick.Location = new System.Drawing.Point(3, 37);
-            this.autoKick.Multiline = true;
-            this.autoKick.Name = "autoKick";
-            this.autoKick.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.autoKick.Size = new System.Drawing.Size(242, 258);
-            this.autoKick.TabIndex = 2;
-            // 
-            // autoBan
-            // 
-            this.autoBan.Location = new System.Drawing.Point(251, 37);
-            this.autoBan.Multiline = true;
-            this.autoBan.Name = "autoBan";
-            this.autoBan.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.autoBan.Size = new System.Drawing.Size(241, 258);
-            this.autoBan.TabIndex = 3;
             // 
             // GUIsettings
             // 
@@ -1176,10 +1176,10 @@
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            this.tabPage5.ResumeLayout(false);
-            this.tabPage5.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
             this.ResumeLayout(false);
 
         }

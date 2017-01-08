@@ -119,7 +119,8 @@
   </resheader>
   <data name="label16.Text" xml:space="preserve">
     <value>DaRT (DayZ RCon Tool) was developed by Perfler Dominik (github.com/DomiStyle)
-in 2012 as response to the lack of proper RCon applications for DayZ servers
+in 2012 and translation and improve by Alexander (github.com/NeiroNx) in 2017
+as response to the lack of proper RCon applications for DayZ servers
 at that given time.
 
 This overhauled version is provided as a community service and thank you

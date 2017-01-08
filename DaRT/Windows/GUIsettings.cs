@@ -241,7 +241,7 @@ namespace DaRT
 
         private void dart_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://github.com/DomiStyle/DaRT");
+            Process.Start("https://github.com/NeiroNx/DaRT");
         }
         private void battlenet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

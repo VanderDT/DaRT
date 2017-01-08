@@ -162,85 +162,12 @@ namespace DaRT
             _hilight = strArray;
 
         }
-
         public void Disconnect()
         {
             _client.Disconnect();
             _initialized = false;
         }
 
-        public List<String> getRawBans()
-        {
-            return null;
-            /*
-            List<String> bans = new List<String>();
-
-            bool gotBans = false;
-            bool bansValid = true;
-            bool abort = false;
-            int counter = 0;
-            int requestCounter = 1;
-
-            do
-            {
-                gotBans = false;
-                bansValid = true;
-                abort = false;
-                requestCounter = 1;
-
-                bans.Clear();
-
-                counter++;
-
-                while (!gotBans)
-                {
-                    _client.SendCommand("bans");
-
-                    Thread.Sleep(500 * requestCounter);
-
-                    if (banResult == null)
-                        gotBans = false;
-                    else
-                        gotBans = true;
-
-                    if (requestCounter >= 5 && !gotBans)
-                    {
-                        if (_form != null) _form.Log("Ban request timed out! (Server didn't respond)");
-                        bans.Clear();
-                        return bans;
-                    }
-                    requestCounter++;
-                }
-
-                StringReader reader = new StringReader(banResult);
-
-                String line;
-                while ((line = reader.ReadLine()) != null && !abort)
-                {
-                    bans.Add(line);
-                }
-                bansValid = true;
-
-                reader.Dispose();
-                reader.Close();
-                gotBans = false;
-                banResult = null;
-            } while (!bansValid && counter < 3 && !abort);
-            if (counter == 3)
-            {
-                bans.Clear();
-                if (_form != null) _form.Log("Ban request timed out! (Data invalid)");
-                return bans;
-            }
-            else
-            {
-                if (bansValid)
-                    return bans;
-                else
-                    return bans;
-            }
-            */
-        }
         public List<Player> getPlayers()
         {
 
@@ -258,14 +185,13 @@ namespace DaRT
             {
                 if(_players.Count > 0) return _players;
                 if (!_reconnecting)
-                    _form.Log("Player request timed out.", LogType.Console, false);
+                    _form.Log(Resources.Strings.Player_timeout, LogType.Console, false);
                 return _players;
             }
             this.parsePlayers(response);
 
             return _players;
         }
-
         public List<Ban> getBans()
         {
             int id = this.Send(BattlEyeCommand.Bans);
@@ -282,78 +208,11 @@ namespace DaRT
             {
                 if (_bans.Count > 0) return _bans;
                 if (!_reconnecting)
-                    _form.Log("Ban request timed out.", LogType.Console, false);
+                    _form.Log(Resources.Strings.Ban_timeout, LogType.Console, false);
                 return _bans;
             }
             this.parseBans(response);
             return _bans;
-        }
-
-        public List<String> getRawPlayers()
-        {
-            return null;
-            /*
-            List<String> players = new List<String>();
-
-            bool gotPlayers = false;
-            bool playersValid = true;
-            int counter = 0;
-            int requestCounter = 1;
-
-            do
-            {
-                gotPlayers = false;
-                playersValid = true;
-                requestCounter = 1;
-
-                players.Clear();
-
-                counter++;
-
-                while (!gotPlayers)
-                {
-                    _client.SendCommand(BattlEyeCommand.Players);
-
-                    Thread.Sleep(500 * requestCounter);
-
-                    if (playerResult == null)
-                        gotPlayers = false;
-                    else
-                        gotPlayers = true;
-
-                    if (requestCounter >= 5 && !gotPlayers)
-                    {
-                        if (_form != null) _form.Log("Player request timed out! (Server didn't respond)");
-                        players.Clear();
-                        return players;
-                    }
-                    requestCounter++;
-                }
-
-                StringReader reader = new StringReader(playerResult);
-
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    players.Add(line);
-                }
-                playersValid = true;
-
-                reader.Dispose();
-                reader.Close();
-                gotPlayers = false;
-                playerResult = null;
-            } while (!playersValid);
-
-            if (playersValid)
-                return players;
-            else
-            {
-                players.Clear();
-                if (_form != null) _form.Log("Player request timed out! (Data invalid)");
-                return players;
-            }
-            */
         }
         public List<String> getAdmins()
         {
@@ -371,7 +230,7 @@ namespace DaRT
             if (response == null)
             {
                 if (!_reconnecting)
-                    _form.Log("Admin request timed out.", LogType.Console, false);
+                    _form.Log(Resources.Strings.Admin_timeout, LogType.Console, false);
                 return _admins;
             }
 
@@ -380,41 +239,6 @@ namespace DaRT
             return _admins;
         }
 
-        public List<String> getRawAdmins()
-        {
-            return null;
-            /*
-            bool gotAdmins = false;
-
-            while (!gotAdmins)
-            {
-                _client.SendCommand("admins");
-
-                Thread.Sleep(500);
-
-                if (adminResult == null)
-                    gotAdmins = false;
-                else
-                    gotAdmins = true;
-            }
-
-            StringReader reader = new StringReader(adminResult);
-
-            List<String> admins = new List<String>();
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                admins.Add(line);
-            }
-
-            reader.Dispose();
-            reader.Close();
-            gotAdmins = false;
-            adminResult = null;
-
-            return admins;
-            */
-        }
         private void parseAdmins(String message)
         {
             StringReader reader = new StringReader(message);
@@ -427,7 +251,6 @@ namespace DaRT
                 if(row.Count() >= 2 && int.TryParse(row[0],out id))_admins.Add(row[1]);
             }
         }
-
         private void parsePlayers(String response)
         {
             _players.Clear();
@@ -473,7 +296,6 @@ namespace DaRT
                 }
             }
         }
-
         public void parseBans(String response)
         {
             _bans.Clear();
@@ -534,7 +356,7 @@ namespace DaRT
                 bool found = false;
                 try
                 {
-                    found = new System.Text.RegularExpressions.Regex(item.ToLower()).IsMatch(message.ToLower());
+                    found = item.Length > 3 && new System.Text.RegularExpressions.Regex(item.ToLower()).IsMatch(message.ToLower());
                 }
                 catch
                 {
@@ -552,14 +374,14 @@ namespace DaRT
                     {
                         if (ban)
                         {
-                            _form.Log(String.Format("AutoBan {0} for {1}" ,player.name ,item), LogType.Console, true);
-                            Ban _ban = new Ban(player.number, player.name, player.guid, "", -1, String.Format("AutoBanned for {0}",item) , true);
+                            _form.Log(String.Format(Resources.Strings.Autoban_for ,player.name ,item), LogType.Console, true);
+                            Ban _ban = new Ban(player.number, player.name, player.guid, "", -1, String.Format(Resources.Strings.Autoban_for,"",item) , true);
                             this.Ban(_ban);
                         }
                         else
                         {
-                            _form.Log(String.Format("AutoKick {0} for {1}",player.name,item), LogType.Console, true);
-                            Kick _kick = new Kick(player.number, player.name, String.Format("AutoKick for {0}",item));
+                            _form.Log(String.Format(Resources.Strings.Autokick_for,player.name,item), LogType.Console, true);
+                            Kick _kick = new Kick(player.number, player.name, String.Format(Resources.Strings.Autokick_for,"",item));
                             this.kick(_kick);
                         }
                     }
@@ -573,32 +395,32 @@ namespace DaRT
         public void scripts()
         {
             _client.SendCommand("loadScripts");
-            if(_form != null) _form.Log("Reloaded Scripts!", LogType.Console, false);
+            if(_form != null) _form.Log(Resources.Strings.Server_relscripts, LogType.Console, false);
         }
         public void bans()
         {
             _client.SendCommand("loadBans");
-            if(_form != null) _form.Log("Reloaded Bans!", LogType.Console, false);
+            if(_form != null) _form.Log(Resources.Strings.Server_relbans, LogType.Console, false);
         } 
         public void events()
         {
             _client.SendCommand("loadEvents");
-            if(_form != null) _form.Log("Reloaded Events!", LogType.Console, false);
+            if(_form != null) _form.Log(Resources.Strings.Server_relevent, LogType.Console, false);
         }
         public void lockServer()
         {
             _client.SendCommand("#lock");
-            if(_form != null) _form.Log("Server is now locked!", LogType.Console, false);
+            if(_form != null) _form.Log(Resources.Strings.Server_locked, LogType.Console, false);
         }
         public void unlockServer()
         {
             _client.SendCommand("#unlock");
-            if (_form != null) _form.Log("Server is now unlocked", LogType.Console, false);
+            if (_form != null) _form.Log(Resources.Strings.Server_unlocked, LogType.Console, false);
         }
         public void shutdown()
         {
             _client.SendCommand("#shutdown");
-            if (_form != null) _form.Log("Server is shutting down!", LogType.Console, false);
+            if (_form != null) _form.Log(Resources.Strings.Server_shutdown, LogType.Console, false);
         }
         public void execute(String command)
         {
@@ -628,7 +450,7 @@ namespace DaRT
                 name = "[" + Settings.Default.name + "] ";
 
             _client.SendCommand(BattlEyeCommand.Kick, kick.id + " " + name + kick.reason);
-            if (_form != null) _form.Log("Kicked " + kick.name + " from the server!", LogType.Console, false);
+            if (_form != null) _form.Log(String.Format(Resources.Strings.Kicked, kick.name), LogType.Console, false);
         }
         public void Execute(string command)
         {
@@ -652,36 +474,36 @@ namespace DaRT
                 else if (!string.IsNullOrEmpty(ban.IP))
                     _client.SendCommand(string.Format("banIP {0} {1} {2}", ban.ID, ban.Duration, name + ban.Reason));
 
-                if (_form != null) _form.Log("Banned " + ban.Name + " from the server!", LogType.Console, false);
+                if (_form != null) _form.Log(String.Format(Resources.Strings.Banned, ban.Name), LogType.Console, false);
             }
             else
             {
                 _client.SendCommand(string.Format("addBan {0} {1} {2}", ban.GUID, ban.Duration, name + ban.Reason));
 
-                if (_form != null) _form.Log("Banned " + ban.Name + " from the server! (Offline)", LogType.Console, false);
+                if (_form != null) _form.Log(String.Format(Resources.Strings.Banned ,ban.Name), LogType.Console, false);
             }
         }
         public void banIP(BanIP ban)
         {
             _client.SendCommand("banIP " + ban.id + " " + ban.duration + " " + ban.reason);
-            if (_form != null) _form.Log("Banned " + ban.name + " from the server! (IP)", LogType.Console, false);
+            if (_form != null) _form.Log(String.Format(Resources.Strings.Banned, ban.name), LogType.Console, false);
         }
         public void banOffline(BanOffline ban)
         {
             _client.SendCommand("addBan " + ban.guid + " " + ban.duration + " " + ban.reason);
             if (ban.name != "")
             {
-                if (_form != null) _form.Log("Banned " + ban.name + " from the server! (GUID)", LogType.Console, false);
+                if (_form != null) _form.Log(String.Format(Resources.Strings.Banned, ban.name), LogType.Console, false);
             }
             else
             {
-                if (_form != null) _form.Log("Banned " + ban.guid + " from the server! (GUID)", LogType.Console, false);
+                if (_form != null) _form.Log(String.Format(Resources.Strings.Banned, ban.guid), LogType.Console, false);
             }
         }
         public void unban(String id)
         {
             _client.SendCommand("removeBan " + id);
-            if (_form != null) _form.Log("Removed Ban!", LogType.Console, false);
+            if (_form != null) _form.Log(Resources.Strings.Ban_removed, LogType.Console, false);
         }
 
         private void HandleMessage(BattlEyeMessageEventArgs args)
@@ -922,23 +744,23 @@ namespace DaRT
                     if (Settings.Default.showConnectMessages && _form != null)
                     {
                         if (!_reconnecting && _form.connect.Enabled == true)
-                            _form.Log("Connected!", LogType.Console, false);
+                            _form.Log(Resources.Strings.Connected, LogType.Console, false);
                         else
-                            _form.Log("Reconnected!", LogType.Console, false);
+                            _form.Log(Resources.Strings.Reconnected, LogType.Console, false);
                     }
                     _error = false;
                     break;
                 case BattlEyeConnectionResult.InvalidLogin:
-                    if (_form != null) _form.Log("Login invalid!", LogType.Console, false);
+                    if (_form != null) _form.Log(Resources.Strings.Error_login, LogType.Console, false);
                     _error = true;
                     break;
                 case BattlEyeConnectionResult.ConnectionFailed:
                     if (_form.connect.Enabled)
-                        if (_form != null) _form.Log("Failed to connect. Please make sure that you properly set a password in beserver.cfg and the server is running.", LogType.Console, false);
+                        if (_form != null) _form.Log(Resources.Strings.Error_connect, LogType.Console, false);
                     _error = true;
                     break;
                 default:
-                    if (_form != null) _form.Log("Unknown error.", LogType.Console, false);
+                    if (_form != null) _form.Log(Resources.Strings.Error_occ, LogType.Console, false);
                     _error = true;
                     break;
             }
@@ -950,7 +772,7 @@ namespace DaRT
                 case BattlEyeDisconnectionType.ConnectionLost:
                     if (!_reconnecting)
                     {
-                        if (_form != null) _form.Log("Connection to server was lost. Attempting to reconnect...", LogType.Console, false);
+                        if (_form != null) _form.Log(Resources.Strings.Error_conlost, LogType.Console, false);
                         this.Reconnect();
                     }
                     break;
@@ -961,19 +783,19 @@ namespace DaRT
                 case BattlEyeDisconnectionType.SocketException:
                     if (_form.connect.Enabled)
                     {
-                        if (_form != null) _form.Log("Host invalid!", LogType.Console, false);
+                        if (_form != null) _form.Log(Resources.Strings.Error_sel_host, LogType.Console, false);
                     }
                     else
                     {
                         if (!_reconnecting)
                         {
-                            if (_form != null) _form.Log("It appears that the server went down. Attempting to reconnect...", LogType.Console, false);
+                            if (_form != null) _form.Log(Resources.Strings.Error_sdown, LogType.Console, false);
                             this.Reconnect();
                         }
                     }
                     break;
                 default:
-                    if (_form != null) _form.Log("Unknown error.", LogType.Console, false);
+                    if (_form != null) _form.Log(Resources.Strings.Error_occ, LogType.Console, false);
                     break;
             }
         }

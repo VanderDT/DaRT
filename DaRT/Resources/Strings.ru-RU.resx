@@ -271,11 +271,29 @@
   <data name="Unban" xml:space="preserve">
     <value>Разбан</value>
   </data>
+  <data name="Admin_timeout" xml:space="preserve">
+    <value>Время ожидания списка админов истекло!</value>
+  </data>
   <data name="Apply" xml:space="preserve">
     <value>Применить</value>
   </data>
+  <data name="Autoban_for" xml:space="preserve">
+    <value>АвтоБан {0} за фразу {1}</value>
+  </data>
+  <data name="Autokick_for" xml:space="preserve">
+    <value>АвтоКик {0} за фразу {1}</value>
+  </data>
+  <data name="Banned" xml:space="preserve">
+    <value>Забанен {0} на сервере!</value>
+  </data>
   <data name="Bans_timeout" xml:space="preserve">
     <value>Время ожидания списка банов истекло.</value>
+  </data>
+  <data name="Ban_removed" xml:space="preserve">
+    <value>Бан удален!</value>
+  </data>
+  <data name="Ban_timeout" xml:space="preserve">
+    <value>Время ожидания списка банов истекло!</value>
   </data>
   <data name="Big_banlist" xml:space="preserve">
     <value>Это появляется если у вас очень большой банлист.
@@ -290,6 +308,9 @@
   <data name="Conn" xml:space="preserve">
     <value>Подключение к {0}:{1}...</value>
   </data>
+  <data name="Connected" xml:space="preserve">
+    <value>Подключились!</value>
+  </data>
   <data name="Deleted" xml:space="preserve">
     <value>Игрок {0} удален из базы.</value>
   </data>
@@ -303,8 +324,17 @@
   <data name="Error_brs" xml:space="preserve">
     <value>На сервере не установлен BRS или его настройки не корректны!</value>
   </data>
+  <data name="Error_conlost" xml:space="preserve">
+    <value>Соединение с сервером потеряно. Пытаемся переподключиться...</value>
+  </data>
+  <data name="Error_connect" xml:space="preserve">
+    <value>Не удалось подключиться. Проверьте правильность пароля в beserver.cfg и работу самого сервера.</value>
+  </data>
   <data name="Error_ip_com" xml:space="preserve">
     <value>Коментировать IP адреса нельзя</value>
+  </data>
+  <data name="Error_login" xml:space="preserve">
+    <value>Неверные параметры авторизации!</value>
   </data>
   <data name="Error_news" xml:space="preserve">
     <value>Получить новости не удалось</value>
@@ -323,6 +353,9 @@
   </data>
   <data name="Error_port" xml:space="preserve">
     <value>Введите правильный порт!</value>
+  </data>
+  <data name="Error_sdown" xml:space="preserve">
+    <value>Это появляется когда сервер перезапускается. Сейчас переподключимся...</value>
   </data>
   <data name="Error_sel_host" xml:space="preserve">
     <value>Сначала выберите хост.</value>
@@ -353,6 +386,9 @@ DaRT нашол существующую базу и будет пытаться
   <data name="Hosts_note" xml:space="preserve">
     <value>Все хосты к которым вы подключались представленны ниже</value>
   </data>
+  <data name="Kicked" xml:space="preserve">
+    <value>Кикнут {0} c сервера!</value>
+  </data>
   <data name="Lock_server" xml:space="preserve">
     <value>Запаролить сервер</value>
   </data>
@@ -365,11 +401,17 @@ DaRT нашол существующую базу и будет пытаться
   <data name="Players_timeout" xml:space="preserve">
     <value>Превышено время ожидания списка игроков.</value>
   </data>
+  <data name="Player_timeout" xml:space="preserve">
+    <value>Время ожидания списка игроков истекло!</value>
+  </data>
   <data name="Quick_reason" xml:space="preserve">
     <value>Забанен на {0} мин.</value>
   </data>
   <data name="Recon" xml:space="preserve">
     <value>Переподключаю...</value>
+  </data>
+  <data name="Reconnected" xml:space="preserve">
+    <value>Переподключились!</value>
   </data>
   <data name="Refr_bans" xml:space="preserve">
     <value>Обновление списка банов ...</value>
@@ -394,6 +436,24 @@ DaRT нашол существующую базу и будет пытаться
   </data>
   <data name="Send" xml:space="preserve">
     <value>Отправить</value>
+  </data>
+  <data name="Server_locked" xml:space="preserve">
+    <value>Сервер заблокирован!</value>
+  </data>
+  <data name="Server_relbans" xml:space="preserve">
+    <value>Перезагруженны баны на сервере!</value>
+  </data>
+  <data name="Server_relevent" xml:space="preserve">
+    <value>Перезагруженны эвенты на сервере!</value>
+  </data>
+  <data name="Server_relscripts" xml:space="preserve">
+    <value>Перезагруженны скрипты на сервере!</value>
+  </data>
+  <data name="Server_shutdown" xml:space="preserve">
+    <value>Сервер выключается!</value>
+  </data>
+  <data name="Server_unlocked" xml:space="preserve">
+    <value>Сервер разблокирован для входа!</value>
   </data>
   <data name="Shutdown" xml:space="preserve">
     <value>Выключить</value>
