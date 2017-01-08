@@ -290,11 +290,30 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Entry {0} was removed.
+        /// </summary>
+        internal static string Deleted {
+            get {
+                return ResourceManager.GetString("Deleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Disconnect.
         /// </summary>
         internal static string Disconnect {
             get {
                 return ResourceManager.GetString("Disconnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на  
+        ///(Click to download update).
+        /// </summary>
+        internal static string Down_upd {
+            get {
+                return ResourceManager.GetString("Down_upd", resourceCulture);
             }
         }
         
@@ -331,6 +350,15 @@ namespace DaRT.Resources {
         internal static string Error_brs {
             get {
                 return ResourceManager.GetString("Error_brs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Comments can&apos;t be assigned to IPs..
+        /// </summary>
+        internal static string Error_ip_com {
+            get {
+                return ResourceManager.GetString("Error_ip_com", resourceCulture);
             }
         }
         
@@ -403,6 +431,15 @@ namespace DaRT.Resources {
         internal static string Execute {
             get {
                 return ResourceManager.GetString("Execute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на All expired bans were removed from the ban list..
+        /// </summary>
+        internal static string Expired_removed {
+            get {
+                return ResourceManager.GetString("Expired_removed", resourceCulture);
             }
         }
         
@@ -670,6 +707,15 @@ namespace DaRT.Resources {
         internal static string Quick_Ban {
             get {
                 return ResourceManager.GetString("Quick_Ban", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Banned for {0} minute(s)..
+        /// </summary>
+        internal static string Quick_reason {
+            get {
+                return ResourceManager.GetString("Quick_reason", resourceCulture);
             }
         }
         

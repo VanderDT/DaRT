@@ -290,11 +290,21 @@ You can find more informations (including a setup guide) about BRS on the DaRT d
   <data name="Conn" xml:space="preserve">
     <value>Connecting to {0}:{1}...</value>
   </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>Entry {0} was removed</value>
+  </data>
+  <data name="Down_upd" xml:space="preserve">
+    <value> 
+(Click to download update)</value>
+  </data>
   <data name="Error_banner" xml:space="preserve">
     <value>Unable to get banner</value>
   </data>
   <data name="Error_brs" xml:space="preserve">
     <value>This server is not running BRS or the server configuration is faulty!</value>
+  </data>
+  <data name="Error_ip_com" xml:space="preserve">
+    <value>Comments can't be assigned to IPs.</value>
   </data>
   <data name="Error_news" xml:space="preserve">
     <value>Could not retrieve news!</value>
@@ -316,6 +326,9 @@ You can find more informations (including a setup guide) about BRS on the DaRT d
   </data>
   <data name="Error_sel_host" xml:space="preserve">
     <value>Please select a host first.</value>
+  </data>
+  <data name="Expired_removed" xml:space="preserve">
+    <value>All expired bans were removed from the ban list.</value>
   </data>
   <data name="First_run" xml:space="preserve">
     <value>This appears to be the first start of the new version of DaRT.
@@ -351,6 +364,9 @@ Please continue to start the migration process.
   </data>
   <data name="Players_timeout" xml:space="preserve">
     <value>Player request timed out!</value>
+  </data>
+  <data name="Quick_reason" xml:space="preserve">
+    <value>Banned for {0} minute(s).</value>
   </data>
   <data name="Recon" xml:space="preserve">
     <value>Reconnecting...</value>

@@ -290,11 +290,21 @@
   <data name="Conn" xml:space="preserve">
     <value>Подключение к {0}:{1}...</value>
   </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>Игрок {0} удален из базы.</value>
+  </data>
+  <data name="Down_upd" xml:space="preserve">
+    <value> 
+(Нажмите для скачивания)</value>
+  </data>
   <data name="Error_banner" xml:space="preserve">
     <value>Получить банер не удалось</value>
   </data>
   <data name="Error_brs" xml:space="preserve">
     <value>На сервере не установлен BRS или его настройки не корректны!</value>
+  </data>
+  <data name="Error_ip_com" xml:space="preserve">
+    <value>Коментировать IP адреса нельзя</value>
   </data>
   <data name="Error_news" xml:space="preserve">
     <value>Получить новости не удалось</value>
@@ -316,6 +326,9 @@
   </data>
   <data name="Error_sel_host" xml:space="preserve">
     <value>Сначала выберите хост.</value>
+  </data>
+  <data name="Expired_removed" xml:space="preserve">
+    <value>Все истекшие баны были удалены из списка.</value>
   </data>
   <data name="First_run" xml:space="preserve">
     <value>Это сообщение появляется при первом запуске новой версии DaRT.
@@ -351,6 +364,9 @@ DaRT нашол существующую базу и будет пытаться
   </data>
   <data name="Players_timeout" xml:space="preserve">
     <value>Превышено время ожидания списка игроков.</value>
+  </data>
+  <data name="Quick_reason" xml:space="preserve">
+    <value>Забанен на {0} мин.</value>
   </data>
   <data name="Recon" xml:space="preserve">
     <value>Переподключаю...</value>

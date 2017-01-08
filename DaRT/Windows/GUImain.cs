@@ -495,7 +495,7 @@ namespace DaRT
             setPlayerCount(0);
             setAdminCount(0);
             setBanCount(0);
-            banner.Image = GetImage("Please connect to a server...");
+            banner.Image = GetImage(Resources.Strings.Error_nocon);
 
             this.Log("Disconnected.", LogType.Console, false);
 
@@ -538,7 +538,7 @@ namespace DaRT
                     }
                     else
                     {
-                        this.Log("Comments can't be assigned to IPs.", LogType.Console, false);
+                        this.Log(Resources.Strings.Error_ip_com, LogType.Console, false);
                         return;
                     }
                 }
@@ -552,7 +552,7 @@ namespace DaRT
             }
             catch(Exception e)
             {
-                this.Log("An error occurred, please try again.", LogType.Console, false);
+                this.Log(Resources.Strings.Error_occ, LogType.Console, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
@@ -579,7 +579,7 @@ namespace DaRT
 
             playerDBList.Items.Remove(item);
 
-            this.Log("Entry was removed", LogType.Console, false);
+            this.Log(String.Format(Resources.Strings.Deleted,name), LogType.Console, false);
         }
         private void say_click(object sender, EventArgs args)
         {
@@ -594,7 +594,7 @@ namespace DaRT
             }
             catch(Exception e)
             {
-                this.Log("An error occurred, please try again.", LogType.Console, false);
+                this.Log(Resources.Strings.Error_occ, LogType.Console, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
@@ -612,7 +612,7 @@ namespace DaRT
             }
             catch(Exception e)
             {
-                this.Log("An error occurred, please try again.", LogType.Console, false);
+                this.Log(Resources.Strings.Error_occ, LogType.Console, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
@@ -632,7 +632,7 @@ namespace DaRT
             }
             catch(Exception e)
             {
-                this.Log("An error occurred, please try again.", LogType.Console, false);
+                this.Log(Resources.Strings.Error_occ, LogType.Console, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
@@ -648,12 +648,12 @@ namespace DaRT
                 String name = item.SubItems[5].Text;
                 
                 rcon.Pending = name;
-                Ban ban = new Ban(id, name, guid, "", Settings.Default.quickBan, String.Format("Banned for {0} minute(s).",Settings.Default.quickBan), true);
+                Ban ban = new Ban(id, name, guid, "", Settings.Default.quickBan, String.Format(Resources.Strings.Quick_reason,Settings.Default.quickBan), true);
                 rcon.Ban(ban);
             }
             catch(Exception e)
             {
-                this.Log("An error occurred, please try again.", LogType.Console, false);
+                this.Log(Resources.Strings.Error_occ, LogType.Console, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
@@ -671,29 +671,36 @@ namespace DaRT
             }
             catch(Exception e)
             {
-                this.Log("An error occurred, please try again.", LogType.Console, false);
+                this.Log(Resources.Strings.Error_occ, LogType.Console, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
         }
         private void unban_click(object sender, EventArgs args)
         {
-            // Getting selected item from cache
-            ListViewItem item = bansList.SelectedItems[0];
-            
-            // Getting ban ID
-            String id = item.SubItems[0].Text;
-
-            // Unbanning player with ID
-            rcon.unban(id);
-
-            // Removing entry from cache
-            bansList.Items.Remove(item);
-            for (int i = bansList.SelectedIndices[0]; i < bansList.Items.Count; i++)
+            try
             {
-                // Increasing ban ID for each ban after the removed one
-                int number = Int32.Parse(bansList.Items[i].SubItems[0].Text);
-                bansList.Items[i].SubItems[0].Text = (number - 1).ToString();
+                // Getting selected item from cache
+                ListViewItem item = bansList.SelectedItems[0];
+                int index = bansList.SelectedIndices[0];
+
+                // Unbanning player with ID
+                rcon.unban(item.SubItems[0].Text);
+
+                // Removing entry from banlist
+                bansList.Items.Remove(item);
+                for (int i = index; i < bansList.Items.Count; i++)
+                {
+                    // Increasing ban ID for each ban after the removed one
+                    int number = Int32.Parse(bansList.Items[i].SubItems[0].Text);
+                    bansList.Items[i].SubItems[0].Text = (number - 1).ToString();
+                }
+            }
+            catch(Exception e)
+            {
+                this.Log(Resources.Strings.Error_occ, LogType.Console, false);
+                this.Log(e.Message, LogType.Debug, false);
+                this.Log(e.StackTrace, LogType.Debug, false);
             }
         }
         private void expired_click(object sender, EventArgs args)
@@ -703,9 +710,8 @@ namespace DaRT
                 if (bans[i].time.Equals("expired"))
                     rcon.unban(bans[i].number);
             }
-            this.Log("All expired bans were removed from the ban list.", LogType.Console, false);
+            this.Log(Resources.Strings.Expired_removed, LogType.Console, false);
         }
-
         private void playerCopyAll_click(object sender, EventArgs args)
         {
             // Copying everything to clipboard
@@ -719,7 +725,7 @@ namespace DaRT
             }
             catch(Exception e)
             {
-                this.Log("Error while accessing clipboard!", LogType.Console, false);
+                this.Log(Resources.Strings.Error_occ, LogType.Console, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
@@ -735,7 +741,7 @@ namespace DaRT
             }
             catch(Exception e)
             {
-                this.Log("Error while accessing clipboard!", LogType.Console, false);
+                this.Log(Resources.Strings.Error_occ, LogType.Console, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
@@ -751,7 +757,7 @@ namespace DaRT
             }
             catch(Exception e)
             {
-                this.Log("Error while accessing clipboard!", LogType.Debug, false);
+                this.Log(Resources.Strings.Error_occ, LogType.Debug, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
@@ -767,12 +773,11 @@ namespace DaRT
             }
             catch(Exception e)
             {
-                this.Log("Error while accessing clipboard!", LogType.Debug, false);
+                this.Log(Resources.Strings.Error_occ, LogType.Debug, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
         }
-
         private void bansCopyGUIDIP_click(object sender, EventArgs args)
         {
             // Copying GUID to clipboard
@@ -784,12 +789,11 @@ namespace DaRT
             }
             catch(Exception e)
             {
-                this.Log("Error while accessing clipboard!", LogType.Debug, false);
+                this.Log(Resources.Strings.Error_occ, LogType.Debug, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
         }
-
         private void playerDBCopyAll_click(object sender, EventArgs args)
         {
             // Copying everything to clipboard
@@ -803,7 +807,7 @@ namespace DaRT
             }
             catch(Exception e)
             {
-                this.Log("Error while accessing clipboard!", LogType.Debug, false);
+                this.Log(Resources.Strings.Error_occ, LogType.Debug, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
@@ -819,7 +823,7 @@ namespace DaRT
             }
             catch(Exception e)
             {
-                this.Log("Error while accessing clipboard!", LogType.Debug, false);
+                this.Log(Resources.Strings.Error_occ, LogType.Debug, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
@@ -835,7 +839,7 @@ namespace DaRT
             }
             catch(Exception e)
             {
-                this.Log("Error while accessing clipboard!", LogType.Debug, false);
+                this.Log(Resources.Strings.Error_occ, LogType.Debug, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
@@ -851,7 +855,7 @@ namespace DaRT
             }
             catch(Exception e)
             {
-                this.Log("Error while accessing clipboard!", LogType.Debug, false);
+                this.Log(Resources.Strings.Error_occ, LogType.Debug, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
@@ -1684,7 +1688,7 @@ namespace DaRT
                 {
                     banner.Image = GetImage(Resources.Strings.Get_banner);
                 });
-                String ip = host.Text + ":" + port.Text;
+                String ip =  String.Format("{0}:{1}",host.Text, Int32.Parse(port.Text)+1);
                 String url = String.Format(Settings.Default.bannerImage, ip);
 
                 HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
@@ -1717,18 +1721,20 @@ namespace DaRT
             {
                 WebClient client = new WebClient();
                 client.Headers.Add("user-agent", "DaRT " + version);
-                String request = client.DownloadString("http://forum.swisscraft.eu/DaRT/news.txt");
+                String request = client.DownloadString(Settings.Default.ReleaseUrl);
                 client.Dispose();
-                String[] split = request.Split(';');
-                String news = split[0];
-                String url = "";
+                String news = new System.Text.RegularExpressions.Regex(@"<title>(.[^<]+)</title>").Match(request).Groups[1].Value;
+                String tip = new System.Text.RegularExpressions.Regex(@"<p>(.[^<]+\.)</p>").Match(request).Groups[1].Value + Resources.Strings.Down_upd;
+                String url = new System.Text.RegularExpressions.Regex(@"https?:\/\/(.[^\/]+)").Match(Settings.Default.ReleaseUrl).Value + new System.Text.RegularExpressions.Regex("<a href=\"(.+DaRT/releases/download/.[^\"]+)\" rel=\"nofollow\">").Match(request).Groups[1].Value;
 
                 this.Invoke((MethodInvoker)delegate
                 {
                     this.news.Text = news;
+                    ToolTip tooltip = new ToolTip();
+                    tooltip.AutoPopDelay = 30000;
+                    tooltip.SetToolTip(this.news, tip);
+                    
                 });
-                if (split.Length > 1)
-                    url = split[1];
 
                 if (url != "")
                 {

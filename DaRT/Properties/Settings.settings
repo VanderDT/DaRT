@@ -249,5 +249,8 @@
     <Setting Name="Language" Type="System.String" Scope="User">
       <Value Profile="(Default)">en</Value>
     </Setting>
+    <Setting Name="ReleaseUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://github.com/NeiroNx/DaRT/releases/latest</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
