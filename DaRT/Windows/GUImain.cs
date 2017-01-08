@@ -88,6 +88,10 @@ namespace DaRT
             playerCounter.BringToFront();
             adminCounter.BringToFront();
             banCounter.BringToFront();
+            setAdminCount(0);
+            setPlayerCount(0);
+            setBanCount(0);
+
         }
         private void InitializeDatabase()
         {
@@ -332,16 +336,16 @@ namespace DaRT
         {
             // Initializing context menu of Execute button
             executeContextMenu = new ContextMenuStrip();
-            executeContextMenu.Items.Add("Reload scripts", null, reloadScripts_Click);
-            executeContextMenu.Items.Add("Reload bans", null, reloadBans_Click);
-            executeContextMenu.Items.Add("Reload events", null, reloadEvents_Click);
+            executeContextMenu.Items.Add(Resources.Strings.Rel_script, null, reloadScripts_Click);
+            executeContextMenu.Items.Add(Resources.Strings.Rel_bans, null, reloadBans_Click);
+            executeContextMenu.Items.Add(Resources.Strings.Rel_events, null, reloadEvents_Click);
             executeContextMenu.Items.Add("-");
-            executeContextMenu.Items.Add("Lock server", null, lock_Click);
-            executeContextMenu.Items.Add("Unlock server", null, unlock_Click);
-            executeContextMenu.Items.Add("Shutdown", null, shutdown_Click);
+            executeContextMenu.Items.Add(Resources.Strings.Lock_server, null, lock_Click);
+            executeContextMenu.Items.Add(Resources.Strings.Unlock_server, null, unlock_Click);
+            executeContextMenu.Items.Add(Resources.Strings.Shutdown, null, shutdown_Click);
             executeContextMenu.Items.Add("-");
             //executeContextMenu.Items.Add("Manually add a ban", null, addBan_Click);
-            executeContextMenu.Items.Add("Manually add multiple bans", null, addBans_Click);
+            executeContextMenu.Items.Add(Resources.Strings.Multiban, null, addBans_Click);
         }
         private void InitializeConsole()
         {
@@ -362,7 +366,7 @@ namespace DaRT
         private void InitializeBanner()
         {
             // Setting the image in the lower right corner
-            banner.Image = GetImage("Please connect to a server...");
+            banner.Image = GetImage(Resources.Strings.Error_nocon);
         }
         private void InitializeNews()
         {
@@ -393,16 +397,16 @@ namespace DaRT
             ToolTip tooltip = new ToolTip();
             tooltip.AutoPopDelay = 30000;
 
-            tooltip.SetToolTip(connect, "Connect to the server using the details given above.");
-            tooltip.SetToolTip(disconnect, "Disconnect from the server.");
-            tooltip.SetToolTip(refresh, "Refresh the current view.");
-            tooltip.SetToolTip(hosts, "Load previously used hosts.");
-            tooltip.SetToolTip(settings, "Adjust your settings.");
-            tooltip.SetToolTip(banner, "A banner of your server will be shown if your server is registered on GameTracker.\r\nClicking it will bring you to GameTracker.");
-            tooltip.SetToolTip(options, "You can switch between say and console mode here.\r\nWhile in say mode you can use global chat to communicate with your players.\r\nConsole mode allows you to execute RCon commands directly on the server.");
-            tooltip.SetToolTip(execute, "Contains a useful collection of tools.");
-            tooltip.SetToolTip(autoRefresh, "If checked, DaRT will automatically refresh your player list at the interval set on the settings page.");
-            tooltip.SetToolTip(allowMessages, "If unchecked, DaRT will queue all incoming messages and add them once new messages are allowed again.\r\nThis can prevent unwanted scrolling while you are copying text.");
+            tooltip.SetToolTip(connect, Resources.Strings.Tip_connect);
+            tooltip.SetToolTip(disconnect, Resources.Strings.Tip_disconnect);
+            tooltip.SetToolTip(refresh, Resources.Strings.Tip_refr);
+            tooltip.SetToolTip(hosts, Resources.Strings.Tip_host);
+            tooltip.SetToolTip(settings, Resources.Strings.Tip_settings);
+            tooltip.SetToolTip(banner, Resources.Strings.Tip_banner);
+            tooltip.SetToolTip(options, Resources.Strings.Tip_say);
+            tooltip.SetToolTip(execute, Resources.Strings.Tip_tools);
+            tooltip.SetToolTip(autoRefresh, Resources.Strings.Tip_autorefr);
+            tooltip.SetToolTip(allowMessages, Resources.Strings.Tip_message);
         }
         #endregion
 
@@ -1169,7 +1173,7 @@ namespace DaRT
                 {
                     // Connecting using BattleNET
                     if (Settings.Default.showConnectMessages)
-                        this.Log(String.Format("Connecting to {0}:{1}...", host.Text, port.Text), LogType.Console, false);
+                        this.Log(String.Format(Resources.Strings.Conn, host.Text, port.Text), LogType.Console, false);
                     rcon.Connect(ip, Int32.Parse(port.Text), password.Text);
 
                     while (!rcon.Connected && !rcon.Error)
@@ -1295,12 +1299,12 @@ namespace DaRT
                 }
                 else
                 {
-                    this.Log("Please enter a valid password!", LogType.Console, false);
+                    this.Log(Resources.Strings.Error_pass, LogType.Console, false);
                 }
             }
             else
             {
-                this.Log("Please enter a valid port!", LogType.Console, false);
+                this.Log(Resources.Strings.Error_port, LogType.Console, false);
             }
 
             // Connect is done
@@ -1317,14 +1321,14 @@ namespace DaRT
                     playerContextMenu.Hide();
                     timer.Stop();
                     refreshTimer = Settings.Default.interval;
-                        nextRefresh.Value = 0;
-                    lastRefresh.Text = "Refreshing...";
+                    nextRefresh.Value = 0;
+                    lastRefresh.Text = Resources.Strings.Refr_now;
                     seconds = 0;
                     minutes = 0;
                     hours = 0;
                 });
                 if (Settings.Default.showRefreshMessages)
-                    this.Log("Refreshing players...", LogType.Console, false);
+                    this.Log(Resources.Strings.Refr_players, LogType.Console, false);
 
                 players = rcon.getPlayers();
 
@@ -1374,13 +1378,13 @@ namespace DaRT
 
                     this.Invoke((MethodInvoker)delegate
                     {
-                        this.Log("Update players, get " + players.Count.ToString() + " players.", LogType.Debug, false);
+                        this.Log(String.Format(Resources.Strings.Get_n_players, players.Count), LogType.Debug, false);
                         setPlayerCount(players.Count);
                     });
 
                     this.Invoke((MethodInvoker)delegate
                     {
-                        lastRefresh.Text = "Geolocating...";
+                        lastRefresh.Text = Resources.Strings.Geoloc;
                     });
 
                     for (int i = 0; i < players.Count; i++)
@@ -1470,7 +1474,7 @@ namespace DaRT
             }
             catch(Exception e)
             {
-                this.Log("Player request timed out! (Critical error)", LogType.Console, false);
+                this.Log(Resources.Strings.Players_timeout, LogType.Console, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
                 pendingPlayers = false;
@@ -1485,7 +1489,7 @@ namespace DaRT
                 if (disconnect.Enabled)
                 {
                     if (Settings.Default.showRefreshMessages)
-                        this.Log("Refreshing bans...", LogType.Console, false);
+                        this.Log(Resources.Strings.Refr_bans, LogType.Console, false);
 
                     if (!Settings.Default.dartbrs)
                     {
@@ -1604,13 +1608,13 @@ namespace DaRT
 
                         this.Invoke((MethodInvoker)delegate
                         {
-                            this.Log("Update bans, get "+bans.Count.ToString()+" bans.", LogType.Debug, false);
+                            this.Log(String.Format(Resources.Strings.Get_n_bans,bans.Count), LogType.Debug, false);
                             setBanCount(bans.Count);
                         });
 
                         if (bans.Count > 3000 && !Settings.Default.showedBanWarning && !Settings.Default.dartbrs)
                         {
-                            MessageBox.Show("It appears you are using a pretty big ban list.\r\nPlease note that your ban list may be cut off because of technical limitations in the RCon protocol.\r\nUsing the BRS (Ban Relay Server) is recommended as you won't encounter such a problem there.\r\n\r\nYou can find more informations (including a setup guide) about BRS on the DaRT download page.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(Resources.Strings.Big_banlist, Resources.Strings.Notice, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                             Settings.Default["showedBanWarning"] = true;
                             Settings.Default.Save();
@@ -1623,11 +1627,11 @@ namespace DaRT
             {
                 if (Settings.Default.dartbrs)
                 {
-                    this.Log("This server is not running BRS or the server configuration is faulty!", LogType.Console, false);
+                    this.Log(Resources.Strings.Error_brs, LogType.Console, false);
                 }
                 else
                 {
-                    this.Log("Ban request timed out! (Critical error)", LogType.Console, false);
+                    this.Log(Resources.Strings.Bans_timeout, LogType.Console, false);
                     this.Log(e.Message, LogType.Debug, false);
                     this.Log(e.StackTrace, LogType.Debug, false);
                 }
@@ -1678,7 +1682,7 @@ namespace DaRT
             {
                 banner.Invoke((MethodInvoker)delegate
                 {
-                    banner.Image = GetImage("Downloading server banner...");
+                    banner.Image = GetImage(Resources.Strings.Get_banner);
                 });
                 String ip = host.Text + ":" + port.Text;
                 String url = String.Format(Settings.Default.bannerImage, ip);
@@ -1703,7 +1707,7 @@ namespace DaRT
             {
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
-                banner.Image = GetImage("Unable to get banner");
+                banner.Image = GetImage(Resources.Strings.Error_banner);
             }
         }
 
@@ -1742,7 +1746,7 @@ namespace DaRT
                 {
                     this.Invoke((MethodInvoker)delegate
                     {
-                        this.news.Text = "Could not retrieve news!";
+                        this.news.Text = Resources.Strings.Error_news;
                     });
                 }
             }
@@ -2562,7 +2566,7 @@ namespace DaRT
                 refresh.Enabled = false;
                 execute.Enabled = false;
                 input.Enabled = false;
-                lastRefresh.Text = "Reconnecting...";
+                lastRefresh.Text = Resources.Strings.Recon;
                 nextRefresh.Maximum = 5;
                 if (nextRefresh.Value >= 5)
                     nextRefresh.Value = 0;
@@ -2605,7 +2609,7 @@ namespace DaRT
                     }
                     else
                     {
-                        this.Log("Please connect first!", LogType.Console, false);
+                        this.Log(Resources.Strings.Error_nocon, LogType.Console, false);
                     }
                 }
                 else
@@ -2808,7 +2812,7 @@ namespace DaRT
             if (Settings.Default.firstStart)
             {
                 if (File.Exists("data/db/players.db"))
-                    MessageBox.Show("This appears to be the first start of the new version of DaRT.\r\nDaRT has found an existing database and will now migrate all of your data to the new format.\r\nA backup of your existing databases will be saved.\r\n\r\nPlease continue to start the migration process.\r\n(This may take a while depending on the size of the database)", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(Resources.Strings.First_run, Resources.Strings.Notice, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             UpdateDatabase();
 
@@ -2829,7 +2833,7 @@ namespace DaRT
                 }
                 catch (Exception e)
                 {
-                    this.Log("An error occured while accessing the log file.", LogType.Console, false);
+                    this.Log(Resources.Strings.Error_occ_log, LogType.Console, false);
                     this.Log(e.Message, LogType.Debug, false);
                     this.Log(e.StackTrace, LogType.Debug, false);
                 }
@@ -2854,7 +2858,7 @@ namespace DaRT
             {
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
-                this.Log("An error occurred, please try again.", LogType.Console, false);
+                this.Log(Resources.Strings.Error_occ, LogType.Console, false);
             }
         }
 

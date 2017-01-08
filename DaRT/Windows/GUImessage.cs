@@ -22,7 +22,7 @@ namespace DaRT
             this.gui = gui;
             this.id = id;
             this.name = name;
-            this.Text = "Talk to " + name;
+            this.Text = Resources.Strings.Message + " " + name;
         }
 
         private void send_Click(object sender, EventArgs e)

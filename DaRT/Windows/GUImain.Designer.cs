@@ -63,9 +63,13 @@
             this.allowMessages = new System.Windows.Forms.CheckBox();
             this.logTabs = new System.Windows.Forms.TabControl();
             this.tabAll = new System.Windows.Forms.TabPage();
+            this.all = new DaRT.ExtendedRichTextBox();
             this.tabConsole = new System.Windows.Forms.TabPage();
+            this.console = new DaRT.ExtendedRichTextBox();
             this.tabChat = new System.Windows.Forms.TabPage();
+            this.chat = new DaRT.ExtendedRichTextBox();
             this.tabLog = new System.Windows.Forms.TabPage();
+            this.logs = new DaRT.ExtendedRichTextBox();
             this.search = new System.Windows.Forms.TextBox();
             this.searchButton = new System.Windows.Forms.Button();
             this.autoRefresh = new System.Windows.Forms.CheckBox();
@@ -75,10 +79,6 @@
             this.banner = new System.Windows.Forms.PictureBox();
             this.options = new System.Windows.Forms.ComboBox();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.all = new DaRT.ExtendedRichTextBox();
-            this.console = new DaRT.ExtendedRichTextBox();
-            this.chat = new DaRT.ExtendedRichTextBox();
-            this.logs = new DaRT.ExtendedRichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -151,7 +151,7 @@
             // 
             // nextRefresh
             // 
-            this.nextRefresh.Location = new System.Drawing.Point(9, 339);
+            this.nextRefresh.Location = new System.Drawing.Point(9, 289);
             this.nextRefresh.Maximum = 10;
             this.nextRefresh.Name = "nextRefresh";
             this.nextRefresh.Size = new System.Drawing.Size(120, 10);
@@ -172,7 +172,7 @@
             // 
             // hosts
             // 
-            this.hosts.Location = new System.Drawing.Point(9, 362);
+            this.hosts.Location = new System.Drawing.Point(9, 305);
             this.hosts.Name = "hosts";
             this.hosts.Size = new System.Drawing.Size(120, 23);
             this.hosts.TabIndex = 18;
@@ -195,7 +195,7 @@
             // 
             this.logo.Image = ((System.Drawing.Image)(resources.GetObject("logo.Image")));
             this.logo.ImageLocation = "";
-            this.logo.Location = new System.Drawing.Point(6, 25);
+            this.logo.Location = new System.Drawing.Point(6, 4);
             this.logo.Name = "logo";
             this.logo.Size = new System.Drawing.Size(130, 62);
             this.logo.TabIndex = 16;
@@ -204,16 +204,16 @@
             // lastRefresh
             // 
             this.lastRefresh.AutoSize = true;
-            this.lastRefresh.Location = new System.Drawing.Point(17, 321);
+            this.lastRefresh.Location = new System.Drawing.Point(12, 273);
             this.lastRefresh.Name = "lastRefresh";
             this.lastRefresh.Size = new System.Drawing.Size(100, 13);
             this.lastRefresh.TabIndex = 12;
-            this.lastRefresh.Text = "Last refresh: 0s ago";
+            this.lastRefresh.Text = "";
             // 
             // refresh
             // 
             this.refresh.Enabled = false;
-            this.refresh.Location = new System.Drawing.Point(9, 295);
+            this.refresh.Location = new System.Drawing.Point(9, 247);
             this.refresh.Name = "refresh";
             this.refresh.Size = new System.Drawing.Size(120, 23);
             this.refresh.TabIndex = 9;
@@ -224,7 +224,7 @@
             // disconnect
             // 
             this.disconnect.Enabled = false;
-            this.disconnect.Location = new System.Drawing.Point(9, 266);
+            this.disconnect.Location = new System.Drawing.Point(9, 218);
             this.disconnect.Name = "disconnect";
             this.disconnect.Size = new System.Drawing.Size(120, 23);
             this.disconnect.TabIndex = 8;
@@ -234,7 +234,7 @@
             // 
             // connect
             // 
-            this.connect.Location = new System.Drawing.Point(9, 237);
+            this.connect.Location = new System.Drawing.Point(9, 189);
             this.connect.Name = "connect";
             this.connect.Size = new System.Drawing.Size(120, 23);
             this.connect.TabIndex = 6;
@@ -244,7 +244,7 @@
             // 
             // password
             // 
-            this.password.Location = new System.Drawing.Point(9, 211);
+            this.password.Location = new System.Drawing.Point(9, 163);
             this.password.Name = "password";
             this.password.Size = new System.Drawing.Size(120, 20);
             this.password.TabIndex = 5;
@@ -253,7 +253,7 @@
             // passwordLabel
             // 
             this.passwordLabel.AutoSize = true;
-            this.passwordLabel.Location = new System.Drawing.Point(44, 195);
+            this.passwordLabel.Location = new System.Drawing.Point(12, 147);
             this.passwordLabel.Name = "passwordLabel";
             this.passwordLabel.Size = new System.Drawing.Size(53, 13);
             this.passwordLabel.TabIndex = 4;
@@ -263,7 +263,7 @@
             // portLabel
             // 
             this.portLabel.AutoSize = true;
-            this.portLabel.Location = new System.Drawing.Point(55, 156);
+            this.portLabel.Location = new System.Drawing.Point(12, 108);
             this.portLabel.Name = "portLabel";
             this.portLabel.Size = new System.Drawing.Size(26, 13);
             this.portLabel.TabIndex = 3;
@@ -273,7 +273,7 @@
             // hostLabel
             // 
             this.hostLabel.AutoSize = true;
-            this.hostLabel.Location = new System.Drawing.Point(55, 117);
+            this.hostLabel.Location = new System.Drawing.Point(12, 69);
             this.hostLabel.Name = "hostLabel";
             this.hostLabel.Size = new System.Drawing.Size(29, 13);
             this.hostLabel.TabIndex = 2;
@@ -282,14 +282,14 @@
             // 
             // port
             // 
-            this.port.Location = new System.Drawing.Point(9, 172);
+            this.port.Location = new System.Drawing.Point(9, 124);
             this.port.Name = "port";
             this.port.Size = new System.Drawing.Size(120, 20);
             this.port.TabIndex = 1;
             // 
             // host
             // 
-            this.host.Location = new System.Drawing.Point(9, 133);
+            this.host.Location = new System.Drawing.Point(9, 85);
             this.host.Name = "host";
             this.host.Size = new System.Drawing.Size(120, 20);
             this.host.TabIndex = 0;
@@ -433,7 +433,6 @@
             this.playerCounter.Name = "playerCounter";
             this.playerCounter.Size = new System.Drawing.Size(53, 13);
             this.playerCounter.TabIndex = 16;
-            this.playerCounter.Text = "Players: 0";
             // 
             // news
             // 
@@ -442,7 +441,7 @@
             this.news.Name = "news";
             this.news.Size = new System.Drawing.Size(82, 13);
             this.news.TabIndex = 19;
-            this.news.Text = "Loading news...";
+            this.news.Text = Resources.Strings.Loading_news;
             this.news.Click += new System.EventHandler(this.news_Click);
             // 
             // banCounter
@@ -453,7 +452,6 @@
             this.banCounter.Name = "banCounter";
             this.banCounter.Size = new System.Drawing.Size(43, 13);
             this.banCounter.TabIndex = 17;
-            this.banCounter.Text = "Bans: 0";
             // 
             // adminCounter
             // 
@@ -463,7 +461,6 @@
             this.adminCounter.Name = "adminCounter";
             this.adminCounter.Size = new System.Drawing.Size(53, 13);
             this.adminCounter.TabIndex = 18;
-            this.adminCounter.Text = "Admins: 0";
             // 
             // counter
             // 
@@ -521,6 +518,21 @@
             this.tabAll.TabIndex = 0;
             this.tabAll.Text = global::DaRT.Resources.Strings.All;
             // 
+            // all
+            // 
+            this.all.BackColor = System.Drawing.SystemColors.Window;
+            this.all.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.all.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.all.Font = new System.Drawing.Font("Segoe UI", 8.5F);
+            this.all.Location = new System.Drawing.Point(0, 0);
+            this.all.Margin = new System.Windows.Forms.Padding(0);
+            this.all.Name = "all";
+            this.all.ReadOnly = true;
+            this.all.Size = new System.Drawing.Size(1009, 178);
+            this.all.TabIndex = 1;
+            this.all.Text = "";
+            this.all.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
+            // 
             // tabConsole
             // 
             this.tabConsole.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -530,6 +542,21 @@
             this.tabConsole.Size = new System.Drawing.Size(1011, 180);
             this.tabConsole.TabIndex = 1;
             this.tabConsole.Text = global::DaRT.Resources.Strings.Console;
+            // 
+            // console
+            // 
+            this.console.BackColor = System.Drawing.SystemColors.Window;
+            this.console.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.console.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.console.Font = new System.Drawing.Font("Segoe UI", 8.5F);
+            this.console.Location = new System.Drawing.Point(0, 0);
+            this.console.Margin = new System.Windows.Forms.Padding(0);
+            this.console.Name = "console";
+            this.console.ReadOnly = true;
+            this.console.Size = new System.Drawing.Size(1009, 178);
+            this.console.TabIndex = 2;
+            this.console.Text = "";
+            this.console.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
             // 
             // tabChat
             // 
@@ -541,6 +568,21 @@
             this.tabChat.TabIndex = 2;
             this.tabChat.Text = global::DaRT.Resources.Strings.Chat;
             // 
+            // chat
+            // 
+            this.chat.BackColor = System.Drawing.SystemColors.Window;
+            this.chat.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.chat.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chat.Font = new System.Drawing.Font("Segoe UI", 8.5F);
+            this.chat.Location = new System.Drawing.Point(0, 0);
+            this.chat.Margin = new System.Windows.Forms.Padding(0);
+            this.chat.Name = "chat";
+            this.chat.ReadOnly = true;
+            this.chat.Size = new System.Drawing.Size(1009, 178);
+            this.chat.TabIndex = 3;
+            this.chat.Text = "";
+            this.chat.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
+            // 
             // tabLog
             // 
             this.tabLog.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -550,6 +592,21 @@
             this.tabLog.Size = new System.Drawing.Size(1011, 180);
             this.tabLog.TabIndex = 3;
             this.tabLog.Text = global::DaRT.Resources.Strings.Log;
+            // 
+            // logs
+            // 
+            this.logs.BackColor = System.Drawing.SystemColors.Window;
+            this.logs.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.logs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.logs.Font = new System.Drawing.Font("Segoe UI", 8.5F);
+            this.logs.Location = new System.Drawing.Point(0, 0);
+            this.logs.Margin = new System.Windows.Forms.Padding(0);
+            this.logs.Name = "logs";
+            this.logs.ReadOnly = true;
+            this.logs.Size = new System.Drawing.Size(1009, 178);
+            this.logs.TabIndex = 3;
+            this.logs.Text = "";
+            this.logs.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
             // 
             // search
             // 
@@ -598,7 +655,7 @@
             this.searchLabel.Name = "searchLabel";
             this.searchLabel.Size = new System.Drawing.Size(44, 13);
             this.searchLabel.TabIndex = 12;
-            this.searchLabel.Text = "Search:";
+            this.searchLabel.Text = global::DaRT.Resources.Strings.Search+":";
             // 
             // input
             // 
@@ -657,66 +714,6 @@
             // 
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
-            // all
-            // 
-            this.all.BackColor = System.Drawing.SystemColors.Window;
-            this.all.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.all.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.all.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-            this.all.Location = new System.Drawing.Point(0, 0);
-            this.all.Margin = new System.Windows.Forms.Padding(0);
-            this.all.Name = "all";
-            this.all.ReadOnly = true;
-            this.all.Size = new System.Drawing.Size(1009, 178);
-            this.all.TabIndex = 1;
-            this.all.Text = "";
-            this.all.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
-            // 
-            // console
-            // 
-            this.console.BackColor = System.Drawing.SystemColors.Window;
-            this.console.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.console.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.console.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-            this.console.Location = new System.Drawing.Point(0, 0);
-            this.console.Margin = new System.Windows.Forms.Padding(0);
-            this.console.Name = "console";
-            this.console.ReadOnly = true;
-            this.console.Size = new System.Drawing.Size(1009, 178);
-            this.console.TabIndex = 2;
-            this.console.Text = "";
-            this.console.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
-            // 
-            // chat
-            // 
-            this.chat.BackColor = System.Drawing.SystemColors.Window;
-            this.chat.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.chat.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chat.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-            this.chat.Location = new System.Drawing.Point(0, 0);
-            this.chat.Margin = new System.Windows.Forms.Padding(0);
-            this.chat.Name = "chat";
-            this.chat.ReadOnly = true;
-            this.chat.Size = new System.Drawing.Size(1009, 178);
-            this.chat.TabIndex = 3;
-            this.chat.Text = "";
-            this.chat.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
-            // 
-            // logs
-            // 
-            this.logs.BackColor = System.Drawing.SystemColors.Window;
-            this.logs.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.logs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.logs.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-            this.logs.Location = new System.Drawing.Point(0, 0);
-            this.logs.Margin = new System.Windows.Forms.Padding(0);
-            this.logs.Name = "logs";
-            this.logs.ReadOnly = true;
-            this.logs.Size = new System.Drawing.Size(1009, 178);
-            this.logs.TabIndex = 3;
-            this.logs.Text = "";
-            this.logs.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
             // 
             // GUImain
             // 

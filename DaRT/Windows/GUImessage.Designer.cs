@@ -42,7 +42,7 @@
             this.messageField.Name = "messageField";
             this.messageField.Size = new System.Drawing.Size(360, 20);
             this.messageField.TabIndex = 0;
-            this.messageField.Text = "Message";
+            this.messageField.Text = Resources.Strings.Message;
             // 
             // send
             // 
@@ -50,7 +50,7 @@
             this.send.Name = "send";
             this.send.Size = new System.Drawing.Size(75, 23);
             this.send.TabIndex = 1;
-            this.send.Text = "Send";
+            this.send.Text = Resources.Strings.Send;
             this.send.UseVisualStyleBackColor = true;
             this.send.Click += new System.EventHandler(this.send_Click);
             // 
@@ -60,7 +60,7 @@
             this.abort.Name = "abort";
             this.abort.Size = new System.Drawing.Size(75, 23);
             this.abort.TabIndex = 2;
-            this.abort.Text = "Abort";
+            this.abort.Text = Resources.Strings.Cancel;
             this.abort.UseVisualStyleBackColor = true;
             this.abort.Click += new System.EventHandler(this.abort_Click);
             // 
@@ -71,7 +71,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(177, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "What do you want to tell the player?";
+            this.label1.Text = Resources.Strings.Message;
             // 
             // GUImessage
             // 
@@ -87,7 +87,7 @@
             this.MaximizeBox = false;
             this.Name = "GUImessage";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Talk to player";
+            this.Text = Resources.Strings.Message;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GUImessage_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();

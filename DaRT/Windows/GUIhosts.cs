@@ -48,15 +48,15 @@ namespace DaRT
         private void InitializeList()
         {
             menu = new ContextMenuStrip();
-            menu.Items.Add("Copy");
-            (menu.Items[0] as ToolStripMenuItem).DropDownItems.Add("Host", null, copyHost_click);
-            (menu.Items[0] as ToolStripMenuItem).DropDownItems.Add("Port", null, copyPort_click);
-            (menu.Items[0] as ToolStripMenuItem).DropDownItems.Add("Both", null, copyBoth_click);
-            menu.Items.Add("Delete", null, delete_click);
+            menu.Items.Add(Resources.Strings.Copy);
+            (menu.Items[0] as ToolStripMenuItem).DropDownItems.Add(Resources.Strings.Host, null, copyHost_click);
+            (menu.Items[0] as ToolStripMenuItem).DropDownItems.Add(Resources.Strings.Port, null, copyPort_click);
+            (menu.Items[0] as ToolStripMenuItem).DropDownItems.Add(Resources.Strings.All, null, copyBoth_click);
+            menu.Items.Add(Resources.Strings.Delete, null, delete_click);
 
-            list.Columns.Add("IP", 150);
-            list.Columns.Add("Port", 100);
-            list.Columns.Add("Password", 150);
+            list.Columns.Add(Resources.Strings.Host, 150);
+            list.Columns.Add(Resources.Strings.Port, 100);
+            list.Columns.Add(Resources.Strings.Password, 150);
         }
 
         private void copyHost_click(object sender, EventArgs e)
@@ -74,7 +74,7 @@ namespace DaRT
             {
                 gui.Invoke((MethodInvoker)delegate
                 {
-                    gui.Log("Error while accessing clipboard!", LogType.Debug, false);
+                    gui.Log(Resources.Strings.Error_occ, LogType.Debug, false);
                 });
             }
         }
@@ -93,7 +93,7 @@ namespace DaRT
             {
                 gui.Invoke((MethodInvoker)delegate
                 {
-                    gui.Log("Error while accessing clipboard!", LogType.Debug, false);
+                    gui.Log(Resources.Strings.Error_occ, LogType.Debug, false);
                 });
             }
         }
@@ -114,7 +114,7 @@ namespace DaRT
             {
                 gui.Invoke((MethodInvoker)delegate
                 {
-                    gui.Log("Error while accessing clipboard!", LogType.Debug, false);
+                    gui.Log(Resources.Strings.Error_occ, LogType.Debug, false);
                 });
             }
         }
@@ -153,7 +153,7 @@ namespace DaRT
             }
             else
             {
-                gui.Log("Please select a host first.", LogType.Console, false);
+                gui.Log(Resources.Strings.Error_sel_host, LogType.Console, false);
             }
         }
 

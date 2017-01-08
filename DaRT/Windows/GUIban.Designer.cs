@@ -43,9 +43,9 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(85, 16);
+            this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(179, 13);
+            this.label1.Size = new System.Drawing.Size(44, 13);
             this.label1.TabIndex = 4;
             this.label1.Text = Resources.Strings.Reason;
             // 
@@ -62,7 +62,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(52, 64);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 13);
+            this.label2.Size = new System.Drawing.Size(67, 13);
             this.label2.TabIndex = 8;
             this.label2.Text = Resources.Strings.Ban_duration;
             // 
@@ -82,7 +82,7 @@
             this.banButton.Name = "banButton";
             this.banButton.Size = new System.Drawing.Size(220, 23);
             this.banButton.TabIndex = 10;
-            this.banButton.Text = Resources.Strings.Ban;
+            this.banButton.Text = global::DaRT.Resources.Strings.Ban;
             this.banButton.UseVisualStyleBackColor = true;
             this.banButton.Click += new System.EventHandler(this.ban_Click);
             // 
@@ -92,7 +92,7 @@
             this.abort.Name = "abort";
             this.abort.Size = new System.Drawing.Size(98, 23);
             this.abort.TabIndex = 11;
-            this.abort.Text = Resources.Strings.Close;
+            this.abort.Text = global::DaRT.Resources.Strings.Close;
             this.abort.UseVisualStyleBackColor = true;
             this.abort.Click += new System.EventHandler(this.abort_Click);
             // 
@@ -117,7 +117,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(52, 13);
             this.label3.TabIndex = 15;
-            this.label3.Text = Resources.Strings.Ban_type+":";
+            this.label3.Text = Resources.Strings.Ban_type;
             // 
             // mode
             // 
@@ -146,8 +146,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.reason);
             this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.Name = "GUIban";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

@@ -41,7 +41,7 @@
             this.load.Name = "load";
             this.load.Size = new System.Drawing.Size(75, 23);
             this.load.TabIndex = 0;
-            this.load.Text = "Load";
+            this.load.Text = Resources.Strings.Load_host;
             this.load.UseVisualStyleBackColor = true;
             this.load.Click += new System.EventHandler(this.load_Click);
             // 
@@ -52,7 +52,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(232, 13);
             this.label1.TabIndex = 1;
-            this.label1.Text = "All hosts you ever connected to are listed below";
+            this.label1.Text = Resources.Strings.Hosts_note;
             // 
             // cancel
             // 
@@ -60,7 +60,7 @@
             this.cancel.Name = "cancel";
             this.cancel.Size = new System.Drawing.Size(75, 23);
             this.cancel.TabIndex = 2;
-            this.cancel.Text = "Cancel";
+            this.cancel.Text = Resources.Strings.Cancel;
             this.cancel.UseVisualStyleBackColor = true;
             this.cancel.Click += new System.EventHandler(this.cancel_Click);
             // 
@@ -91,7 +91,7 @@
             this.MaximizeBox = false;
             this.Name = "GUIhosts";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Saved hosts";
+            this.Text = Resources.Strings.Saved_hosts;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GUIhosts_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();

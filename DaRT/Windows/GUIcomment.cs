@@ -26,7 +26,7 @@ namespace DaRT
         {
             this.gui = gui;
             this.connection = connection;
-            this.Text = "Comment " + name;
+            this.Text = Resources.Strings.Comment + " " + name;
             this.guid = guid;
             this.mode = mode;
 

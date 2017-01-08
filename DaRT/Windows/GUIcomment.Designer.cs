@@ -46,7 +46,7 @@
             this.apply.Name = "apply";
             this.apply.Size = new System.Drawing.Size(75, 23);
             this.apply.TabIndex = 1;
-            this.apply.Text = "Apply";
+            this.apply.Text = global::DaRT.Resources.Strings.Apply;
             this.apply.UseVisualStyleBackColor = true;
             this.apply.Click += new System.EventHandler(this.apply_Click);
             // 
@@ -57,11 +57,10 @@
             this.ClientSize = new System.Drawing.Size(384, 70);
             this.Controls.Add(this.apply);
             this.Controls.Add(this.input);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "GUIcomment";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Comment player";
+            this.Text = Resources.Strings.Comment;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GUIcomment_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -223,7 +223,8 @@
     <value>Name</value>
   </data>
   <data name="Offline_ban_note" xml:space="preserve">
-    <value>The player you were about to ban left the game.\r\nPress OK to ban him offline (GUID only) instead.</value>
+    <value>The player you were about to ban left the game.
+Press OK to ban him offline (GUID only) instead.</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
@@ -269,5 +270,157 @@
   </data>
   <data name="Unban" xml:space="preserve">
     <value>Unban</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Bans_timeout" xml:space="preserve">
+    <value>Ban request timed out!</value>
+  </data>
+  <data name="Big_banlist" xml:space="preserve">
+    <value>It appears you are using a pretty big ban list.
+Please note that your ban list may be cut off because of technical limitations in the RCon protocol.
+Using the BRS (Ban Relay Server) is recommended as you won't encounter such a problem there.
+
+You can find more informations (including a setup guide) about BRS on the DaRT download page.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Conn" xml:space="preserve">
+    <value>Connecting to {0}:{1}...</value>
+  </data>
+  <data name="Error_banner" xml:space="preserve">
+    <value>Unable to get banner</value>
+  </data>
+  <data name="Error_brs" xml:space="preserve">
+    <value>This server is not running BRS or the server configuration is faulty!</value>
+  </data>
+  <data name="Error_news" xml:space="preserve">
+    <value>Could not retrieve news!</value>
+  </data>
+  <data name="Error_nocon" xml:space="preserve">
+    <value>Please connect first!</value>
+  </data>
+  <data name="Error_occ" xml:space="preserve">
+    <value>An error occurred, please try again.</value>
+  </data>
+  <data name="Error_occ_log" xml:space="preserve">
+    <value>An error occured while accessing the log file.</value>
+  </data>
+  <data name="Error_pass" xml:space="preserve">
+    <value>Please enter a valid password!</value>
+  </data>
+  <data name="Error_port" xml:space="preserve">
+    <value>Please enter a valid port!</value>
+  </data>
+  <data name="Error_sel_host" xml:space="preserve">
+    <value>Please select a host first.</value>
+  </data>
+  <data name="First_run" xml:space="preserve">
+    <value>This appears to be the first start of the new version of DaRT.
+DaRT has found an existing database and will now migrate all of your data to the new format.
+A backup of your existing databases will be saved.
+
+Please continue to start the migration process.
+(This may take a while depending on the size of the database)</value>
+  </data>
+  <data name="Geoloc" xml:space="preserve">
+    <value>Geolocating...</value>
+  </data>
+  <data name="Get_banner" xml:space="preserve">
+    <value>Downloading server banner...</value>
+  </data>
+  <data name="Get_n_bans" xml:space="preserve">
+    <value>Update bans, get {0} bans.</value>
+  </data>
+  <data name="Get_n_players" xml:space="preserve">
+    <value>Update players, get {0} players.</value>
+  </data>
+  <data name="Hosts_note" xml:space="preserve">
+    <value>All hosts you ever connected to are listed below</value>
+  </data>
+  <data name="Lock_server" xml:space="preserve">
+    <value>Lock server</value>
+  </data>
+  <data name="Multiban" xml:space="preserve">
+    <value>Manually add multiple bans</value>
+  </data>
+  <data name="Notice" xml:space="preserve">
+    <value>Notice</value>
+  </data>
+  <data name="Players_timeout" xml:space="preserve">
+    <value>Player request timed out!</value>
+  </data>
+  <data name="Recon" xml:space="preserve">
+    <value>Reconnecting...</value>
+  </data>
+  <data name="Refr_bans" xml:space="preserve">
+    <value>Refreshing bans...</value>
+  </data>
+  <data name="Refr_now" xml:space="preserve">
+    <value>Refreshing...</value>
+  </data>
+  <data name="Refr_players" xml:space="preserve">
+    <value>Refreshing players on server...</value>
+  </data>
+  <data name="Rel_bans" xml:space="preserve">
+    <value>Reload bans</value>
+  </data>
+  <data name="Rel_events" xml:space="preserve">
+    <value>Reload events</value>
+  </data>
+  <data name="Rel_script" xml:space="preserve">
+    <value>Reload scripts</value>
+  </data>
+  <data name="Saved_hosts" xml:space="preserve">
+    <value>Saved hosts</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="Shutdown" xml:space="preserve">
+    <value>Shutdown</value>
+  </data>
+  <data name="Shutdown_note" xml:space="preserve">
+    <value>Are you sure you want to shut the server down?
+
+Note: This will terminate your current RCon session.</value>
+  </data>
+  <data name="Tip_autorefr" xml:space="preserve">
+    <value>If checked, DaRT will automatically refresh your player list at the interval set on the settings page.</value>
+  </data>
+  <data name="Tip_banner" xml:space="preserve">
+    <value>A banner of your server will be shown if your server is registered on GameTracker.\r\nClicking it will bring you to GameTracker.</value>
+  </data>
+  <data name="Tip_connect" xml:space="preserve">
+    <value>Connect to the server using the details given above.</value>
+  </data>
+  <data name="Tip_disconnect" xml:space="preserve">
+    <value>Disconnect from the server.</value>
+  </data>
+  <data name="Tip_host" xml:space="preserve">
+    <value>Load previously used hosts.</value>
+  </data>
+  <data name="Tip_message" xml:space="preserve">
+    <value>If unchecked, DaRT will queue all incoming messages and add them once new messages are allowed again.
+This can prevent unwanted scrolling while you are copying text.</value>
+  </data>
+  <data name="Tip_refr" xml:space="preserve">
+    <value>Refresh the current view.</value>
+  </data>
+  <data name="Tip_say" xml:space="preserve">
+    <value>You can switch between say and console mode here.
+While in say mode you can use global chat to communicate with your players.
+Console mode allows you to execute RCon commands directly on the server.</value>
+  </data>
+  <data name="Tip_settings" xml:space="preserve">
+    <value>Adjust your settings.</value>
+  </data>
+  <data name="Tip_tools" xml:space="preserve">
+    <value>Contains a useful collection of tools.</value>
+  </data>
+  <data name="Unlock_server" xml:space="preserve">
+    <value>Unlock server</value>
   </data>
 </root>

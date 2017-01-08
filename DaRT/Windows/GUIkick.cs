@@ -22,7 +22,7 @@ namespace DaRT
             this.gui = gui;
             this.id = id;
             this.name = name;
-            this.Text = "Kick " + name;
+            this.Text = Resources.Strings.Kick + " " + name;
         }
 
         private void kick_Click(object sender, EventArgs e)

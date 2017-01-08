@@ -223,7 +223,8 @@
     <value>Имя</value>
   </data>
   <data name="Offline_ban_note" xml:space="preserve">
-    <value>Игрок находится вне игры.\r\nНажмите OK для бана только по GUID.</value>
+    <value>Игрок находится вне игры.
+Нажмите OK для бана только по GUID.</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Пароль</value>
@@ -269,5 +270,159 @@
   </data>
   <data name="Unban" xml:space="preserve">
     <value>Разбан</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="Bans_timeout" xml:space="preserve">
+    <value>Время ожидания списка банов истекло.</value>
+  </data>
+  <data name="Big_banlist" xml:space="preserve">
+    <value>Это появляется если у вас очень большой банлист.
+Помните что банлист может обрезаться из-за технических ограничений протокола RCon.
+Использование BRS (Ban Relay Server) рекомендуется при подобной ситуации.
+
+Больше информации (и инструкции по установке) о BRS на странице проекта DaRT.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Conn" xml:space="preserve">
+    <value>Подключение к {0}:{1}...</value>
+  </data>
+  <data name="Error_banner" xml:space="preserve">
+    <value>Получить банер не удалось</value>
+  </data>
+  <data name="Error_brs" xml:space="preserve">
+    <value>На сервере не установлен BRS или его настройки не корректны!</value>
+  </data>
+  <data name="Error_news" xml:space="preserve">
+    <value>Получить новости не удалось</value>
+  </data>
+  <data name="Error_nocon" xml:space="preserve">
+    <value>Вначале надо подключиться!</value>
+  </data>
+  <data name="Error_occ" xml:space="preserve">
+    <value>Произошла ошибка, попробуйте еще раз.</value>
+  </data>
+  <data name="Error_occ_log" xml:space="preserve">
+    <value>Во время доступа к файлам логов произошла ошибка.</value>
+  </data>
+  <data name="Error_pass" xml:space="preserve">
+    <value>Пожалуйста введите верный пароль!</value>
+  </data>
+  <data name="Error_port" xml:space="preserve">
+    <value>Введите правильный порт!</value>
+  </data>
+  <data name="Error_sel_host" xml:space="preserve">
+    <value>Сначала выберите хост.</value>
+  </data>
+  <data name="First_run" xml:space="preserve">
+    <value>Это сообщение появляется при первом запуске новой версии DaRT.
+DaRT нашол существующую базу и будет пытаться сконвертировать ее в новый формат.
+Бекап базы будет сделан.
+
+Нажмите ОК чтобы начать процесс.
+(Может занять некоторое время в зависимости от размеров базы)</value>
+  </data>
+  <data name="Geoloc" xml:space="preserve">
+    <value>Геолокация...</value>
+  </data>
+  <data name="Get_banner" xml:space="preserve">
+    <value>Скачиваем банер сервера ...</value>
+  </data>
+  <data name="Get_n_bans" xml:space="preserve">
+    <value>Обновление банов выполнено, полученно {0} банов.</value>
+  </data>
+  <data name="Get_n_players" xml:space="preserve">
+    <value>Обновлен список игроков, получено {0} игроков.</value>
+  </data>
+  <data name="Hosts_note" xml:space="preserve">
+    <value>Все хосты к которым вы подключались представленны ниже</value>
+  </data>
+  <data name="Lock_server" xml:space="preserve">
+    <value>Запаролить сервер</value>
+  </data>
+  <data name="Multiban" xml:space="preserve">
+    <value>Добавить много банов</value>
+  </data>
+  <data name="Notice" xml:space="preserve">
+    <value>Уведомление</value>
+  </data>
+  <data name="Players_timeout" xml:space="preserve">
+    <value>Превышено время ожидания списка игроков.</value>
+  </data>
+  <data name="Recon" xml:space="preserve">
+    <value>Переподключаю...</value>
+  </data>
+  <data name="Refr_bans" xml:space="preserve">
+    <value>Обновление списка банов ...</value>
+  </data>
+  <data name="Refr_now" xml:space="preserve">
+    <value>Обновляю...</value>
+  </data>
+  <data name="Refr_players" xml:space="preserve">
+    <value>Обновление списка игроков на сервере ...</value>
+  </data>
+  <data name="Rel_bans" xml:space="preserve">
+    <value>Перезагрузиь баны</value>
+  </data>
+  <data name="Rel_events" xml:space="preserve">
+    <value>Перезагрузить эвенты</value>
+  </data>
+  <data name="Rel_script" xml:space="preserve">
+    <value>Перезагрузить скрипты</value>
+  </data>
+  <data name="Saved_hosts" xml:space="preserve">
+    <value>Сохраненные хосты</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Отправить</value>
+  </data>
+  <data name="Shutdown" xml:space="preserve">
+    <value>Выключить</value>
+  </data>
+  <data name="Shutdown_note" xml:space="preserve">
+    <value>Вы уверены в выключении сервера?
+
+Пояснение: это действие закроет текущее RCon подключение.</value>
+  </data>
+  <data name="Tip_autorefr" xml:space="preserve">
+    <value>Если включено, то DaRT будет автоматически обновлять список игроков через заданный в настройках интервал.</value>
+  </data>
+  <data name="Tip_banner" xml:space="preserve">
+    <value>Банер сервера будет показываться если вы зарегистрировали его на GameTracker.
+При клике откроется страница сервера на GameTracker.</value>
+  </data>
+  <data name="Tip_connect" xml:space="preserve">
+    <value>Подключение к серверу используя указанные данные.</value>
+  </data>
+  <data name="Tip_disconnect" xml:space="preserve">
+    <value>Отключение от текущего сервера.</value>
+  </data>
+  <data name="Tip_host" xml:space="preserve">
+    <value>Список недавних серверов.</value>
+  </data>
+  <data name="Tip_message" xml:space="preserve">
+    <value>Если отключено, то DaRT задержит входящие сообщения  и добавит все разом когда снова включится.
+Это полезно чтобы не автоскролилось кгда надо скопировать текст.</value>
+  </data>
+  <data name="Tip_refr" xml:space="preserve">
+    <value>Обновление текущей выбранной вкладки.</value>
+  </data>
+  <data name="Tip_say" xml:space="preserve">
+    <value>Вы можете переключаться между консольным режимом и чатом здесь.
+Глобальный чат для общения со всеми игроками сразу.
+Приват для общения с конкретным игроком выбранным в списке игрокв.
+Консоль отправляет текстовые команды прямо на сервер.</value>
+  </data>
+  <data name="Tip_settings" xml:space="preserve">
+    <value>Настройка приложения.</value>
+  </data>
+  <data name="Tip_tools" xml:space="preserve">
+    <value>Содержит утилиты управления сервером.</value>
+  </data>
+  <data name="Unlock_server" xml:space="preserve">
+    <value>Снять пароль</value>
   </data>
 </root>
