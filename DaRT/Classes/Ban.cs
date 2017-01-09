@@ -48,6 +48,10 @@ namespace DaRT
             get { return _online; }
             set { _online = value; }
         }
+        public override string ToString()
+        {
+            return String.Format("{0}\t{1}\t{2}",_guid,_duration,_reason);
+        }
 
         public String number = "";
         public String ipguid = "";

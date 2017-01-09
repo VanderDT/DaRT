@@ -86,7 +86,7 @@ namespace DaRT.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool refresh {
             get {
                 return ((bool)(this["refresh"]));
@@ -290,7 +290,7 @@ namespace DaRT.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
         public uint interval {
             get {
                 return ((uint)(this["interval"]));
@@ -918,7 +918,8 @@ namespace DaRT.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
             "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
-            "tring>fuck</string>\r\n</ArrayOfString>")]
+            "tring>fuck.*[^admin]</string>\r\n  <string>fak.*[^admin]</string>\r\n</ArrayOfString" +
+            ">")]
         public global::System.Collections.Specialized.StringCollection autoKick {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["autoKick"]));
@@ -932,7 +933,8 @@ namespace DaRT.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
             "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
-            "tring>fuck.*admin</string>\r\n</ArrayOfString>")]
+            "tring>fuck.*admin.[^!]*!+</string>\r\n  <string>fak.*admin.[^!]*!+</string>\r\n</Arr" +
+            "ayOfString>")]
         public global::System.Collections.Specialized.StringCollection autoBan {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["autoBan"]));
@@ -987,6 +989,18 @@ namespace DaRT.Properties {
             }
             set {
                 this["ReleaseUrl"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Check_update {
+            get {
+                return ((bool)(this["Check_update"]));
+            }
+            set {
+                this["Check_update"] = value;
             }
         }
     }

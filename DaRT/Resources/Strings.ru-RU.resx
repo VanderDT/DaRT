@@ -271,17 +271,53 @@
   <data name="Unban" xml:space="preserve">
     <value>Разбан</value>
   </data>
+  <data name="About" xml:space="preserve">
+    <value>О программе</value>
+  </data>
+  <data name="Admin_call" xml:space="preserve">
+    <value>Вызов админа по имени</value>
+  </data>
+  <data name="Admin_chat" xml:space="preserve">
+    <value>Показать админ чат</value>
+  </data>
+  <data name="Admin_login" xml:space="preserve">
+    <value>Подключения администраторов</value>
+  </data>
+  <data name="Admin_name" xml:space="preserve">
+    <value>Имя в чате:</value>
+  </data>
+  <data name="Admin_settings" xml:space="preserve">
+    <value>Настройка админа</value>
+  </data>
   <data name="Admin_timeout" xml:space="preserve">
     <value>Время ожидания списка админов истекло!</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>Применить</value>
   </data>
+  <data name="AutoBan" xml:space="preserve">
+    <value>Автоматический бан за сообщения</value>
+  </data>
   <data name="Autoban_for" xml:space="preserve">
     <value>АвтоБан {0} за фразу {1}</value>
   </data>
+  <data name="AutoKick" xml:space="preserve">
+    <value>Автоматический кик за сообщения</value>
+  </data>
   <data name="Autokick_for" xml:space="preserve">
     <value>АвтоКик {0} за фразу {1}</value>
+  </data>
+  <data name="Automate" xml:space="preserve">
+    <value>Автоматизация</value>
+  </data>
+  <data name="Autoref_int" xml:space="preserve">
+    <value>Интервал автообновления (секунд):</value>
+  </data>
+  <data name="Autoupdate_join" xml:space="preserve">
+    <value>Автообновление при входе/выходе игрока</value>
+  </data>
+  <data name="Auto_int" xml:space="preserve">
+    <value>Время обновления(секунд):</value>
   </data>
   <data name="Banned" xml:space="preserve">
     <value>Забанен {0} на сервере!</value>
@@ -291,6 +327,9 @@
   </data>
   <data name="Ban_removed" xml:space="preserve">
     <value>Бан удален!</value>
+  </data>
+  <data name="Ban_ticks" xml:space="preserve">
+    <value>Ожидание запроса банов:</value>
   </data>
   <data name="Ban_timeout" xml:space="preserve">
     <value>Время ожидания списка банов истекло!</value>
@@ -305,14 +344,59 @@
   <data name="Cancel" xml:space="preserve">
     <value>Отмена</value>
   </data>
+  <data name="Check_onStart" xml:space="preserve">
+    <value>Проверять обновления при запуске</value>
+  </data>
+  <data name="Check_Updates" xml:space="preserve">
+    <value>Найти Обновления</value>
+  </data>
+  <data name="Choose_font" xml:space="preserve">
+    <value>Выберите шрифт</value>
+  </data>
+  <data name="Color_chat" xml:space="preserve">
+    <value>Цветной чат</value>
+  </data>
+  <data name="Color_filters" xml:space="preserve">
+    <value>Цветные фильтры</value>
+  </data>
+  <data name="Command_chat" xml:space="preserve">
+    <value>Показать коммандный чат</value>
+  </data>
   <data name="Conn" xml:space="preserve">
     <value>Подключение к {0}:{1}...</value>
   </data>
   <data name="Connected" xml:space="preserve">
     <value>Подключились!</value>
   </data>
+  <data name="Connect_onStart" xml:space="preserve">
+    <value>Подключение при старте</value>
+  </data>
+  <data name="Conn_mess" xml:space="preserve">
+    <value>Сообщения подключения/отключения</value>
+  </data>
+  <data name="Conn_player" xml:space="preserve">
+    <value>Сообщения подключения/отключения игроков</value>
+  </data>
+  <data name="Conn_req" xml:space="preserve">
+    <value>Получать списки при подключении</value>
+  </data>
+  <data name="Custom_filters" xml:space="preserve">
+    <value>Свои фильтры:</value>
+  </data>
+  <data name="DaRT_thank" xml:space="preserve">
+    <value>Спасибо запуск DaRT!</value>
+  </data>
+  <data name="Data_settings" xml:space="preserve">
+    <value>Настройка данных</value>
+  </data>
+  <data name="Debug_mess" xml:space="preserve">
+    <value>Сообщения об внутренних ошибках</value>
+  </data>
   <data name="Deleted" xml:space="preserve">
     <value>Игрок {0} удален из базы.</value>
+  </data>
+  <data name="Direct_chat" xml:space="preserve">
+    <value>Показать прямой чат</value>
   </data>
   <data name="Down_upd" xml:space="preserve">
     <value> 
@@ -335,6 +419,9 @@
   </data>
   <data name="Error_login" xml:space="preserve">
     <value>Неверные параметры авторизации!</value>
+  </data>
+  <data name="Error_mess" xml:space="preserve">
+    <value>Вывод ошибок</value>
   </data>
   <data name="Error_news" xml:space="preserve">
     <value>Получить новости не удалось</value>
@@ -371,6 +458,12 @@ DaRT нашол существующую базу и будет пытаться
 Нажмите ОК чтобы начать процесс.
 (Может занять некоторое время в зависимости от размеров базы)</value>
   </data>
+  <data name="Flash_calls" xml:space="preserve">
+    <value>Мигать окном при вызове</value>
+  </data>
+  <data name="forum_link" xml:space="preserve">
+    <value>Офицальный форум</value>
+  </data>
   <data name="Geoloc" xml:space="preserve">
     <value>Геолокация...</value>
   </data>
@@ -383,17 +476,78 @@ DaRT нашол существующую базу и будет пытаться
   <data name="Get_n_players" xml:space="preserve">
     <value>Обновлен список игроков, получено {0} игроков.</value>
   </data>
+  <data name="Global_chat" xml:space="preserve">
+    <value>Показать глобальный чат</value>
+  </data>
+  <data name="Global_chats" xml:space="preserve">
+    <value>Глобальные чаты</value>
+  </data>
+  <data name="Group_chat" xml:space="preserve">
+    <value>Показать групповой чат</value>
+  </data>
+  <data name="Guid_mess" xml:space="preserve">
+    <value>Сообщения проверки GUID</value>
+  </data>
+  <data name="Hilight" xml:space="preserve">
+    <value>Подсвечивать вызовы:</value>
+  </data>
   <data name="Hosts_note" xml:space="preserve">
     <value>Все хосты к которым вы подключались представленны ниже</value>
+  </data>
+  <data name="Interval_settings" xml:space="preserve">
+    <value>Интервалы</value>
   </data>
   <data name="Kicked" xml:space="preserve">
     <value>Кикнут {0} c сервера!</value>
   </data>
+  <data name="lib_lic" xml:space="preserve">
+    <value>Эта программа использует библиотеку BattleNET
+созданную Marcel de Vries (github.com/marceldev89)
+и Robert van der Boorn (github.com/vipeax)
+выпускаемую по лицензии GNU Lesser General Public License.</value>
+  </data>
+  <data name="licence" xml:space="preserve">
+    <value>DaRT (DayZ RCon Tool) разработанна Perfler Dominik (github.com/DomiStyle)
+в 2012; переведена и доработанна Alexander (github.com/NeiroNx) in 2017
+в ответ на отсутствие хрошего RCon клиента для DayZ серверов в это время.
+
+Эта переработанная версия предоставляется как услуга сообщества и спасибо
+всем администраторам северов которые нуждаются в хрошем ПО для
+управления серверами - даже столько лет спустя.</value>
+  </data>
+  <data name="Local_chats" xml:space="preserve">
+    <value>Локальные чаты</value>
+  </data>
+  <data name="Local_filters" xml:space="preserve">
+    <value>Локальные</value>
+  </data>
+  <data name="Local_settings" xml:space="preserve">
+    <value>Локальные настройки</value>
+  </data>
   <data name="Lock_server" xml:space="preserve">
     <value>Запаролить сервер</value>
   </data>
+  <data name="Log_buffer" xml:space="preserve">
+    <value>Буфер лога:</value>
+  </data>
+  <data name="Mention" xml:space="preserve">
+    <value>Похвальный отзыв:</value>
+  </data>
   <data name="Multiban" xml:space="preserve">
     <value>Добавить много банов</value>
+  </data>
+  <data name="News_download" xml:space="preserve">
+    <value>
+Обновление {0}
+{3}
+Скачать: {1} ({2})
+</value>
+  </data>
+  <data name="News_noupdate" xml:space="preserve">
+    <value>Ваша версия DaRT не нуждается в обновлении.</value>
+  </data>
+  <data name="News_update" xml:space="preserve">
+    <value>Обновление {0} Новая версия: {1} (Размер: {2})</value>
   </data>
   <data name="Notice" xml:space="preserve">
     <value>Уведомление</value>
@@ -401,8 +555,14 @@ DaRT нашол существующую базу и будет пытаться
   <data name="Players_timeout" xml:space="preserve">
     <value>Превышено время ожидания списка игроков.</value>
   </data>
+  <data name="Player_ticks" xml:space="preserve">
+    <value>Ожидание запроса игроков:</value>
+  </data>
   <data name="Player_timeout" xml:space="preserve">
     <value>Время ожидания списка игроков истекло!</value>
+  </data>
+  <data name="Quick_ban_duration" xml:space="preserve">
+    <value>Быстрый бан(минут):</value>
   </data>
   <data name="Quick_reason" xml:space="preserve">
     <value>Забанен на {0} мин.</value>
@@ -415,6 +575,9 @@ DaRT нашол существующую базу и будет пытаться
   </data>
   <data name="Refr_bans" xml:space="preserve">
     <value>Обновление списка банов ...</value>
+  </data>
+  <data name="Refr_mess" xml:space="preserve">
+    <value>Сообщения об обновлении</value>
   </data>
   <data name="Refr_now" xml:space="preserve">
     <value>Обновляю...</value>
@@ -431,11 +594,29 @@ DaRT нашол существующую базу и будет пытаться
   <data name="Rel_script" xml:space="preserve">
     <value>Перезагрузить скрипты</value>
   </data>
+  <data name="Request_settings" xml:space="preserve">
+    <value>Настройки запросов</value>
+  </data>
   <data name="Saved_hosts" xml:space="preserve">
     <value>Сохраненные хосты</value>
   </data>
+  <data name="Save_hosts" xml:space="preserve">
+    <value>Сохранять хосты</value>
+  </data>
+  <data name="Save_log" xml:space="preserve">
+    <value>Сохранять логи</value>
+  </data>
+  <data name="Save_players" xml:space="preserve">
+    <value>Сохранять игроков</value>
+  </data>
+  <data name="Save_settings" xml:space="preserve">
+    <value>Сохранить настройки</value>
+  </data>
   <data name="Send" xml:space="preserve">
     <value>Отправить</value>
+  </data>
+  <data name="Server_filters" xml:space="preserve">
+    <value>Серверные</value>
   </data>
   <data name="Server_locked" xml:space="preserve">
     <value>Сервер заблокирован!</value>
@@ -462,6 +643,12 @@ DaRT нашол существующую базу и будет пытаться
     <value>Вы уверены в выключении сервера?
 
 Пояснение: это действие закроет текущее RCon подключение.</value>
+  </data>
+  <data name="Side_chat" xml:space="preserve">
+    <value>Показать общий чат</value>
+  </data>
+  <data name="Timestamp_log" xml:space="preserve">
+    <value>Отметки времени в логах</value>
   </data>
   <data name="Tip_autorefr" xml:space="preserve">
     <value>Если включено, то DaRT будет автоматически обновлять список игроков через заданный в настройках интервал.</value>
@@ -498,7 +685,16 @@ DaRT нашол существующую базу и будет пытаться
   <data name="Tip_tools" xml:space="preserve">
     <value>Содержит утилиты управления сервером.</value>
   </data>
+  <data name="Unknown_chat" xml:space="preserve">
+    <value>Показывать неизвестный чат</value>
+  </data>
   <data name="Unlock_server" xml:space="preserve">
     <value>Снять пароль</value>
+  </data>
+  <data name="Use_BRS" xml:space="preserve">
+    <value>Использовать DaRT BRS</value>
+  </data>
+  <data name="Vehicle_chat" xml:space="preserve">
+    <value>Показать транспортный чат</value>
   </data>
 </root>

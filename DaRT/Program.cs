@@ -139,19 +139,19 @@ namespace DaRT
                     #region Command mode
                     if (command == "players")
                     {
-                        List<String> players = rcon.getRawPlayers();
-                        foreach (String player in players)
-                            Write(player);
+                        List<Player> players = rcon.getPlayers();
+                        foreach (Player player in players)
+                            Write(player.ToString());
                     }
                     else if (command == "bans")
                     {
-                        List<String> bans = rcon.getRawBans();
-                        foreach (String ban in bans)
-                            Write(ban);
+                        List<Ban> bans = rcon.getBans();
+                        foreach (Ban ban in bans)
+                            Write(ban.ToString());
                     }
                     else if (command == "admins")
                     {
-                        List<String> admins = rcon.getRawAdmins();
+                        List<String> admins = rcon.getAdmins();
                         foreach (String admin in admins)
                             Write(admin);
                     }

@@ -113,6 +113,7 @@
             this.autoBans = new System.Windows.Forms.CheckBox();
             this.autoKicks = new System.Windows.Forms.CheckBox();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.updates = new System.Windows.Forms.CheckBox();
             this.dart = new System.Windows.Forms.LinkLabel();
             this.label19 = new System.Windows.Forms.Label();
             this.epm = new System.Windows.Forms.LinkLabel();
@@ -122,6 +123,7 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
+            this.checkupdate = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -138,7 +140,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(69, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Data settings";
+            this.label1.Text = Resources.Strings.Data_settings;
             // 
             // savePlayers
             // 
@@ -147,7 +149,7 @@
             this.savePlayers.Name = "savePlayers";
             this.savePlayers.Size = new System.Drawing.Size(87, 17);
             this.savePlayers.TabIndex = 2;
-            this.savePlayers.Text = "Save players";
+            this.savePlayers.Text = global::DaRT.Resources.Strings.Save_players;
             this.savePlayers.UseVisualStyleBackColor = true;
             // 
             // saveHosts
@@ -157,7 +159,7 @@
             this.saveHosts.Name = "saveHosts";
             this.saveHosts.Size = new System.Drawing.Size(79, 17);
             this.saveHosts.TabIndex = 3;
-            this.saveHosts.Text = "Save hosts";
+            this.saveHosts.Text = global::DaRT.Resources.Strings.Save_hosts;
             this.saveHosts.UseVisualStyleBackColor = true;
             // 
             // showDirectChat
@@ -167,7 +169,7 @@
             this.showDirectChat.Name = "showDirectChat";
             this.showDirectChat.Size = new System.Drawing.Size(106, 17);
             this.showDirectChat.TabIndex = 4;
-            this.showDirectChat.Text = "Show direct chat";
+            this.showDirectChat.Text = global::DaRT.Resources.Strings.Direct_chat;
             this.showDirectChat.UseVisualStyleBackColor = true;
             // 
             // showTimestamps
@@ -177,7 +179,7 @@
             this.showTimestamps.Name = "showTimestamps";
             this.showTimestamps.Size = new System.Drawing.Size(136, 17);
             this.showTimestamps.TabIndex = 8;
-            this.showTimestamps.Text = "Show timestamps in log";
+            this.showTimestamps.Text = global::DaRT.Resources.Strings.Timestamp_log;
             this.showTimestamps.UseVisualStyleBackColor = true;
             // 
             // refreshOnJoin
@@ -187,17 +189,17 @@
             this.refreshOnJoin.Name = "refreshOnJoin";
             this.refreshOnJoin.Size = new System.Drawing.Size(238, 17);
             this.refreshOnJoin.TabIndex = 9;
-            this.refreshOnJoin.Text = "Automatically refresh when players join/leave";
+            this.refreshOnJoin.Text = global::DaRT.Resources.Strings.Autoupdate_join;
             this.refreshOnJoin.UseVisualStyleBackColor = true;
             // 
             // done
             // 
             this.done.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.done.Location = new System.Drawing.Point(189, 327);
+            this.done.Location = new System.Drawing.Point(100, 327);
             this.done.Name = "done";
             this.done.Size = new System.Drawing.Size(127, 23);
             this.done.TabIndex = 11;
-            this.done.Text = "Apply settings";
+            this.done.Text = global::DaRT.Resources.Strings.Save_settings;
             this.done.UseVisualStyleBackColor = true;
             this.done.Click += new System.EventHandler(this.done_Click);
             // 
@@ -208,7 +210,7 @@
             this.showVehicleChat.Name = "showVehicleChat";
             this.showVehicleChat.Size = new System.Drawing.Size(114, 17);
             this.showVehicleChat.TabIndex = 14;
-            this.showVehicleChat.Text = "Show vehicle chat";
+            this.showVehicleChat.Text = global::DaRT.Resources.Strings.Vehicle_chat;
             this.showVehicleChat.UseVisualStyleBackColor = true;
             // 
             // showGroupChat
@@ -218,7 +220,7 @@
             this.showGroupChat.Name = "showGroupChat";
             this.showGroupChat.Size = new System.Drawing.Size(107, 17);
             this.showGroupChat.TabIndex = 15;
-            this.showGroupChat.Text = "Show group chat";
+            this.showGroupChat.Text = global::DaRT.Resources.Strings.Group_chat;
             this.showGroupChat.UseVisualStyleBackColor = true;
             // 
             // showAdminChat
@@ -228,7 +230,7 @@
             this.showAdminChat.Name = "showAdminChat";
             this.showAdminChat.Size = new System.Drawing.Size(108, 17);
             this.showAdminChat.TabIndex = 16;
-            this.showAdminChat.Text = "Show admin chat";
+            this.showAdminChat.Text = global::DaRT.Resources.Strings.Admin_chat;
             this.showAdminChat.UseVisualStyleBackColor = true;
             // 
             // saveLog
@@ -238,7 +240,7 @@
             this.saveLog.Name = "saveLog";
             this.saveLog.Size = new System.Drawing.Size(93, 17);
             this.saveLog.TabIndex = 19;
-            this.saveLog.Text = "Save a log file";
+            this.saveLog.Text = global::DaRT.Resources.Strings.Save_log;
             this.saveLog.UseVisualStyleBackColor = true;
             // 
             // showGlobalChat
@@ -248,7 +250,7 @@
             this.showGlobalChat.Name = "showGlobalChat";
             this.showGlobalChat.Size = new System.Drawing.Size(108, 17);
             this.showGlobalChat.TabIndex = 20;
-            this.showGlobalChat.Text = "Show global chat";
+            this.showGlobalChat.Text = global::DaRT.Resources.Strings.Global_chat;
             this.showGlobalChat.UseVisualStyleBackColor = true;
             // 
             // showSideChat
@@ -258,7 +260,7 @@
             this.showSideChat.Name = "showSideChat";
             this.showSideChat.Size = new System.Drawing.Size(99, 17);
             this.showSideChat.TabIndex = 21;
-            this.showSideChat.Text = "Show side chat";
+            this.showSideChat.Text = global::DaRT.Resources.Strings.Side_chat;
             this.showSideChat.UseVisualStyleBackColor = true;
             // 
             // label5
@@ -268,7 +270,7 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(153, 13);
             this.label5.TabIndex = 23;
-            this.label5.Text = "Auto refresh interval (seconds):";
+            this.label5.Text = Resources.Strings.Auto_int;
             // 
             // interval
             // 
@@ -347,7 +349,7 @@
             this.requestOnConnect.Name = "requestOnConnect";
             this.requestOnConnect.Size = new System.Drawing.Size(187, 17);
             this.requestOnConnect.TabIndex = 31;
-            this.requestOnConnect.Text = "Request players/bans on connect";
+            this.requestOnConnect.Text = Resources.Strings.Conn_req;
             this.requestOnConnect.UseVisualStyleBackColor = true;
             // 
             // showLogErrors
@@ -357,7 +359,7 @@
             this.showLogErrors.Name = "showLogErrors";
             this.showLogErrors.Size = new System.Drawing.Size(99, 17);
             this.showLogErrors.TabIndex = 32;
-            this.showLogErrors.Text = "Show log errors";
+            this.showLogErrors.Text = Resources.Strings.Error_mess;
             this.showLogErrors.UseVisualStyleBackColor = true;
             // 
             // flash
@@ -367,7 +369,7 @@
             this.flash.Name = "flash";
             this.flash.Size = new System.Drawing.Size(191, 17);
             this.flash.TabIndex = 33;
-            this.flash.Text = "Flash window when admin is called";
+            this.flash.Text = Resources.Strings.Flash_calls;
             this.flash.UseVisualStyleBackColor = true;
             // 
             // fontChooser
@@ -377,7 +379,7 @@
             this.fontChooser.Name = "fontChooser";
             this.fontChooser.Size = new System.Drawing.Size(187, 23);
             this.fontChooser.TabIndex = 34;
-            this.fontChooser.Text = "Choose font";
+            this.fontChooser.Text = Resources.Strings.Choose_font;
             this.fontChooser.UseVisualStyleBackColor = true;
             this.fontChooser.Click += new System.EventHandler(this.fontChooser_Click);
             // 
@@ -388,7 +390,7 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(73, 13);
             this.label6.TabIndex = 36;
-            this.label6.Text = "Name in chat:";
+            this.label6.Text = Resources.Strings.Admin_name;
             // 
             // name
             // 
@@ -406,7 +408,7 @@
             this.dartbrs.Name = "dartbrs";
             this.dartbrs.Size = new System.Drawing.Size(163, 17);
             this.dartbrs.TabIndex = 38;
-            this.dartbrs.Text = "Use DaRT Ban Relay Server";
+            this.dartbrs.Text = Resources.Strings.Use_BRS;
             this.dartbrs.UseVisualStyleBackColor = true;
             // 
             // connectOnStartup
@@ -416,7 +418,7 @@
             this.connectOnStartup.Name = "connectOnStartup";
             this.connectOnStartup.Size = new System.Drawing.Size(116, 17);
             this.connectOnStartup.TabIndex = 39;
-            this.connectOnStartup.Text = "Connect on startup";
+            this.connectOnStartup.Text = Resources.Strings.Connect_onStart;
             this.connectOnStartup.UseVisualStyleBackColor = true;
             // 
             // label7
@@ -426,7 +428,7 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(145, 13);
             this.label7.TabIndex = 40;
-            this.label7.Text = "Quick ban duration (minutes):";
+            this.label7.Text = Resources.Strings.Quick_ban_duration;
             // 
             // quickBan
             // 
@@ -492,7 +494,7 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(495, 298);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Local settings";
+            this.tabPage1.Text = Resources.Strings.Local_settings;
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // buffer
@@ -512,7 +514,7 @@
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(58, 13);
             this.label21.TabIndex = 54;
-            this.label21.Text = "Log buffer:";
+            this.label21.Text = Resources.Strings.Log_buffer;
             // 
             // colorFilters
             // 
@@ -521,7 +523,7 @@
             this.colorFilters.Name = "colorFilters";
             this.colorFilters.Size = new System.Drawing.Size(77, 17);
             this.colorFilters.TabIndex = 53;
-            this.colorFilters.Text = "Color filters";
+            this.colorFilters.Text = Resources.Strings.Color_filters;
             this.colorFilters.UseVisualStyleBackColor = true;
             // 
             // colorChat
@@ -531,7 +533,7 @@
             this.colorChat.Name = "colorChat";
             this.colorChat.Size = new System.Drawing.Size(74, 17);
             this.colorChat.TabIndex = 52;
-            this.colorChat.Text = "Color chat";
+            this.colorChat.Text = Resources.Strings.Color_chat;
             this.colorChat.UseVisualStyleBackColor = true;
             // 
             // label12
@@ -541,7 +543,7 @@
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(92, 13);
             this.label12.TabIndex = 51;
-            this.label12.Text = "Ban request ticks:";
+            this.label12.Text = Resources.Strings.Ban_ticks;
             // 
             // label3
             // 
@@ -550,7 +552,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(102, 13);
             this.label3.TabIndex = 50;
-            this.label3.Text = "Player request ticks:";
+            this.label3.Text = Resources.Strings.Player_ticks;
             // 
             // banTicks
             // 
@@ -589,7 +591,7 @@
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(81, 13);
             this.label9.TabIndex = 46;
-            this.label9.Text = "Interval settings";
+            this.label9.Text = Resources.Strings.Interval_settings;
             // 
             // useNameForAdminCalls
             // 
@@ -598,7 +600,7 @@
             this.useNameForAdminCalls.Name = "useNameForAdminCalls";
             this.useNameForAdminCalls.Size = new System.Drawing.Size(178, 17);
             this.useNameForAdminCalls.TabIndex = 45;
-            this.useNameForAdminCalls.Text = "Use my name for admin calls too";
+            this.useNameForAdminCalls.Text = Resources.Strings.Admin_call;
             this.useNameForAdminCalls.UseVisualStyleBackColor = true;
             // 
             // label8
@@ -609,7 +611,7 @@
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(75, 13);
             this.label8.TabIndex = 43;
-            this.label8.Text = "Admin settings";
+            this.label8.Text = Resources.Strings.Admin_settings;
             // 
             // label2
             // 
@@ -619,7 +621,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(86, 13);
             this.label2.TabIndex = 42;
-            this.label2.Text = "Request settings";
+            this.label2.Text = Resources.Strings.Request_settings;
             // 
             // tabPage2
             // 
@@ -647,7 +649,7 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(495, 298);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Local filters";
+            this.tabPage2.Text = Resources.Strings.Local_filters;
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // showAdminCalls
@@ -657,7 +659,7 @@
             this.showAdminCalls.Name = "showAdminCalls";
             this.showAdminCalls.Size = new System.Drawing.Size(94, 17);
             this.showAdminCalls.TabIndex = 45;
-            this.showAdminCalls.Text = "Highlight calls:";
+            this.showAdminCalls.Text = Resources.Strings.Hilight;
             this.showAdminCalls.UseVisualStyleBackColor = true;
             // 
             // hilight
@@ -677,7 +679,7 @@
             this.showUnknownChat.Name = "showUnknownChat";
             this.showUnknownChat.Size = new System.Drawing.Size(124, 17);
             this.showUnknownChat.TabIndex = 43;
-            this.showUnknownChat.Text = "Show unknown chat";
+            this.showUnknownChat.Text = Resources.Strings.Unknown_chat;
             this.showUnknownChat.UseVisualStyleBackColor = true;
             // 
             // showDebug
@@ -687,7 +689,7 @@
             this.showDebug.Name = "showDebug";
             this.showDebug.Size = new System.Drawing.Size(136, 17);
             this.showDebug.TabIndex = 42;
-            this.showDebug.Text = "Show debug messages";
+            this.showDebug.Text = Resources.Strings.Debug_mess;
             this.showDebug.UseVisualStyleBackColor = true;
             // 
             // showPlayerConnectMessages
@@ -697,7 +699,7 @@
             this.showPlayerConnectMessages.Name = "showPlayerConnectMessages";
             this.showPlayerConnectMessages.Size = new System.Drawing.Size(239, 17);
             this.showPlayerConnectMessages.TabIndex = 41;
-            this.showPlayerConnectMessages.Text = "Show player connect / disconnect messages";
+            this.showPlayerConnectMessages.Text = Resources.Strings.Conn_player;
             this.showPlayerConnectMessages.UseVisualStyleBackColor = true;
             // 
             // label4
@@ -708,7 +710,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(60, 13);
             this.label4.TabIndex = 40;
-            this.label4.Text = "Local filters";
+            this.label4.Text = Resources.Strings.Local_filters;
             // 
             // showAdminMessages
             // 
@@ -717,7 +719,7 @@
             this.showAdminMessages.Name = "showAdminMessages";
             this.showAdminMessages.Size = new System.Drawing.Size(159, 17);
             this.showAdminMessages.TabIndex = 39;
-            this.showAdminMessages.Text = "Show admin login messages";
+            this.showAdminMessages.Text = Resources.Strings.Admin_login;
             this.showAdminMessages.UseVisualStyleBackColor = true;
             // 
             // showVerificationMessages
@@ -727,7 +729,7 @@
             this.showVerificationMessages.Name = "showVerificationMessages";
             this.showVerificationMessages.Size = new System.Drawing.Size(187, 17);
             this.showVerificationMessages.TabIndex = 38;
-            this.showVerificationMessages.Text = "Show GUID verification messages";
+            this.showVerificationMessages.Text = Resources.Strings.Guid_mess;
             this.showVerificationMessages.UseVisualStyleBackColor = true;
             // 
             // showConnectMessages
@@ -737,7 +739,7 @@
             this.showConnectMessages.Name = "showConnectMessages";
             this.showConnectMessages.Size = new System.Drawing.Size(208, 17);
             this.showConnectMessages.TabIndex = 36;
-            this.showConnectMessages.Text = "Show connect / disconnect messages";
+            this.showConnectMessages.Text = Resources.Strings.Conn_mess;
             this.showConnectMessages.UseVisualStyleBackColor = true;
             // 
             // showRefreshMessages
@@ -747,7 +749,7 @@
             this.showRefreshMessages.Name = "showRefreshMessages";
             this.showRefreshMessages.Size = new System.Drawing.Size(138, 17);
             this.showRefreshMessages.TabIndex = 37;
-            this.showRefreshMessages.Text = "Show refresh messages";
+            this.showRefreshMessages.Text = Resources.Strings.Refr_mess;
             this.showRefreshMessages.UseVisualStyleBackColor = true;
             // 
             // showCommandChat
@@ -757,7 +759,7 @@
             this.showCommandChat.Name = "showCommandChat";
             this.showCommandChat.Size = new System.Drawing.Size(126, 17);
             this.showCommandChat.TabIndex = 35;
-            this.showCommandChat.Text = "Show command chat";
+            this.showCommandChat.Text = Resources.Strings.Command_chat;
             this.showCommandChat.UseVisualStyleBackColor = true;
             // 
             // label14
@@ -768,7 +770,7 @@
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(66, 13);
             this.label14.TabIndex = 34;
-            this.label14.Text = "Global chats";
+            this.label14.Text = Resources.Strings.Global_chats;
             // 
             // label13
             // 
@@ -778,7 +780,7 @@
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(62, 13);
             this.label13.TabIndex = 23;
-            this.label13.Text = "Local chats";
+            this.label13.Text = Resources.Strings.Local_chats;
             // 
             // tabPage3
             // 
@@ -810,7 +812,7 @@
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(495, 298);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Server filters";
+            this.tabPage3.Text = Resources.Strings.Server_filters;
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // filters
@@ -828,7 +830,7 @@
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(72, 13);
             this.label20.TabIndex = 50;
-            this.label20.Text = "Custom filters:";
+            this.label20.Text = Resources.Strings.Custom_filters;
             // 
             // showWaypointStatementLog
             // 
@@ -978,7 +980,7 @@
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(65, 13);
             this.label10.TabIndex = 33;
-            this.label10.Text = "Server filters";
+            this.label10.Text = Resources.Strings.Server_filters;
             // 
             // tabPage4
             // 
@@ -990,7 +992,7 @@
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Size = new System.Drawing.Size(495, 298);
             this.tabPage4.TabIndex = 4;
-            this.tabPage4.Text = "Automate";
+            this.tabPage4.Text = Resources.Strings.Automate;
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // autoBan
@@ -1018,7 +1020,7 @@
             this.autoBans.Name = "autoBans";
             this.autoBans.Size = new System.Drawing.Size(131, 17);
             this.autoBans.TabIndex = 1;
-            this.autoBans.Text = "Autoban for messages";
+            this.autoBans.Text = Resources.Strings.AutoBan;
             this.autoBans.UseVisualStyleBackColor = true;
             // 
             // autoKicks
@@ -1028,11 +1030,12 @@
             this.autoKicks.Name = "autoKicks";
             this.autoKicks.Size = new System.Drawing.Size(133, 17);
             this.autoKicks.TabIndex = 0;
-            this.autoKicks.Text = "Autokick for messages";
+            this.autoKicks.Text = Resources.Strings.AutoKick;
             this.autoKicks.UseVisualStyleBackColor = true;
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.updates);
             this.tabPage5.Controls.Add(this.dart);
             this.tabPage5.Controls.Add(this.label19);
             this.tabPage5.Controls.Add(this.epm);
@@ -1046,11 +1049,23 @@
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Size = new System.Drawing.Size(495, 298);
             this.tabPage5.TabIndex = 3;
-            this.tabPage5.Text = "About";
+            this.tabPage5.Text = Resources.Strings.About;
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // updates
+            // 
+            this.updates.AutoSize = true;
+            this.updates.Location = new System.Drawing.Point(13, 170);
+            this.updates.Name = "updates";
+            this.updates.Size = new System.Drawing.Size(153, 17);
+            this.updates.TabIndex = 44;
+            this.updates.Text = global::DaRT.Resources.Strings.Check_onStart;
+            this.updates.UseVisualStyleBackColor = true;
             // 
             // dart
             // 
+            this.dart.AccessibleDescription = "https://github.com/NeiroNx/DaRT";
+            this.dart.AccessibleRole = System.Windows.Forms.AccessibleRole.Link;
             this.dart.AutoSize = true;
             this.dart.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.dart.Location = new System.Drawing.Point(150, 258);
@@ -1060,7 +1075,7 @@
             this.dart.TabIndex = 43;
             this.dart.TabStop = true;
             this.dart.Text = "DaRT GitHub";
-            this.dart.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.dart_LinkClicked);
+            this.dart.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkClicked);
             // 
             // label19
             // 
@@ -1071,10 +1086,13 @@
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(112, 13);
             this.label19.TabIndex = 42;
-            this.label19.Text = "Honorable Mention:";
+            this.label19.Text = Resources.Strings.Mention;
             // 
             // epm
             // 
+            this.epm.AccessibleDescription = "http://forums.dayzgame.com/index.php?/topic/170620-epm-rcon-tool-0996-changelog-a" +
+    "nd-information/?p=1736050";
+            this.epm.AccessibleRole = System.Windows.Forms.AccessibleRole.Link;
             this.epm.AutoSize = true;
             this.epm.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.epm.Location = new System.Drawing.Point(430, 266);
@@ -1084,10 +1102,12 @@
             this.epm.TabIndex = 41;
             this.epm.TabStop = true;
             this.epm.Text = "EPM RCon";
-            this.epm.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.epm_LinkClicked);
+            this.epm.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkClicked);
             // 
             // battlenet
             // 
+            this.battlenet.AccessibleDescription = "https://github.com/marceldev89/BattleNET";
+            this.battlenet.AccessibleRole = System.Windows.Forms.AccessibleRole.Link;
             this.battlenet.AutoSize = true;
             this.battlenet.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.battlenet.Location = new System.Drawing.Point(150, 275);
@@ -1097,10 +1117,13 @@
             this.battlenet.TabIndex = 39;
             this.battlenet.TabStop = true;
             this.battlenet.Text = "BattleNET GitHub";
-            this.battlenet.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.battlenet_LinkClicked);
+            this.battlenet.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkClicked);
             // 
             // dartthread
             // 
+            this.dartthread.AccessibleDescription = "http://forums.dayzgame.com/index.php?/topic/68933-dart-a-lightweight-dayz-rcon-to" +
+    "ol-v101-26062013/?p=658483";
+            this.dartthread.AccessibleRole = System.Windows.Forms.AccessibleRole.Link;
             this.dartthread.AutoSize = true;
             this.dartthread.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dartthread.Location = new System.Drawing.Point(15, 266);
@@ -1109,8 +1132,8 @@
             this.dartthread.Size = new System.Drawing.Size(115, 13);
             this.dartthread.TabIndex = 38;
             this.dartthread.TabStop = true;
-            this.dartthread.Text = "Official forum thread";
-            this.dartthread.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.dartthread_LinkClicked);
+            this.dartthread.Text = Resources.Strings.forum_link;
+            this.dartthread.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkClicked);
             // 
             // label18
             // 
@@ -1132,7 +1155,7 @@
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(454, 50);
             this.label17.TabIndex = 36;
-            this.label17.Text = "Thank you for using DaRT!";
+            this.label17.Text = Resources.Strings.DaRT_thank;
             // 
             // label16
             // 
@@ -1143,7 +1166,7 @@
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(423, 104);
             this.label16.TabIndex = 35;
-            this.label16.Text = resources.GetString("label16.Text");
+            this.label16.Text = Resources.Strings.licence;
             // 
             // label15
             // 
@@ -1152,15 +1175,26 @@
             this.label15.Location = new System.Drawing.Point(10, 194);
             this.label15.Margin = new System.Windows.Forms.Padding(10);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(329, 52);
+            this.label15.Size = new System.Drawing.Size(0, 13);
             this.label15.TabIndex = 34;
-            this.label15.Text = resources.GetString("label15.Text");
+            this.label15.Text = Resources.Strings.lib_lic;
+            // 
+            // checkupdate
+            // 
+            this.checkupdate.Location = new System.Drawing.Point(266, 327);
+            this.checkupdate.Name = "checkupdate";
+            this.checkupdate.Size = new System.Drawing.Size(133, 23);
+            this.checkupdate.TabIndex = 43;
+            this.checkupdate.Text = global::DaRT.Resources.Strings.Check_Updates;
+            this.checkupdate.UseVisualStyleBackColor = true;
+            this.checkupdate.Click += new System.EventHandler(this.checkupdate_Click);
             // 
             // GUIsettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(504, 361);
+            this.Controls.Add(this.checkupdate);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.done);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -1168,7 +1202,7 @@
             this.MaximizeBox = false;
             this.Name = "GUIsettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Settings";
+            this.Text = global::DaRT.Resources.Strings.Settings;
             this.tabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -1279,5 +1313,7 @@
         private System.Windows.Forms.TextBox autoKick;
         private System.Windows.Forms.CheckBox autoBans;
         private System.Windows.Forms.CheckBox autoKicks;
+        private System.Windows.Forms.CheckBox updates;
+        private System.Windows.Forms.Button checkupdate;
     }
 }

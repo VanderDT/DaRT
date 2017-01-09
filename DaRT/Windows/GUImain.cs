@@ -368,7 +368,7 @@ namespace DaRT
             // Setting the image in the lower right corner
             banner.Image = GetImage(Resources.Strings.Error_nocon);
         }
-        private void InitializeNews()
+        public void InitializeNews()
         {
             // Requesting the news
             Thread thread = new Thread(new ThreadStart(thread_News));
@@ -1719,23 +1719,39 @@ namespace DaRT
         {
             try
             {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    this.news.Text = Resources.Strings.Loading_news;
+
+                });
                 WebClient client = new WebClient();
                 client.Headers.Add("user-agent", "DaRT " + version);
                 String request = client.DownloadString(Settings.Default.ReleaseUrl);
                 client.Dispose();
-                String news = new System.Text.RegularExpressions.Regex(@"<title>(.[^<]+)</title>").Match(request).Groups[1].Value;
-                String tip = new System.Text.RegularExpressions.Regex(@"<p>(.[^<]+\.)</p>").Match(request).Groups[1].Value + Resources.Strings.Down_upd;
-                String url = new System.Text.RegularExpressions.Regex(@"https?:\/\/(.[^\/]+)").Match(Settings.Default.ReleaseUrl).Value + new System.Text.RegularExpressions.Regex("<a href=\"(.+DaRT/releases/download/.[^\"]+)\" rel=\"nofollow\">").Match(request).Groups[1].Value;
-
-                this.Invoke((MethodInvoker)delegate
+                System.Text.RegularExpressions.Match info = new System.Text.RegularExpressions.Regex("<a href=\"(.+DaRT/releases/tag/(.[^\"]+))\"?.>(.[^<]+)</a>").Match(request);
+                String size = new System.Text.RegularExpressions.Regex("<small class=\"text-gray float-right\">(.[^<]+)</small>").Match(request).Groups[1].Value;
+                String baseUrl = new System.Text.RegularExpressions.Regex(@"https?:\/\/(.[^\/]+)").Match(Settings.Default.ReleaseUrl).Value;
+                String url =  baseUrl + new System.Text.RegularExpressions.Regex("<a href=\"(.+DaRT/releases/download/.[^\"]+)\" rel=\"nofollow\">").Match(request).Groups[1].Value;
+                String desc = new System.Text.RegularExpressions.Regex(@"<p>(.[^<]+\.)</p>").Match(request).Groups[1].Value;
+                String release = new System.Text.RegularExpressions.Regex("<a href=\"(.+DaRT/releases/download/.[^\"]+)\" rel=\"nofollow\">").Match(request).Groups[1].Value;
+                //new System.Text.RegularExpressions.Regex(@"<title>(.[^<]+)</title>").Match(request).Groups[1].Value;
+                if(!version.Equals(info.Groups[2].Value))
                 {
-                    this.news.Text = news;
-                    ToolTip tooltip = new ToolTip();
-                    tooltip.AutoPopDelay = 30000;
-                    tooltip.SetToolTip(this.news, tip);
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        this.Log(String.Format(Resources.Strings.News_download, info.Groups[3].Value,url,size,desc), LogType.Console, false);
+                        this.news.Text = String.Format(Resources.Strings.News_update,info.Groups[3].Value,info.Groups[2].Value,size);
+                        this.news.AccessibleDescription = url;
+                        ToolTip tooltip = new ToolTip();
+                        tooltip.AutoPopDelay = 30000;
+                        tooltip.SetToolTip(this.news, desc + Resources.Strings.Down_upd);
                     
-                });
-
+                    });
+                }
+                else
+                {
+                    this.Log(Resources.Strings.News_noupdate, LogType.Console, false);
+                }
                 if (url != "")
                 {
                     this.Invoke((MethodInvoker)delegate
@@ -2678,7 +2694,7 @@ namespace DaRT
                 konami = 0;
         }
 
-        private void console_LinkClicked(object sender, LinkClickedEventArgs args)
+        private void LinkClicked(object sender, LinkClickedEventArgs args)
         {
             Process.Start(args.LinkText);
         }
@@ -2804,7 +2820,7 @@ namespace DaRT
             InitializeFunctions();
             InitializeConsole();
             InitializeBanner();
-            InitializeNews();
+            if (Settings.Default.Check_update) InitializeNews();
             InitializeProxy();
             InitializeProgressBar();
             InitializeFonts();

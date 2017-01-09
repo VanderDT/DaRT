@@ -18,6 +18,11 @@ namespace DaRT
         public String location;
         public String comment;
 
+        public override string ToString()
+        {
+            return String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", number, ip, ping, guid, name, status);
+        }
+
         public Player(int number, String ip, String ping, String guid, String name, String status)
         {
             this.number = number;

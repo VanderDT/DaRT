@@ -61,6 +61,60 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на About.
+        /// </summary>
+        internal static string About {
+            get {
+                return ResourceManager.GetString("About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Use my name for admin calls too.
+        /// </summary>
+        internal static string Admin_call {
+            get {
+                return ResourceManager.GetString("Admin_call", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Show admin chat.
+        /// </summary>
+        internal static string Admin_chat {
+            get {
+                return ResourceManager.GetString("Admin_chat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Show admin login messages.
+        /// </summary>
+        internal static string Admin_login {
+            get {
+                return ResourceManager.GetString("Admin_login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Name in chat:.
+        /// </summary>
+        internal static string Admin_name {
+            get {
+                return ResourceManager.GetString("Admin_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Admin settings.
+        /// </summary>
+        internal static string Admin_settings {
+            get {
+                return ResourceManager.GetString("Admin_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Admin request timed out..
         /// </summary>
         internal static string Admin_timeout {
@@ -115,11 +169,29 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Auto refresh interval (seconds):.
+        /// </summary>
+        internal static string Auto_int {
+            get {
+                return ResourceManager.GetString("Auto_int", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Auto Refresh.
         /// </summary>
         internal static string Auto_Refresh {
             get {
                 return ResourceManager.GetString("Auto_Refresh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Autoban for messages.
+        /// </summary>
+        internal static string AutoBan {
+            get {
+                return ResourceManager.GetString("AutoBan", resourceCulture);
             }
         }
         
@@ -133,11 +205,47 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Autokick for messages.
+        /// </summary>
+        internal static string AutoKick {
+            get {
+                return ResourceManager.GetString("AutoKick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на AutoKick {0} for phrase {1}.
         /// </summary>
         internal static string Autokick_for {
             get {
                 return ResourceManager.GetString("Autokick_for", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Automate.
+        /// </summary>
+        internal static string Automate {
+            get {
+                return ResourceManager.GetString("Automate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Auto refresh interval (seconds):.
+        /// </summary>
+        internal static string Autoref_int {
+            get {
+                return ResourceManager.GetString("Autoref_int", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Automatically refresh when players join/leave.
+        /// </summary>
+        internal static string Autoupdate_join {
+            get {
+                return ResourceManager.GetString("Autoupdate_join", resourceCulture);
             }
         }
         
@@ -165,6 +273,15 @@ namespace DaRT.Resources {
         internal static string Ban_removed {
             get {
                 return ResourceManager.GetString("Ban_removed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ban request ticks:.
+        /// </summary>
+        internal static string Ban_ticks {
+            get {
+                return ResourceManager.GetString("Ban_ticks", resourceCulture);
             }
         }
         
@@ -254,6 +371,33 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Check for Updates on start.
+        /// </summary>
+        internal static string Check_onStart {
+            get {
+                return ResourceManager.GetString("Check_onStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Check Updates.
+        /// </summary>
+        internal static string Check_Updates {
+            get {
+                return ResourceManager.GetString("Check_Updates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Choose font.
+        /// </summary>
+        internal static string Choose_font {
+            get {
+                return ResourceManager.GetString("Choose_font", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Clear.
         /// </summary>
         internal static string Clear {
@@ -281,6 +425,33 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Color chat.
+        /// </summary>
+        internal static string Color_chat {
+            get {
+                return ResourceManager.GetString("Color_chat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Color filters.
+        /// </summary>
+        internal static string Color_filters {
+            get {
+                return ResourceManager.GetString("Color_filters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Show command chat.
+        /// </summary>
+        internal static string Command_chat {
+            get {
+                return ResourceManager.GetString("Command_chat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Comment.
         /// </summary>
         internal static string Comment {
@@ -299,11 +470,47 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Show connect / disconnect messages.
+        /// </summary>
+        internal static string Conn_mess {
+            get {
+                return ResourceManager.GetString("Conn_mess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Show player connect / disconnect messages.
+        /// </summary>
+        internal static string Conn_player {
+            get {
+                return ResourceManager.GetString("Conn_player", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Request players/bans on connect.
+        /// </summary>
+        internal static string Conn_req {
+            get {
+                return ResourceManager.GetString("Conn_req", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Connect.
         /// </summary>
         internal static string Connect {
             get {
                 return ResourceManager.GetString("Connect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Connect on startup.
+        /// </summary>
+        internal static string Connect_onStart {
+            get {
+                return ResourceManager.GetString("Connect_onStart", resourceCulture);
             }
         }
         
@@ -335,11 +542,47 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Custom filters:.
+        /// </summary>
+        internal static string Custom_filters {
+            get {
+                return ResourceManager.GetString("Custom_filters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Thank you for using DaRT!.
+        /// </summary>
+        internal static string DaRT_thank {
+            get {
+                return ResourceManager.GetString("DaRT_thank", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Data settings.
+        /// </summary>
+        internal static string Data_settings {
+            get {
+                return ResourceManager.GetString("Data_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Date.
         /// </summary>
         internal static string Date {
             get {
                 return ResourceManager.GetString("Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Show debug messages.
+        /// </summary>
+        internal static string Debug_mess {
+            get {
+                return ResourceManager.GetString("Debug_mess", resourceCulture);
             }
         }
         
@@ -358,6 +601,15 @@ namespace DaRT.Resources {
         internal static string Deleted {
             get {
                 return ResourceManager.GetString("Deleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Show direct chat.
+        /// </summary>
+        internal static string Direct_chat {
+            get {
+                return ResourceManager.GetString("Direct_chat", resourceCulture);
             }
         }
         
@@ -449,6 +701,15 @@ namespace DaRT.Resources {
         internal static string Error_login {
             get {
                 return ResourceManager.GetString("Error_login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Show log errors.
+        /// </summary>
+        internal static string Error_mess {
+            get {
+                return ResourceManager.GetString("Error_mess", resourceCulture);
             }
         }
         
@@ -557,6 +818,24 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Flash window when is called.
+        /// </summary>
+        internal static string Flash_calls {
+            get {
+                return ResourceManager.GetString("Flash_calls", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Official forum thread.
+        /// </summary>
+        internal static string forum_link {
+            get {
+                return ResourceManager.GetString("forum_link", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Geolocating....
         /// </summary>
         internal static string Geoloc {
@@ -593,6 +872,51 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Show global chat.
+        /// </summary>
+        internal static string Global_chat {
+            get {
+                return ResourceManager.GetString("Global_chat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Global chats.
+        /// </summary>
+        internal static string Global_chats {
+            get {
+                return ResourceManager.GetString("Global_chats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Show group chat.
+        /// </summary>
+        internal static string Group_chat {
+            get {
+                return ResourceManager.GetString("Group_chat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Show GUID verification messages.
+        /// </summary>
+        internal static string Guid_mess {
+            get {
+                return ResourceManager.GetString("Guid_mess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Highlight calls:.
+        /// </summary>
+        internal static string Hilight {
+            get {
+                return ResourceManager.GetString("Hilight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Host.
         /// </summary>
         internal static string Host {
@@ -616,6 +940,15 @@ namespace DaRT.Resources {
         internal static string InitApp {
             get {
                 return ResourceManager.GetString("InitApp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Interval settings.
+        /// </summary>
+        internal static string Interval_settings {
+            get {
+                return ResourceManager.GetString("Interval_settings", resourceCulture);
             }
         }
         
@@ -665,6 +998,34 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на This software uses the BattleNET library
+        ///created by Marcel de Vries (github.com/marceldev89)
+        ///and Robert van der Boorn (github.com/vipeax)
+        ///which is licensed under the GNU Lesser General Public License..
+        /// </summary>
+        internal static string lib_lic {
+            get {
+                return ResourceManager.GetString("lib_lic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на DaRT (DayZ RCon Tool) was developed by Perfler Dominik (github.com/DomiStyle)
+        ///in 2012 and translation and improve by Alexander (github.com/NeiroNx) in 2017
+        ///as response to the lack of proper RCon applications for DayZ servers
+        ///at that given time.
+        ///
+        ///This overhauled version is provided as a community service and thank you
+        ///for all the server administrators out there 
+        ///who are still in need for a proper RCon tool - even after such a long time..
+        /// </summary>
+        internal static string licence {
+            get {
+                return ResourceManager.GetString("licence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Load host.
         /// </summary>
         internal static string Load_host {
@@ -683,6 +1044,33 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Local chats.
+        /// </summary>
+        internal static string Local_chats {
+            get {
+                return ResourceManager.GetString("Local_chats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Local filters.
+        /// </summary>
+        internal static string Local_filters {
+            get {
+                return ResourceManager.GetString("Local_filters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Local settings.
+        /// </summary>
+        internal static string Local_settings {
+            get {
+                return ResourceManager.GetString("Local_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Lock server.
         /// </summary>
         internal static string Lock_server {
@@ -697,6 +1085,24 @@ namespace DaRT.Resources {
         internal static string Log {
             get {
                 return ResourceManager.GetString("Log", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Log buffer:.
+        /// </summary>
+        internal static string Log_buffer {
+            get {
+                return ResourceManager.GetString("Log_buffer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Honorable Mention:.
+        /// </summary>
+        internal static string Mention {
+            get {
+                return ResourceManager.GetString("Mention", resourceCulture);
             }
         }
         
@@ -724,6 +1130,37 @@ namespace DaRT.Resources {
         internal static string Name {
             get {
                 return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 
+        ///Released {0}
+        ///{3}
+        ///Download: {1} ({2})
+        ///.
+        /// </summary>
+        internal static string News_download {
+            get {
+                return ResourceManager.GetString("News_download", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на DaRT version is actual..
+        /// </summary>
+        internal static string News_noupdate {
+            get {
+                return ResourceManager.GetString("News_noupdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Released {0} New version: {1} (Size: {2}).
+        /// </summary>
+        internal static string News_update {
+            get {
+                return ResourceManager.GetString("News_update", resourceCulture);
             }
         }
         
@@ -770,6 +1207,15 @@ namespace DaRT.Resources {
         internal static string Player_Database {
             get {
                 return ResourceManager.GetString("Player_Database", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Player request ticks:.
+        /// </summary>
+        internal static string Player_ticks {
+            get {
+                return ResourceManager.GetString("Player_ticks", resourceCulture);
             }
         }
         
@@ -828,6 +1274,15 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Quick ban duration (minutes):.
+        /// </summary>
+        internal static string Quick_ban_duration {
+            get {
+                return ResourceManager.GetString("Quick_ban_duration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Banned for {0} minute(s)..
         /// </summary>
         internal static string Quick_reason {
@@ -869,6 +1324,15 @@ namespace DaRT.Resources {
         internal static string Refr_bans {
             get {
                 return ResourceManager.GetString("Refr_bans", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Show refresh messages.
+        /// </summary>
+        internal static string Refr_mess {
+            get {
+                return ResourceManager.GetString("Refr_mess", resourceCulture);
             }
         }
         
@@ -927,6 +1391,51 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Request settings.
+        /// </summary>
+        internal static string Request_settings {
+            get {
+                return ResourceManager.GetString("Request_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Save hosts.
+        /// </summary>
+        internal static string Save_hosts {
+            get {
+                return ResourceManager.GetString("Save_hosts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Save a log file.
+        /// </summary>
+        internal static string Save_log {
+            get {
+                return ResourceManager.GetString("Save_log", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Save players.
+        /// </summary>
+        internal static string Save_players {
+            get {
+                return ResourceManager.GetString("Save_players", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Save settings.
+        /// </summary>
+        internal static string Save_settings {
+            get {
+                return ResourceManager.GetString("Save_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Saved hosts.
         /// </summary>
         internal static string Saved_hosts {
@@ -968,6 +1477,15 @@ namespace DaRT.Resources {
         internal static string Send {
             get {
                 return ResourceManager.GetString("Send", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Server filters.
+        /// </summary>
+        internal static string Server_filters {
+            get {
+                return ResourceManager.GetString("Server_filters", resourceCulture);
             }
         }
         
@@ -1055,11 +1573,29 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Show side chat.
+        /// </summary>
+        internal static string Side_chat {
+            get {
+                return ResourceManager.GetString("Side_chat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Status.
         /// </summary>
         internal static string Status {
             get {
                 return ResourceManager.GetString("Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Show timestamps in log.
+        /// </summary>
+        internal static string Timestamp_log {
+            get {
+                return ResourceManager.GetString("Timestamp_log", resourceCulture);
             }
         }
         
@@ -1166,11 +1702,38 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Show unknown chat.
+        /// </summary>
+        internal static string Unknown_chat {
+            get {
+                return ResourceManager.GetString("Unknown_chat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Unlock server.
         /// </summary>
         internal static string Unlock_server {
             get {
                 return ResourceManager.GetString("Unlock_server", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Use DaRT Ban Relay Server.
+        /// </summary>
+        internal static string Use_BRS {
+            get {
+                return ResourceManager.GetString("Use_BRS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Show vehicle chat.
+        /// </summary>
+        internal static string Vehicle_chat {
+            get {
+                return ResourceManager.GetString("Vehicle_chat", resourceCulture);
             }
         }
     }

@@ -271,17 +271,53 @@ Press OK to ban him offline (GUID only) instead.</value>
   <data name="Unban" xml:space="preserve">
     <value>Unban</value>
   </data>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Admin_call" xml:space="preserve">
+    <value>Use my name for admin calls too</value>
+  </data>
+  <data name="Admin_chat" xml:space="preserve">
+    <value>Show admin chat</value>
+  </data>
+  <data name="Admin_login" xml:space="preserve">
+    <value>Show admin login messages</value>
+  </data>
+  <data name="Admin_name" xml:space="preserve">
+    <value>Name in chat:</value>
+  </data>
+  <data name="Admin_settings" xml:space="preserve">
+    <value>Admin settings</value>
+  </data>
   <data name="Admin_timeout" xml:space="preserve">
     <value>Admin request timed out.</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>Apply</value>
   </data>
+  <data name="AutoBan" xml:space="preserve">
+    <value>Autoban for messages</value>
+  </data>
   <data name="Autoban_for" xml:space="preserve">
     <value>AutoBan {0} for phrase {1}</value>
   </data>
+  <data name="AutoKick" xml:space="preserve">
+    <value>Autokick for messages</value>
+  </data>
   <data name="Autokick_for" xml:space="preserve">
     <value>AutoKick {0} for phrase {1}</value>
+  </data>
+  <data name="Automate" xml:space="preserve">
+    <value>Automate</value>
+  </data>
+  <data name="Autoref_int" xml:space="preserve">
+    <value>Auto refresh interval (seconds):</value>
+  </data>
+  <data name="Autoupdate_join" xml:space="preserve">
+    <value>Automatically refresh when players join/leave</value>
+  </data>
+  <data name="Auto_int" xml:space="preserve">
+    <value>Auto refresh interval (seconds):</value>
   </data>
   <data name="Banned" xml:space="preserve">
     <value>Banned {0} from the server!</value>
@@ -291,6 +327,9 @@ Press OK to ban him offline (GUID only) instead.</value>
   </data>
   <data name="Ban_removed" xml:space="preserve">
     <value>Removed Ban!</value>
+  </data>
+  <data name="Ban_ticks" xml:space="preserve">
+    <value>Ban request ticks:</value>
   </data>
   <data name="Ban_timeout" xml:space="preserve">
     <value>Ban request timed out.</value>
@@ -305,14 +344,59 @@ You can find more informations (including a setup guide) about BRS on the DaRT d
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Check_onStart" xml:space="preserve">
+    <value>Check for Updates on start</value>
+  </data>
+  <data name="Check_Updates" xml:space="preserve">
+    <value>Check Updates</value>
+  </data>
+  <data name="Choose_font" xml:space="preserve">
+    <value>Choose font</value>
+  </data>
+  <data name="Color_chat" xml:space="preserve">
+    <value>Color chat</value>
+  </data>
+  <data name="Color_filters" xml:space="preserve">
+    <value>Color filters</value>
+  </data>
+  <data name="Command_chat" xml:space="preserve">
+    <value>Show command chat</value>
+  </data>
   <data name="Conn" xml:space="preserve">
     <value>Connecting to {0}:{1}...</value>
   </data>
   <data name="Connected" xml:space="preserve">
     <value>Connected!</value>
   </data>
+  <data name="Connect_onStart" xml:space="preserve">
+    <value>Connect on startup</value>
+  </data>
+  <data name="Conn_mess" xml:space="preserve">
+    <value>Show connect / disconnect messages</value>
+  </data>
+  <data name="Conn_player" xml:space="preserve">
+    <value>Show player connect / disconnect messages</value>
+  </data>
+  <data name="Conn_req" xml:space="preserve">
+    <value>Request players/bans on connect</value>
+  </data>
+  <data name="Custom_filters" xml:space="preserve">
+    <value>Custom filters:</value>
+  </data>
+  <data name="DaRT_thank" xml:space="preserve">
+    <value>Thank you for using DaRT!</value>
+  </data>
+  <data name="Data_settings" xml:space="preserve">
+    <value>Data settings</value>
+  </data>
+  <data name="Debug_mess" xml:space="preserve">
+    <value>Show debug messages</value>
+  </data>
   <data name="Deleted" xml:space="preserve">
     <value>Entry {0} was removed</value>
+  </data>
+  <data name="Direct_chat" xml:space="preserve">
+    <value>Show direct chat</value>
   </data>
   <data name="Down_upd" xml:space="preserve">
     <value> 
@@ -335,6 +419,9 @@ You can find more informations (including a setup guide) about BRS on the DaRT d
   </data>
   <data name="Error_login" xml:space="preserve">
     <value>Login invalid!</value>
+  </data>
+  <data name="Error_mess" xml:space="preserve">
+    <value>Show log errors</value>
   </data>
   <data name="Error_news" xml:space="preserve">
     <value>Could not retrieve news!</value>
@@ -371,6 +458,12 @@ A backup of your existing databases will be saved.
 Please continue to start the migration process.
 (This may take a while depending on the size of the database)</value>
   </data>
+  <data name="Flash_calls" xml:space="preserve">
+    <value>Flash window when is called</value>
+  </data>
+  <data name="forum_link" xml:space="preserve">
+    <value>Official forum thread</value>
+  </data>
   <data name="Geoloc" xml:space="preserve">
     <value>Geolocating...</value>
   </data>
@@ -383,17 +476,79 @@ Please continue to start the migration process.
   <data name="Get_n_players" xml:space="preserve">
     <value>Update players, get {0} players.</value>
   </data>
+  <data name="Global_chat" xml:space="preserve">
+    <value>Show global chat</value>
+  </data>
+  <data name="Global_chats" xml:space="preserve">
+    <value>Global chats</value>
+  </data>
+  <data name="Group_chat" xml:space="preserve">
+    <value>Show group chat</value>
+  </data>
+  <data name="Guid_mess" xml:space="preserve">
+    <value>Show GUID verification messages</value>
+  </data>
+  <data name="Hilight" xml:space="preserve">
+    <value>Highlight calls:</value>
+  </data>
   <data name="Hosts_note" xml:space="preserve">
     <value>All hosts you ever connected to are listed below</value>
+  </data>
+  <data name="Interval_settings" xml:space="preserve">
+    <value>Interval settings</value>
   </data>
   <data name="Kicked" xml:space="preserve">
     <value>Kicked {0} from the server!</value>
   </data>
+  <data name="lib_lic" xml:space="preserve">
+    <value>This software uses the BattleNET library
+created by Marcel de Vries (github.com/marceldev89)
+and Robert van der Boorn (github.com/vipeax)
+which is licensed under the GNU Lesser General Public License.</value>
+  </data>
+  <data name="licence" xml:space="preserve">
+    <value>DaRT (DayZ RCon Tool) was developed by Perfler Dominik (github.com/DomiStyle)
+in 2012 and translation and improve by Alexander (github.com/NeiroNx) in 2017
+as response to the lack of proper RCon applications for DayZ servers
+at that given time.
+
+This overhauled version is provided as a community service and thank you
+for all the server administrators out there 
+who are still in need for a proper RCon tool - even after such a long time.</value>
+  </data>
+  <data name="Local_chats" xml:space="preserve">
+    <value>Local chats</value>
+  </data>
+  <data name="Local_filters" xml:space="preserve">
+    <value>Local filters</value>
+  </data>
+  <data name="Local_settings" xml:space="preserve">
+    <value>Local settings</value>
+  </data>
   <data name="Lock_server" xml:space="preserve">
     <value>Lock server</value>
   </data>
+  <data name="Log_buffer" xml:space="preserve">
+    <value>Log buffer:</value>
+  </data>
+  <data name="Mention" xml:space="preserve">
+    <value>Honorable Mention:</value>
+  </data>
   <data name="Multiban" xml:space="preserve">
     <value>Manually add multiple bans</value>
+  </data>
+  <data name="News_download" xml:space="preserve">
+    <value>
+Released {0}
+{3}
+Download: {1} ({2})
+</value>
+  </data>
+  <data name="News_noupdate" xml:space="preserve">
+    <value>DaRT version is actual.</value>
+  </data>
+  <data name="News_update" xml:space="preserve">
+    <value>Released {0} New version: {1} (Size: {2})</value>
   </data>
   <data name="Notice" xml:space="preserve">
     <value>Notice</value>
@@ -401,8 +556,14 @@ Please continue to start the migration process.
   <data name="Players_timeout" xml:space="preserve">
     <value>Player request timed out!</value>
   </data>
+  <data name="Player_ticks" xml:space="preserve">
+    <value>Player request ticks:</value>
+  </data>
   <data name="Player_timeout" xml:space="preserve">
     <value>Player request timed out.</value>
+  </data>
+  <data name="Quick_ban_duration" xml:space="preserve">
+    <value>Quick ban duration (minutes):</value>
   </data>
   <data name="Quick_reason" xml:space="preserve">
     <value>Banned for {0} minute(s).</value>
@@ -415,6 +576,9 @@ Please continue to start the migration process.
   </data>
   <data name="Refr_bans" xml:space="preserve">
     <value>Refreshing bans...</value>
+  </data>
+  <data name="Refr_mess" xml:space="preserve">
+    <value>Show refresh messages</value>
   </data>
   <data name="Refr_now" xml:space="preserve">
     <value>Refreshing...</value>
@@ -431,11 +595,29 @@ Please continue to start the migration process.
   <data name="Rel_script" xml:space="preserve">
     <value>Reload scripts</value>
   </data>
+  <data name="Request_settings" xml:space="preserve">
+    <value>Request settings</value>
+  </data>
   <data name="Saved_hosts" xml:space="preserve">
     <value>Saved hosts</value>
   </data>
+  <data name="Save_hosts" xml:space="preserve">
+    <value>Save hosts</value>
+  </data>
+  <data name="Save_log" xml:space="preserve">
+    <value>Save a log file</value>
+  </data>
+  <data name="Save_players" xml:space="preserve">
+    <value>Save players</value>
+  </data>
+  <data name="Save_settings" xml:space="preserve">
+    <value>Save settings</value>
+  </data>
   <data name="Send" xml:space="preserve">
     <value>Send</value>
+  </data>
+  <data name="Server_filters" xml:space="preserve">
+    <value>Server filters</value>
   </data>
   <data name="Server_locked" xml:space="preserve">
     <value>Server is now locked!</value>
@@ -462,6 +644,12 @@ Please continue to start the migration process.
     <value>Are you sure you want to shut the server down?
 
 Note: This will terminate your current RCon session.</value>
+  </data>
+  <data name="Side_chat" xml:space="preserve">
+    <value>Show side chat</value>
+  </data>
+  <data name="Timestamp_log" xml:space="preserve">
+    <value>Show timestamps in log</value>
   </data>
   <data name="Tip_autorefr" xml:space="preserve">
     <value>If checked, DaRT will automatically refresh your player list at the interval set on the settings page.</value>
@@ -496,7 +684,16 @@ Console mode allows you to execute RCon commands directly on the server.</value>
   <data name="Tip_tools" xml:space="preserve">
     <value>Contains a useful collection of tools.</value>
   </data>
+  <data name="Unknown_chat" xml:space="preserve">
+    <value>Show unknown chat</value>
+  </data>
   <data name="Unlock_server" xml:space="preserve">
     <value>Unlock server</value>
+  </data>
+  <data name="Use_BRS" xml:space="preserve">
+    <value>Use DaRT Ban Relay Server</value>
+  </data>
+  <data name="Vehicle_chat" xml:space="preserve">
+    <value>Show vehicle chat</value>
   </data>
 </root>

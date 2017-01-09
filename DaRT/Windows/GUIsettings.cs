@@ -131,6 +131,8 @@ namespace DaRT
             filters.Text = Settings.Default.filters;
 
             font = Settings.Default.font;
+
+            updates.Checked = Settings.Default.Check_update;
         }
 
         private void done_Click(object sender, EventArgs e)
@@ -198,6 +200,8 @@ namespace DaRT
             Settings.Default.name = name.Text;
             Settings.Default.font = font;
 
+            Settings.Default.Check_update = updates.Checked;
+
             try
             {
                 Settings.Default.quickBan = int.Parse(quickBan.Text);
@@ -208,7 +212,7 @@ namespace DaRT
             }
             catch
             {
-                gui.Log("An error occurred while applying the settings.", LogType.Debug, false);
+                gui.Log(Resources.Strings.Error_occ, LogType.Debug, false);
             }
             Settings.Default.Save();
 
@@ -234,23 +238,15 @@ namespace DaRT
                 font = fontDialog.Font;
         }
 
-        private void dartthread_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("http://forums.dayzgame.com/index.php?/topic/68933-dart-a-lightweight-dayz-rcon-tool-v101-26062013/?p=658483");
+            System.Windows.Forms.Label obj = (System.Windows.Forms.Label)sender;
+            Process.Start(obj.AccessibleDescription); 
         }
 
-        private void dart_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void checkupdate_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/NeiroNx/DaRT");
-        }
-        private void battlenet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start("https://github.com/marceldev89/BattleNET");
-        }
-
-        private void epm_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start("http://forums.dayzgame.com/index.php?/topic/170620-epm-rcon-tool-0996-changelog-and-information/?p=1736050");
+            gui.InitializeNews();
         }
     }
 }

@@ -441,7 +441,6 @@
             this.news.Name = "news";
             this.news.Size = new System.Drawing.Size(82, 13);
             this.news.TabIndex = 19;
-            this.news.Text = Resources.Strings.Loading_news;
             this.news.Click += new System.EventHandler(this.news_Click);
             // 
             // banCounter
@@ -532,6 +531,7 @@
             this.all.TabIndex = 1;
             this.all.Text = "";
             this.all.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
+            this.all.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.LinkClicked);
             // 
             // tabConsole
             // 
@@ -557,6 +557,7 @@
             this.console.TabIndex = 2;
             this.console.Text = "";
             this.console.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
+            this.console.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.LinkClicked);
             // 
             // tabChat
             // 
@@ -582,6 +583,7 @@
             this.chat.TabIndex = 3;
             this.chat.Text = "";
             this.chat.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
+            this.chat.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.LinkClicked);
             // 
             // tabLog
             // 
@@ -607,6 +609,7 @@
             this.logs.TabIndex = 3;
             this.logs.Text = "";
             this.logs.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
+            this.logs.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.LinkClicked);
             // 
             // search
             // 
