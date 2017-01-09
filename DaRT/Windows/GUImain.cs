@@ -65,6 +65,7 @@ namespace DaRT
         public IWebProxy proxy;
         bool pendingConnect = false;
         public bool pendingPlayers = false;
+        public bool pendingAdmins = false;
         bool pendingBans = false;
         bool pendingDatabase = false;
 
@@ -1678,10 +1679,16 @@ namespace DaRT
         }
         private void thread_Admins()
         {
+            pendingAdmins = true;
+            List<string> admins = rcon.getAdmins();
             this.Invoke((MethodInvoker)delegate
             {
-                setAdminCount(rcon.getAdmins().Count);
+                ToolTip tooltip = new ToolTip();
+                tooltip.AutoPopDelay = 30000;
+                tooltip.SetToolTip(this.adminCounter, String.Join<string>("\n", admins));
+                setAdminCount(admins.Count);
             });
+            pendingAdmins = false;
         }
         private void thread_Banner()
         {
@@ -2548,6 +2555,13 @@ namespace DaRT
                             Thread threadPlayer = new Thread(new ThreadStart(thread_Player));
                             threadPlayer.IsBackground = true;
                             threadPlayer.Start();
+                            Thread.Sleep(2000);
+                        }
+                        if (!pendingAdmins)
+                        {
+                            Thread threadAdmins = new Thread(new ThreadStart(thread_Admins));
+                            threadAdmins.IsBackground = true;
+                            threadAdmins.Start();
                         }
                     }
                 }
@@ -2774,27 +2788,26 @@ namespace DaRT
 
         private void console_MouseDown(object sender, MouseEventArgs args)
         {
-            /*if (args.Button == MouseButtons.Right)
-            {
-                if (logTabs.SelectedIndex == 0)
-                {
-                    allContextMenu.Show(Cursor.Position);
-                }
-                else if (logTabs.SelectedIndex == 1)
-                {
-                    consoleContextMenu.Show(Cursor.Position);
-                }
-                else if (logTabs.SelectedIndex == 2)
-                {
-                    chatContextMenu.Show(Cursor.Position);
-                }
-                else if (logTabs.SelectedIndex == 3)
-                {
-                    logContextMenu.Show(Cursor.Position);
-                }
-            }*/
+            
         }
-
+        private void DblClick_log(object sender, MouseEventArgs args)
+        {
+            String text = ((DaRT.ExtendedRichTextBox)sender).SelectedText.Trim();
+            if (text != "")
+            {
+                foreach (ListViewItem item in playerList.Items)
+                {
+                    if (item.SubItems[5].Text.Contains(text)|| item.SubItems[4].Text.Equals(text))
+                    {
+                        item.Selected = true;
+                        playerList.Select();
+                        item.EnsureVisible();
+                        options.SelectedIndex = 1;
+                        input.Focus();
+                    }
+                }
+            }
+        }
         private void GUI_Load(object sender, EventArgs args)
         {
             InitializeSplitter();

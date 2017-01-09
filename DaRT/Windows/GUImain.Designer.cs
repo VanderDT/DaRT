@@ -532,6 +532,7 @@
             this.all.Text = "";
             this.all.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
             this.all.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.LinkClicked);
+            this.all.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.DblClick_log);
             // 
             // tabConsole
             // 
@@ -558,6 +559,7 @@
             this.console.Text = "";
             this.console.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
             this.console.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.LinkClicked);
+            this.console.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.DblClick_log);
             // 
             // tabChat
             // 
@@ -584,6 +586,7 @@
             this.chat.Text = "";
             this.chat.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
             this.chat.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.LinkClicked);
+            this.chat.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.DblClick_log);
             // 
             // tabLog
             // 
@@ -610,6 +613,7 @@
             this.logs.Text = "";
             this.logs.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
             this.logs.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.LinkClicked);
+            this.logs.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.DblClick_log);
             // 
             // search
             // 
