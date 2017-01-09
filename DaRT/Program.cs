@@ -33,7 +33,7 @@ namespace DaRT
         {
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-            version = "v"+fvi.FileVersion;
+            version = fvi.FileVersion;
             if (args.Length == 0)
             {
                 if (Debugger.IsAttached)

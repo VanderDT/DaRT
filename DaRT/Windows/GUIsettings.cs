@@ -24,7 +24,7 @@ namespace DaRT
 
             ToolTip tooltip = new ToolTip();
             tooltip.AutoPopDelay = 30000;
-
+            
             tooltip.SetToolTip(savePlayers, "Should DaRT store all players in a database?");
             tooltip.SetToolTip(saveHosts, "Should DaRT save the hosts you connected to?");
             tooltip.SetToolTip(showTimestamps, "Would you like to have timestamps in your log window?");

@@ -53,10 +53,6 @@ namespace DaRT
         private ContextMenuStrip playerContextMenu;
         private ContextMenuStrip bansContextMenu;
         private ContextMenuStrip playerDBContextMenu;
-        private ContextMenuStrip allContextMenu;
-        private ContextMenuStrip consoleContextMenu;
-        private ContextMenuStrip chatContextMenu;
-        private ContextMenuStrip logContextMenu;
         private ContextMenuStrip executeContextMenu;
         private ListViewColumnSorter playerSorter;
         private ListViewColumnSorter banSorter;
@@ -66,7 +62,6 @@ namespace DaRT
         StreamWriter consoleWriter;
         StreamWriter chatWriter;
         StreamWriter logWriter;
-        String url = "";
         public IWebProxy proxy;
         bool pendingConnect = false;
         public bool pendingPlayers = false;
@@ -350,18 +345,26 @@ namespace DaRT
         private void InitializeConsole()
         {
             // Initializing context menus of consoles
-            allContextMenu = new ContextMenuStrip();
-            allContextMenu.Items.Add(Resources.Strings.Clear, null, clear_click);
-            allContextMenu.Items.Add(Resources.Strings.Clear_all, null, clearAll_click);
-            consoleContextMenu = new ContextMenuStrip();
-            consoleContextMenu.Items.Add(Resources.Strings.Clear, null, clear_click);
-            consoleContextMenu.Items.Add(Resources.Strings.Clear_all, null, clearAll_click);
-            chatContextMenu = new ContextMenuStrip();
-            chatContextMenu.Items.Add(Resources.Strings.Clear, null, clear_click);
-            chatContextMenu.Items.Add(Resources.Strings.Clear_all, null, clearAll_click);
-            logContextMenu = new ContextMenuStrip();
-            logContextMenu.Items.Add(Resources.Strings.Clear, null, clear_click);
-            logContextMenu.Items.Add(Resources.Strings.Clear_all, null, clearAll_click);
+            all.ContextMenuStrip = new ContextMenuStrip();
+            all.ContextMenuStrip.Items.Add(Resources.Strings.Copy, null, copy_click);
+            all.ContextMenuStrip.Items.Add("-");
+            all.ContextMenuStrip.Items.Add(Resources.Strings.Clear, null, clear_click);
+            all.ContextMenuStrip.Items.Add(Resources.Strings.Clear_all, null, clearAll_click);
+            console.ContextMenuStrip = new ContextMenuStrip();
+            console.ContextMenuStrip.Items.Add(Resources.Strings.Copy, null, copy_click);
+            console.ContextMenuStrip.Items.Add("-");
+            console.ContextMenuStrip.Items.Add(Resources.Strings.Clear, null, clear_click);
+            console.ContextMenuStrip.Items.Add(Resources.Strings.Clear_all, null, clearAll_click);
+            chat.ContextMenuStrip = new ContextMenuStrip();
+            chat.ContextMenuStrip.Items.Add(Resources.Strings.Copy, null, copy_click);
+            chat.ContextMenuStrip.Items.Add("-");
+            chat.ContextMenuStrip.Items.Add(Resources.Strings.Clear, null, clear_click);
+            chat.ContextMenuStrip.Items.Add(Resources.Strings.Clear_all, null, clearAll_click);
+            logs.ContextMenuStrip = new ContextMenuStrip();
+            logs.ContextMenuStrip.Items.Add(Resources.Strings.Copy, null, copy_click);
+            logs.ContextMenuStrip.Items.Add("-");
+            logs.ContextMenuStrip.Items.Add(Resources.Strings.Clear, null, clear_click);
+            logs.ContextMenuStrip.Items.Add(Resources.Strings.Clear_all, null, clearAll_click);
         }
         private void InitializeBanner()
         {
@@ -1725,6 +1728,7 @@ namespace DaRT
 
                 });
                 WebClient client = new WebClient();
+                client.Encoding = System.Text.Encoding.UTF8;
                 client.Headers.Add("user-agent", "DaRT " + version);
                 String request = client.DownloadString(Settings.Default.ReleaseUrl);
                 client.Dispose();
@@ -1733,7 +1737,6 @@ namespace DaRT
                 String baseUrl = new System.Text.RegularExpressions.Regex(@"https?:\/\/(.[^\/]+)").Match(Settings.Default.ReleaseUrl).Value;
                 String url =  baseUrl + new System.Text.RegularExpressions.Regex("<a href=\"(.+DaRT/releases/download/.[^\"]+)\" rel=\"nofollow\">").Match(request).Groups[1].Value;
                 String desc = new System.Text.RegularExpressions.Regex(@"<p>(.[^<]+\.)</p>").Match(request).Groups[1].Value;
-                String release = new System.Text.RegularExpressions.Regex("<a href=\"(.+DaRT/releases/download/.[^\"]+)\" rel=\"nofollow\">").Match(request).Groups[1].Value;
                 //new System.Text.RegularExpressions.Regex(@"<title>(.[^<]+)</title>").Match(request).Groups[1].Value;
                 if(!version.Equals(info.Groups[2].Value))
                 {
@@ -1750,13 +1753,11 @@ namespace DaRT
                 }
                 else
                 {
-                    this.Log(Resources.Strings.News_noupdate, LogType.Console, false);
-                }
-                if (url != "")
-                {
-                    this.Invoke((MethodInvoker)delegate
+                     this.Invoke((MethodInvoker)delegate
                     {
-                        this.url = url;
+                        this.Log(Resources.Strings.News_noupdate, LogType.Console, false);
+                        this.news.Text = "";
+                        this.news.AccessibleDescription = "";
                     });
                 }
             }
@@ -2746,28 +2747,15 @@ namespace DaRT
             GUIhosts gui = new GUIhosts(this, connection, command);
             gui.ShowDialog();
         }
+        private void copy_click(object sender, EventArgs args)
+        {
+            ((DaRT.ExtendedRichTextBox)((ContextMenuStrip)(((ToolStripMenuItem)sender).Owner)).SourceControl).Copy();
+        }
         private void clear_click(object sender, EventArgs args)
         {
-            if (logTabs.SelectedIndex == 0)
-            {
-                all.Clear();
-                all.AppendText(String.Format(Resources.Strings.InitApp,version));
-            }
-            else if (logTabs.SelectedIndex == 1)
-            {
-                console.Clear();
-                console.AppendText(String.Format(Resources.Strings.InitApp, version));
-            }
-            else if (logTabs.SelectedIndex == 2)
-            {
-                chat.Clear();
-                chat.AppendText(String.Format(Resources.Strings.InitApp, version));
-            }
-            else if (logTabs.SelectedIndex == 3)
-            {
-                logs.Clear();
-                logs.AppendText(String.Format(Resources.Strings.InitApp, version));
-            }
+            DaRT.ExtendedRichTextBox textbox = (DaRT.ExtendedRichTextBox)((ContextMenuStrip)(((ToolStripMenuItem)sender).Owner)).SourceControl;
+            textbox.Clear();
+            textbox.AppendText(String.Format(Resources.Strings.InitApp, version));
         }
         private void clearAll_click(object sender, EventArgs args)
         {
@@ -2786,7 +2774,7 @@ namespace DaRT
 
         private void console_MouseDown(object sender, MouseEventArgs args)
         {
-            if (args.Button == MouseButtons.Right)
+            /*if (args.Button == MouseButtons.Right)
             {
                 if (logTabs.SelectedIndex == 0)
                 {
@@ -2804,7 +2792,7 @@ namespace DaRT
                 {
                     logContextMenu.Show(Cursor.Position);
                 }
-            }
+            }*/
         }
 
         private void GUI_Load(object sender, EventArgs args)
@@ -2873,8 +2861,8 @@ namespace DaRT
         {
             try
             {
-                if (url != "")
-                    Process.Start(url);
+                if (((Label)sender).AccessibleDescription != "")
+                    Process.Start(((Label)sender).AccessibleDescription);
             }
             catch(Exception e)
             {

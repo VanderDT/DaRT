@@ -384,7 +384,7 @@
     <value>Свои фильтры:</value>
   </data>
   <data name="DaRT_thank" xml:space="preserve">
-    <value>Спасибо запуск DaRT!</value>
+    <value>Спасибо за запуск DaRT!</value>
   </data>
   <data name="Data_settings" xml:space="preserve">
     <value>Настройка данных</value>
@@ -607,7 +607,7 @@ DaRT нашол существующую базу и будет пытаться
     <value>Сохранять логи</value>
   </data>
   <data name="Save_players" xml:space="preserve">
-    <value>Сохранять игроков</value>
+    <value>Сохр игрока</value>
   </data>
   <data name="Save_settings" xml:space="preserve">
     <value>Сохранить настройки</value>
