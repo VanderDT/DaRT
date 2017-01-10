@@ -2805,10 +2805,6 @@ namespace DaRT
                         options.SelectedIndex = 1;
                         input.Focus();
                     }
-                    else
-                    {
-                        options.SelectedIndex = 0;
-                    }
                 }
             }
         }

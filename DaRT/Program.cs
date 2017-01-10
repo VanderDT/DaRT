@@ -54,8 +54,6 @@ namespace DaRT
             }
             else
             {
-                AllocConsole();
-
                 #region Read Config
                 String ip = "127.0.0.1";
                 int port = 2302;
@@ -65,6 +63,7 @@ namespace DaRT
                 String script = "";
                 int loop = 0;
                 bool close = false;
+                bool window = true;
 
                 foreach (String arg in args)
                 {
@@ -87,7 +86,7 @@ namespace DaRT
                     {
                         password = arg.Split(new char[] { '=' }, 2, StringSplitOptions.RemoveEmptyEntries)[1];
                     }
-                    else if (arg.StartsWith("-command="))
+                    else if (arg.StartsWith("-command=") || arg.StartsWith("-cmd="))
                     {
                         command = arg.Split(new char[] { '=' }, 2, StringSplitOptions.RemoveEmptyEntries)[1];
                     }
@@ -98,6 +97,10 @@ namespace DaRT
                     else if(arg.StartsWith("-close"))
                     {
                         close = true;
+                    }
+                    else if (arg.StartsWith("-nowindow"))
+                    {
+                        window = false;
                     }
                     else if (arg.StartsWith("-script="))
                     {
@@ -114,6 +117,8 @@ namespace DaRT
                 RCon rcon = new RCon(null);
                 rcon.Connect(IPAddress.Parse(ip), port, password);
                 #endregion
+
+                if(window) AllocConsole();
 
                 #region Writing header
                 if (output != "")
@@ -324,7 +329,7 @@ namespace DaRT
                 }
                 else
                 {
-                    Write("You need to run atleast one command or one script.");
+                    Write("Params: -port=2302 ,-password= (-pass= -pw=), -command= (-cmd=), -output=file, -close, -nowindow, -loop=[-1,count], -script=file");
                 }
                 
                 rcon.Disconnect();
@@ -333,7 +338,7 @@ namespace DaRT
                     writer.Close();
                     writer.Dispose();
                 }
-                if (!close)
+                if (!close && window)
                 {
                     Console.WriteLine("All done. Press any key to close.");
                     Console.ReadKey();

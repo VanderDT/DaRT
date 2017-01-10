@@ -354,9 +354,12 @@ namespace DaRT
             foreach(string item in check)
             {
                 bool found = false;
+                string msg = "";
                 try
                 {
-                    found = item.Length > 3 && new System.Text.RegularExpressions.Regex(item.ToLower()).IsMatch(message.ToLower());
+                    System.Text.RegularExpressions.Match r = new System.Text.RegularExpressions.Regex(item.ToLower()).Match(message.ToLower());
+                    found = item.Length > 3 && r.Success;
+                    if (found && r.Groups.Count > 1) msg = r.Groups[1].Value; else msg=r.Value;
                 }
                 catch
                 {
@@ -375,13 +378,13 @@ namespace DaRT
                         if (ban)
                         {
                             _form.Log(String.Format(Resources.Strings.Autoban_for ,player.name ,item), LogType.Console, true);
-                            Ban _ban = new Ban(player.number, player.name, player.guid, "", -1, String.Format(Resources.Strings.Autoban_for,"",item) , true);
+                            Ban _ban = new Ban(player.number, player.name, player.guid, "", 0, String.Format(Resources.Strings.Autoban_for,"",msg) , true);
                             this.Ban(_ban);
                         }
                         else
                         {
                             _form.Log(String.Format(Resources.Strings.Autokick_for,player.name,item), LogType.Console, true);
-                            Kick _kick = new Kick(player.number, player.name, String.Format(Resources.Strings.Autokick_for,"",item));
+                            Kick _kick = new Kick(player.number, player.name, String.Format(Resources.Strings.Autokick_for,"",msg));
                             this.kick(_kick);
                         }
                     }
