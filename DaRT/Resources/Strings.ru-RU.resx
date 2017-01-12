@@ -697,4 +697,7 @@ DaRT нашол существующую базу и будет пытаться
   <data name="Vehicle_chat" xml:space="preserve">
     <value>Показать транспортный чат</value>
   </data>
+  <data name="Expired" xml:space="preserve">
+    <value>Истекшие</value>
+  </data>
 </root>

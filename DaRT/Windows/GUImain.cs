@@ -281,7 +281,8 @@ namespace DaRT
             bansContextMenu.Items.Add(Resources.Strings.Comment, null, comment_click);
             bansContextMenu.Items.Add(Resources.Strings.Unban, null, unban_click);
             bansContextMenu.Items.Add("-");
-            bansContextMenu.Items.Add(String.Format("{0} {1} {2}",Resources.Strings.Delete,Resources.Strings.All,Resources.Strings.Bans), null, expired_click);
+            bansContextMenu.Items.Add(String.Format("{0} {1} {2}",Resources.Strings.Delete,Resources.Strings.Expired, Resources.Strings.Bans), null, expired_click);
+            bansContextMenu.Items.Add(String.Format("{0} {1} {2}", Resources.Strings.Copy, Resources.Strings.All, Resources.Strings.Bans), null, copyall_click);
 
             // Attaching event handlers to detect state of context menu
             bansContextMenu.Opened += new System.EventHandler(this.menu_Opened);
@@ -709,12 +710,31 @@ namespace DaRT
         }
         private void expired_click(object sender, EventArgs args)
         {
-            for(int i = bans.Count - 1; i >= 0; i--)
+            foreach(Ban ban in bans)
             {
-                if (bans[i].time.Equals("expired"))
-                    rcon.unban(bans[i].number);
+                if (ban.time.Equals("expired"))
+                    rcon.unban(ban.number);
             }
             this.Log(Resources.Strings.Expired_removed, LogType.Console, false);
+        }
+        private void copyall_click(object sender, EventArgs args)
+        {
+            String bansAll = "";
+            foreach(ListViewItem item in bansList.Items)
+            {
+                if (!item.SubItems[2].Text.Equals("expired"))
+                    bansAll += String.Format("{0} {1} {2}\r\n", item.SubItems[1].Text, (item.SubItems[2].Text.Equals("perm"))?"-1": item.SubItems[2].Text, item.SubItems[3].Text);
+            }
+            try
+            {
+                Clipboard.SetText(bansAll);
+            }
+            catch (Exception e)
+            {
+                this.Log(Resources.Strings.Error_occ, LogType.Console, false);
+                this.Log(e.Message, LogType.Debug, false);
+                this.Log(e.StackTrace, LogType.Debug, false);
+            }
         }
         private void playerCopyAll_click(object sender, EventArgs args)
         {

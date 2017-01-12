@@ -696,4 +696,7 @@ Console mode allows you to execute RCon commands directly on the server.</value>
   <data name="Vehicle_chat" xml:space="preserve">
     <value>Show vehicle chat</value>
   </data>
+  <data name="Expired" xml:space="preserve">
+    <value>Expired</value>
+  </data>
 </root>
