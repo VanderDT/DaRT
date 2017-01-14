@@ -45,6 +45,7 @@ namespace DaRT
         // Public variables
         public String version;
         public RCon rcon;
+        private ToolTip tooltip = new ToolTip();
         private List<Player> players = new List<Player>();
         private List<Ban> bans = new List<Ban>();
         private List<Location> locations = new List<Location>();
@@ -399,7 +400,6 @@ namespace DaRT
         }
         private void InitializeTooltips()
         {
-            ToolTip tooltip = new ToolTip();
             tooltip.AutoPopDelay = 30000;
 
             tooltip.SetToolTip(connect, Resources.Strings.Tip_connect);
@@ -1703,8 +1703,6 @@ namespace DaRT
             List<string> admins = rcon.getAdmins();
             this.Invoke((MethodInvoker)delegate
             {
-                ToolTip tooltip = new ToolTip();
-                tooltip.AutoPopDelay = 30000;
                 tooltip.SetToolTip(this.adminCounter, String.Join<string>("\n", admins));
                 setAdminCount(admins.Count);
             });
