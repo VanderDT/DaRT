@@ -1427,21 +1427,7 @@ namespace DaRT
                     List<ListViewItem> items = new List<ListViewItem>();
                     for (int i = 0; i < players.Count; i++)
                     {
-                        // Get comment for GUID
-                        SqliteCommand commentCommand = new SqliteCommand(connection);
-                        commentCommand.CommandText = "SELECT comment FROM comments WHERE guid = @guid";
-                        commentCommand.Parameters.Add(new SqliteParameter("@guid", players[i].guid));
-
-                        SqliteDataReader commentReader = commentCommand.ExecuteReader();
-
-                        String comment = "";
-                        if (commentReader.Read())
-                            comment = this.GetSafeString(commentReader, 0);
-                        commentReader.Close();
-                        commentReader.Dispose();
-                        commentCommand.Dispose();
-
-                        String[] entries = { "", players[i].number.ToString(), players[i].ip, players[i].ping, players[i].guid, players[i].name, players[i].status, comment };
+                        String[] entries = { "", players[i].number.ToString(), players[i].ip, players[i].ping, players[i].guid, players[i].name, players[i].status, GetComment(players[i].guid) };
                         items.Add(new ListViewItem(entries));
                         items[i].ImageIndex = i;
                     }
@@ -2497,18 +2483,7 @@ namespace DaRT
                     String comment = "";
                     if (ban.ipguid.Length == 32)
                     {
-                        // Get comment for GUID
-                        using (command = new SqliteCommand("SELECT comment FROM comments WHERE guid = @guid", connection))
-                        {
-                            command.Parameters.Clear();
-                            command.Parameters.Add(new SqliteParameter("@guid", ban.ipguid));
-
-                            using (SqliteDataReader reader = command.ExecuteReader())
-                            {
-                                if (!reader.IsClosed && reader.HasRows && reader.Read())
-                                    comment = this.GetSafeString(reader, 0);
-                            }
-                        }
+                        comment = GetComment(ban.ipguid);
                     }
                     if (filter == -1 || searchtext.Equals("") ||
                         (filter == 0 && ban.ipguid.ToLower().Contains(searchtext)) ||
@@ -2642,6 +2617,31 @@ namespace DaRT
                 }
             }
             return items;
+        }
+        public String GetComment(String guid)
+        {
+            String comment = "";
+            // Get comment for GUID
+            try
+            {
+                using (command = new SqliteCommand("SELECT comment FROM comments WHERE guid = @guid", connection))
+                {
+                    command.Parameters.Clear();
+                    command.Parameters.Add(new SqliteParameter("@guid", guid));
+
+                    using (SqliteDataReader reader = command.ExecuteReader())
+                    {
+                        if (!reader.IsClosed && reader.HasRows && reader.Read())
+                            comment = this.GetSafeString(reader, 0);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                this.Log(e.Message, LogType.Debug, false);
+                this.Log(e.StackTrace, LogType.Debug, false);
+            }
+            return comment;
         }
         #endregion 
 
@@ -3111,21 +3111,7 @@ namespace DaRT
 
                     for (int i = 0; i < players.Count; i++)
                     {
-                        // Get comment for GUID
-                        SqliteCommand commentCommand = new SqliteCommand(connection);
-                        commentCommand.CommandText = "SELECT comment FROM comments WHERE guid = @guid";
-                        commentCommand.Parameters.Add(new SqliteParameter("@guid", players[i].guid));
-
-                        SqliteDataReader commentReader = commentCommand.ExecuteReader();
-
-                        String comment = "";
-                        if (commentReader.Read())
-                            comment = this.GetSafeString(commentReader, 0);
-                        commentReader.Close();
-                        commentReader.Dispose();
-                        commentCommand.Dispose();
-
-                        String[] items = { "", players[i].number.ToString(), players[i].ip, players[i].ping, players[i].guid, players[i].name, players[i].status, comment };
+                        String[] items = { "", players[i].number.ToString(), players[i].ip, players[i].ping, players[i].guid, players[i].name, players[i].status, GetComment(players[i].guid) };
                         ListViewItem item = new ListViewItem(items);
                         item.ImageIndex = i;
 
@@ -3180,21 +3166,7 @@ namespace DaRT
 
                     for (int i = 0; i < players.Count; i++)
                     {
-                        // Get comment for GUID
-                        SqliteCommand commentCommand = new SqliteCommand(connection);
-                        commentCommand.CommandText = "SELECT comment FROM comments WHERE guid = @guid";
-                        commentCommand.Parameters.Add(new SqliteParameter("@guid", players[i].guid));
-
-                        SqliteDataReader commentReader = commentCommand.ExecuteReader();
-
-                        String comment = "";
-                        if (commentReader.Read())
-                            comment = this.GetSafeString(commentReader, 0);
-                        commentReader.Close();
-                        commentReader.Dispose();
-                        commentCommand.Dispose();
-
-                        String[] items = { "", players[i].number.ToString(), players[i].ip, players[i].ping, players[i].guid, players[i].name, players[i].status, comment };
+                        String[] items = { "", players[i].number.ToString(), players[i].ip, players[i].ping, players[i].guid, players[i].name, players[i].status, GetComment(players[i].guid) };
                         ListViewItem item = new ListViewItem(items);
                         item.ImageIndex = i;
 
