@@ -106,6 +106,16 @@ namespace DaRT
             Settings.Default.autoBan.CopyTo(banArray, 0);
             autoBan.Lines = banArray;
 
+            dbRemote.Checked = Settings.Default.dbRemote;
+            dbHost.Enabled = dbRemote.Checked;
+            dbBase.Enabled = dbRemote.Checked;
+            dbUser.Enabled = dbRemote.Checked;
+            dbPassword.Enabled = dbRemote.Checked;
+            dbHost.Text = Settings.Default.dbHost;
+            dbBase.Text = Settings.Default.dbBase;
+            dbUser.Text = Settings.Default.dbUser;
+            dbPassword.Text = Settings.Default.dbPassword;
+
 
             showLogErrors.Checked = Settings.Default.showLogErrors;
             showScriptsLog.Checked = Settings.Default.showScriptsLog;
@@ -173,6 +183,12 @@ namespace DaRT
             Settings.Default.autoKick.AddRange(autoKick.Lines);
             Settings.Default.autoBan.Clear();
             Settings.Default.autoBan.AddRange(autoBan.Lines);
+
+            Settings.Default.dbRemote = dbRemote.Checked;
+            Settings.Default.dbHost = dbHost.Text;
+            Settings.Default.dbBase = dbBase.Text;
+            Settings.Default.dbUser = dbUser.Text;
+            Settings.Default.dbPassword = dbPassword.Text;
 
             Settings.Default.showLogErrors = showLogErrors.Checked;
             Settings.Default.showScriptsLog = showScriptsLog.Checked;
@@ -248,5 +264,13 @@ namespace DaRT
         {
             gui.InitializeNews();
         }
+        private void dbRemote_Click(object sender, EventArgs e)
+        {
+            dbHost.Enabled = dbRemote.Checked;
+            dbBase.Enabled = dbRemote.Checked;
+            dbUser.Enabled = dbRemote.Checked;
+            dbPassword.Enabled = dbRemote.Checked;
+        }
+
     }
 }

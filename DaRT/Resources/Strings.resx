@@ -699,4 +699,16 @@ Console mode allows you to execute RCon commands directly on the server.</value>
   <data name="Expired" xml:space="preserve">
     <value>Expired</value>
   </data>
+  <data name="Data_base" xml:space="preserve">
+    <value>Data base</value>
+  </data>
+  <data name="Remote_Base" xml:space="preserve">
+    <value>Remote Base</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="Use_Remote" xml:space="preserve">
+    <value>Use Remote data Base</value>
+  </data>
 </root>

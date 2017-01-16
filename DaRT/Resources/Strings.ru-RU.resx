@@ -700,4 +700,16 @@ DaRT нашол существующую базу и будет пытаться
   <data name="Expired" xml:space="preserve">
     <value>Истекшие</value>
   </data>
+  <data name="Data_base" xml:space="preserve">
+    <value>База данных</value>
+  </data>
+  <data name="Remote_Base" xml:space="preserve">
+    <value>Удаленная база</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Пользователь</value>
+  </data>
+  <data name="Use_Remote" xml:space="preserve">
+    <value>Использовать удаленную базу данных</value>
+  </data>
 </root>

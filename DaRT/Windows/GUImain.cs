@@ -48,7 +48,6 @@ namespace DaRT
         public RCon rcon;
         private ToolTip tooltip = new ToolTip();
         private List<Player> players = new List<Player>();
-        private List<Ban> bans = new List<Ban>();
         private List<Location> locations = new List<Location>();
         private SqliteConnection connection;
         private MySqlConnection remoteconnection;
@@ -743,10 +742,13 @@ namespace DaRT
         }
         private void expired_click(object sender, EventArgs args)
         {
-            foreach(Ban ban in bans)
+            foreach(ListViewItem item in bansList.Items)
             {
-                if (ban.time.Equals("expired"))
-                    rcon.unban(ban.number);
+                if (item.SubItems[2].Text.Equals("expired"))
+                {
+                    rcon.unban(item.SubItems[0].Text);
+                    bansList.Items.Remove(item);
+                }
             }
             this.Log(Resources.Strings.Expired_removed, LogType.Console, false);
         }
@@ -1120,6 +1122,18 @@ namespace DaRT
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
+
+            if(Settings.Default.dbRemote) 
+                try
+                {
+                    remoteconnection.Close();
+                    remoteconnection.Dispose();
+                }
+                catch (Exception e)
+                {
+                    this.Log(e.Message, LogType.Debug, false);
+                    this.Log(e.StackTrace, LogType.Debug, false);
+                }
 
             // Closing log file writer
             if (consoleWriter != null)
@@ -1547,120 +1561,21 @@ namespace DaRT
             {
                 pendingBans = true;
 
-                if (disconnect.Enabled)
+                if (rcon.Connected)
                 {
                     if (Settings.Default.showRefreshMessages)
                         this.Log(Resources.Strings.Refr_bans, LogType.Console, false);
 
-                    if (!Settings.Default.dartbrs)
-                    {
-                        bans = rcon.getBans();
-                    }
-                    else
-                    {
-                        #region BRS
-                        using (TcpClient client = new TcpClient())
-                        {
-                            client.Connect(IPAddress.Parse(host.Text), Int32.Parse(port.Text));
-                            client.SendTimeout = 15000;
-                            client.ReceiveTimeout = 15000;
+                    List<ListViewItem> items = GetBanList(-1, "");
 
-                            Socket socket = client.Client;
-
-                            byte[] buffer = Encoding.UTF8.GetBytes(password.Text);
-                            socket.Send(buffer);
-
-                            buffer = new byte[4];
-                            socket.Receive(buffer);
-
-                            int length = BitConverter.ToInt32(buffer, 0);
-                            socket.ReceiveBufferSize = length;
-
-                            buffer = Encoding.UTF8.GetBytes("OK");
-                            socket.Send(buffer);
-
-                            buffer = new byte[length];
-                            int tempLength = 0;
-                            int tempPos = 0;
-                            byte[] tempBuffer = new byte[1024];
-                            while ((tempLength = socket.Receive(tempBuffer, 1024, SocketFlags.None)) != 0)
-                            {
-                                Array.Copy(tempBuffer, 0, buffer, tempPos, tempLength);
-                                tempPos += tempLength;
-                            }
-
-                            String brsBans = Encoding.UTF8.GetString(buffer);
-                            bans.Clear();
-
-                            using (StringReader reader = new StringReader(brsBans))
-                            {
-                                String line;
-                                int number = 0;
-                                while ((line = reader.ReadLine()) != null)
-                                {
-                                    String[] items = line.Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                                    if (items.Length > 0)
-                                    {
-                                        String ipguid = items[0];
-                                        String time = items[1];
-                                        String reason = "(No reason)";
-                                        if (time == "-1")
-                                            time = "perm";
-                                        else
-                                        {
-                                            time = GetDuration(double.Parse(time)).ToString();
-
-                                            if (Int32.Parse(time) < 0)
-                                                time = "expired";
-                                        }
-
-                                        if (items.Length >= 3) reason = items[2];
-
-                                        if (ipguid.IndexOf('.') == -1)
-                                        {
-                                            bans.Add(new Ban(number.ToString(), ipguid, time, reason));
-                                            number++;
-                                        }
-                                    }
-
-                                }
-                            }
-                        }
-                        #endregion
-                    }
-
-                    if (bans != null && bans.Count > 0)
+                    if (items != null && items.Count > 0)
                     {
                         bansList.Invoke((MethodInvoker)delegate
                         {
                             bansList.ListViewItemSorter = null;
                             bansList.Items.Clear();
                         });
-
-
-                        List<ListViewItem> items = new List<ListViewItem>();
-                        for (int i = 0; i < bans.Count; i++)
-                        {
-                            String comment = "";
-                            if (bans[i].ipguid.Length == 32)
-                            {
-                                // Get comment for GUID
-                                using (command = new SqliteCommand("SELECT comment FROM comments WHERE guid = @guid", connection))
-                                {
-                                    command.Parameters.Clear();
-                                    command.Parameters.Add(new SqliteParameter("@guid", bans[i].ipguid));
-
-                                    using (SqliteDataReader reader = command.ExecuteReader())
-                                    {
-                                        if (!reader.IsClosed && reader.HasRows && reader.Read())
-                                            comment = this.GetSafeString(reader, 0);
-                                    }
-                                }
-                            }
-
-                            String[] entries = { bans[i].number, bans[i].ipguid, bans[i].time, bans[i].reason, comment };
-                            items.Add(new ListViewItem(entries));
-                        }
+                        
                         bansList.Invoke((MethodInvoker)delegate
                         {
                             bansList.Items.AddRange(items.ToArray());
@@ -1669,11 +1584,11 @@ namespace DaRT
 
                         this.Invoke((MethodInvoker)delegate
                         {
-                            this.Log(String.Format(Resources.Strings.Get_n_bans,bans.Count), LogType.Debug, false);
-                            setBanCount(bans.Count);
+                            this.Log(String.Format(Resources.Strings.Get_n_bans,bansList.Items.Count), LogType.Debug, false);
+                            setBanCount(bansList.Items.Count);
                         });
 
-                        if (bans.Count > 3000 && !Settings.Default.showedBanWarning && !Settings.Default.dartbrs)
+                        if (bansList.Items.Count > 3000 && !Settings.Default.showedBanWarning && !Settings.Default.dartbrs)
                         {
                             MessageBox.Show(Resources.Strings.Big_banlist, Resources.Strings.Notice, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -2571,6 +2486,163 @@ namespace DaRT
             }
             return items;
         }
+        public List<ListViewItem> GetBanList(int filter, String searchtext)
+        {
+            List<ListViewItem> items = new List<ListViewItem>();
+            if (!Settings.Default.dartbrs)
+            {
+                searchtext = searchtext.ToLower();
+                foreach(Ban ban in rcon.getBans())
+                {
+                    String comment = "";
+                    if (ban.ipguid.Length == 32)
+                    {
+                        // Get comment for GUID
+                        using (command = new SqliteCommand("SELECT comment FROM comments WHERE guid = @guid", connection))
+                        {
+                            command.Parameters.Clear();
+                            command.Parameters.Add(new SqliteParameter("@guid", ban.ipguid));
+
+                            using (SqliteDataReader reader = command.ExecuteReader())
+                            {
+                                if (!reader.IsClosed && reader.HasRows && reader.Read())
+                                    comment = this.GetSafeString(reader, 0);
+                            }
+                        }
+                    }
+                    if (filter == -1 || searchtext.Equals("") ||
+                        (filter == 0 && ban.ipguid.ToLower().Contains(searchtext)) ||
+                        (filter == 1 && ban.reason.ToLower().Contains(searchtext)) ||
+                        (filter == 2 && comment.ToLower().Contains(searchtext)))
+                    {
+                        String[] entries = { ban.number, ban.ipguid, ban.time, ban.reason, comment };
+                        items.Add(new ListViewItem(entries));
+                    }
+                }
+            }
+            else
+            {
+                #region BRS
+                /*using (TcpClient client = new TcpClient())
+                        {
+                            client.Connect(IPAddress.Parse(host.Text), Int32.Parse(port.Text));
+                            client.SendTimeout = 15000;
+                            client.ReceiveTimeout = 15000;
+
+                            Socket socket = client.Client;
+
+                            byte[] buffer = Encoding.UTF8.GetBytes(password.Text);
+                            socket.Send(buffer);
+
+                            buffer = new byte[4];
+                            socket.Receive(buffer);
+
+                            int length = BitConverter.ToInt32(buffer, 0);
+                            socket.ReceiveBufferSize = length;
+
+                            buffer = Encoding.UTF8.GetBytes("OK");
+                            socket.Send(buffer);
+
+                            buffer = new byte[length];
+                            int tempLength = 0;
+                            int tempPos = 0;
+                            byte[] tempBuffer = new byte[1024];
+                            while ((tempLength = socket.Receive(tempBuffer, 1024, SocketFlags.None)) != 0)
+                            {
+                                Array.Copy(tempBuffer, 0, buffer, tempPos, tempLength);
+                                tempPos += tempLength;
+                            }
+
+                            String brsBans = Encoding.UTF8.GetString(buffer);
+                            bans.Clear();
+
+                            using (StringReader reader = new StringReader(brsBans))
+                            {
+                                String line;
+                                int number = 0;
+                                while ((line = reader.ReadLine()) != null)
+                                {
+                                    String[] items = line.Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+                                    if (items.Length > 0)
+                                    {
+                                        String ipguid = items[0];
+                                        String time = items[1];
+                                        String reason = "(No reason)";
+                                        if (time == "-1")
+                                            time = "perm";
+                                        else
+                                        {
+                                            time = GetDuration(double.Parse(time)).ToString();
+
+                                            if (Int32.Parse(time) < 0)
+                                                time = "expired";
+                                        }
+
+                                        if (items.Length >= 3) reason = items[2];
+
+                                        if (ipguid.IndexOf('.') == -1)
+                                        {
+                                            bans.Add(new Ban(number.ToString(), ipguid, time, reason));
+                                            number++;
+                                        }
+                                    }
+
+                                }
+                            }
+                        }*/
+                #endregion
+                try
+                {
+                    command = new SqliteCommand(connection);
+
+                    command.CommandText = "SELECT bans.id, bans.guid, bans.duration, bans.reason, comments.comment FROM players LEFT JOIN comments ON bans.guid = comments.guid ";
+
+                    searchtext = "%" + searchtext + "%";
+                    if (filter != -1 && searchtext != "%%") switch (filter)
+                        {
+                            case 0:
+                                command.CommandText += "WHERE bans.guid LIKE(@guid) ";
+                                command.Parameters.Add(new SqliteParameter("@guid", searchtext));
+                                break;
+
+                            case 1:
+                                command.CommandText += "WHERE bans.reason LIKE(@lastip) ";
+                                command.Parameters.Add(new SqliteParameter("@lastip", searchtext));
+                                break;
+
+                            case 2:
+                                command.CommandText += "WHERE comments.comment LIKE(@comment) ";
+                                command.Parameters.Add(new SqliteParameter("@comment", searchtext));
+                                break;
+                        }
+
+                    command.CommandText += "ORDER BY id ASC";
+
+                    SqliteDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        int id = reader.GetInt32(0);
+                        String guid = this.GetSafeString(reader, 1);
+                        String duration = this.GetSafeString(reader, 2);
+                        String reason = this.GetSafeString(reader, 3);
+                        String comment = this.GetSafeString(reader, 4);
+
+                        String[] entries = { id.ToString(), guid, duration, reason, comment };
+                        items.Add(new ListViewItem(entries));
+                    }
+                    reader.Close();
+                    reader.Dispose();
+                    command.Dispose();
+                }
+                catch (Exception e)
+                {
+                    this.Log(e.Message, LogType.Debug, false);
+                    this.Log(e.StackTrace, LogType.Debug, false);
+                }
+            }
+            return items;
+        }
         #endregion 
 
         int seconds = 0;
@@ -3134,95 +3206,10 @@ namespace DaRT
             #region Bans
             if (tabControl.SelectedTab.Name == "bansTab")
             {
-                if (search.Text != "")
-                {
-                    bansList.Items.Clear();
-
-                    for (int i = 0; i < bans.Count; i++)
-                    {
-                        // Get comment for GUID
-                        String comment = "";
-                        if (bans[i].ipguid.Length == 32)
-                        {
-                            // Get comment for GUID
-                            using (command = new SqliteCommand("SELECT comment FROM comments WHERE guid = @guid", connection))
-                            {
-                                command.Parameters.Add(new SqliteParameter("@guid", bans[i].ipguid));
-
-                                using (SqliteDataReader reader = command.ExecuteReader())
-                                {
-                                    if (reader.Read())
-                                        comment = this.GetSafeString(reader, 0);
-                                }
-                            }
-                        }
-
-                        String[] items = { bans[i].number, bans[i].ipguid, bans[i].time, bans[i].reason, comment };
-                        ListViewItem item = new ListViewItem(items);
-
-                        bansList.Items.Add(item);
-                    }
-
-                    List<ListViewItem> foundItems = new List<ListViewItem>();
-
-                    foreach (ListViewItem item in bansList.Items)
-                    {
-                        if (item.SubItems[1].Text.ToLower().Contains(search.Text.ToLower()))
-                        {
-                            foundItems.Add(item);
-                        }
-                        else if (filter.SelectedIndex == 1)
-                        {
-                            if (item.SubItems[3].Text.ToLower().Contains(search.Text.ToLower()))
-                            {
-                                foundItems.Add(item);
-                            }
-                        }
-                        else if (filter.SelectedIndex == 2)
-                        {
-                            if (item.SubItems[4].Text.ToLower().Contains(search.Text.ToLower()))
-                            {
-                                foundItems.Add(item);
-                            }
-                        }
-                    }
-
-                    bansList.Items.Clear();
-
-                    for (int i = 0; i < foundItems.Count; i++)
-                    {
-                        bansList.Items.Add(foundItems[i]);
-                    }
-                }
-                else
-                {
-                    bansList.Items.Clear();
-
-                    for (int i = 0; i < bans.Count; i++)
-                    {
-                        // Get comment for GUID
-                        String comment = "";
-                        if (bans[i].ipguid.Length == 32)
-                        {
-                            // Get comment for GUID
-                            using (command = new SqliteCommand("SELECT comment FROM comments WHERE guid = @guid", connection))
-                            {
-                                command.Parameters.Add(new SqliteParameter("@guid", bans[i].ipguid));
-
-                                using (SqliteDataReader reader = command.ExecuteReader())
-                                {
-                                    if (reader.Read())
-                                        comment = this.GetSafeString(reader, 0);
-                                }
-                            }
-                        }
-
-                        String[] items = { bans[i].number, bans[i].ipguid, bans[i].time, bans[i].reason, comment };
-                        ListViewItem item = new ListViewItem(items);
-
-                        bansList.Items.Add(item);
-                    }
-                }
+                List<ListViewItem> items = GetBanList(filter.SelectedIndex, search.Text);
+                bansList.Items.Clear();
+                bansList.Items.AddRange(items.ToArray());
+                bansList.ListViewItemSorter = banSorter;
             }
             #endregion
             #region Player Database
