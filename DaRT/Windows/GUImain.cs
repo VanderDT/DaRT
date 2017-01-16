@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using Mono.Data.Sqlite;
+using MySql.Data.MySqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -50,7 +51,9 @@ namespace DaRT
         private List<Ban> bans = new List<Ban>();
         private List<Location> locations = new List<Location>();
         private SqliteConnection connection;
+        private MySqlConnection remoteconnection;
         private SqliteCommand command;
+        private MySqlCommand remotecommand;
         private ContextMenuStrip playerContextMenu;
         private ContextMenuStrip bansContextMenu;
         private ContextMenuStrip playerDBContextMenu;
@@ -101,6 +104,10 @@ namespace DaRT
                 {
                     command.ExecuteNonQuery();
                 }
+                using (command = new SqliteCommand("CREATE TABLE IF NOT EXISTS bans (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, guid VARCHAR(32) NOT NULL, date VARCHAR(20), reason VARCHAR(100), host VARCHAR(20) NOT NULL, synced INTEGER)", connection))
+                {
+                    command.ExecuteNonQuery();
+                }
                 using (command = new SqliteCommand("CREATE TABLE IF NOT EXISTS comments (guid VARCHAR(32) NOT NULL PRIMARY KEY, comment VARCHAR(256) NOT NULL, date VARCHAR(20))", connection))
                 {
                     command.ExecuteNonQuery();
@@ -111,6 +118,32 @@ namespace DaRT
                 }
             }
             catch(Exception e)
+            {
+                this.Log(e.Message, LogType.Debug, false);
+                this.Log(e.StackTrace, LogType.Debug, false);
+            }
+        }
+        private void InitializeRemoteBase()
+        {
+            try
+            {
+                remoteconnection = new MySqlConnection(String.Format("Database={1};Data Source={0};User Id={2};Password={3}", Settings.Default.dbHost,Settings.Default.dbBase,Settings.Default.dbUser,Settings.Default.dbPassword));
+                remoteconnection.Open();
+                using (remotecommand = new MySqlCommand("CREATE TABLE IF NOT EXISTS players (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, lastip VARCHAR(100) NOT NULL, lastseen DATETIME NOT NULL, guid VARCHAR(32) NOT NULL, name VARCHAR(100) NOT NULL, lastseenon VARCHAR(20), location VARCHAR(2))", remoteconnection))
+                {
+                    remotecommand.ExecuteNonQuery();
+                }
+                using (remotecommand = new MySqlCommand("CREATE TABLE IF NOT EXISTS bans (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, guid VARCHAR(32) NOT NULL, date DATETIME, reason VARCHAR(100), host VARCHAR(20) NOT NULL)", remoteconnection))
+                {
+                    remotecommand.ExecuteNonQuery();
+                }
+                using (remotecommand = new MySqlCommand("CREATE TABLE IF NOT EXISTS comments (guid VARCHAR(32) NOT NULL PRIMARY KEY, comment VARCHAR(256) NOT NULL, date DATETIME)", remoteconnection))
+                {
+                    remotecommand.ExecuteNonQuery();
+                }
+
+            }
+            catch (Exception e)
             {
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
@@ -2831,6 +2864,7 @@ namespace DaRT
             InitializeSplitter();
             InitializeText();
             InitializeDatabase();
+            if (Settings.Default.dbRemote) InitializeRemoteBase();
             InitializeFields();
             InitializeBox();
             InitializePlayerList();
