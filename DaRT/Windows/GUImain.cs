@@ -126,11 +126,11 @@ namespace DaRT
             {
                 remoteconnection = new MySqlConnection(String.Format("Database={1};Data Source={0};User Id={2};Password={3}", Settings.Default.dbHost,Settings.Default.dbBase,Settings.Default.dbUser,Settings.Default.dbPassword));
                 remoteconnection.Open();
-                using (MySqlCommand command = new MySqlCommand("CREATE TABLE IF NOT EXISTS players (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, lastip VARCHAR(100) NOT NULL, lastseen DATETIME NOT NULL, guid VARCHAR(32) NOT NULL, name VARCHAR(100) NOT NULL, lastseenon VARCHAR(20))", remoteconnection))
+                using (MySqlCommand command = new MySqlCommand("CREATE TABLE IF NOT EXISTS players (id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,lastip VARCHAR(20) NOT NULL,lastseen DATETIME NOT NULL,guid VARCHAR(32) NOT NULL,name VARCHAR(100) NOT NULL,lastseenon VARCHAR(20) NOT NULL)", remoteconnection))
                 {
                     command.ExecuteNonQuery();
                 }
-                using (MySqlCommand command = new MySqlCommand("CREATE TABLE IF NOT EXISTS bans (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, guid VARCHAR(32) NOT NULL, date DATETIME, reason VARCHAR(100), host VARCHAR(20) NOT NULL)", remoteconnection))
+                using (MySqlCommand command = new MySqlCommand("CREATE TABLE IF NOT EXISTS bans (id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT, guid VARCHAR(32) NOT NULL, date DATETIME, reason VARCHAR(100), host VARCHAR(20) NOT NULL)", remoteconnection))
                 {
                     command.ExecuteNonQuery();
                 }
@@ -374,6 +374,7 @@ namespace DaRT
             executeContextMenu.Items.Add("-");
             //executeContextMenu.Items.Add("Manually add a ban", null, addBan_Click);
             executeContextMenu.Items.Add(Resources.Strings.Multiban, null, addBans_Click);
+            if(Settings.Default.dbRemote) executeContextMenu.Items.Add(Resources.Strings.Load_bans_txt, null, loadBans_Click);
         }
         private void InitializeConsole()
         {
@@ -404,7 +405,7 @@ namespace DaRT
             // Setting the image in the lower right corner
             banner.Image = GetImage(Resources.Strings.Error_nocon);
         }
-        public void InitializeNews()
+        private void InitializeNews()
         {
             // Requesting the news
             Thread thread = new Thread(new ThreadStart(thread_News));
@@ -1223,7 +1224,7 @@ namespace DaRT
         #endregion
 
         #region Threads
-        private void thread_Connect()
+        public void thread_Connect()
         {
             // Connect process is pending
             pendingConnect = true;
@@ -1345,11 +1346,9 @@ namespace DaRT
                             Thread threadPlayer = new Thread(new ThreadStart(thread_Player));
                             threadPlayer.IsBackground = true;
                             threadPlayer.Start();
-                            Thread.Sleep(5000);
                             Thread threadBans = new Thread(new ThreadStart(thread_Bans));
                             threadBans.IsBackground = true;
                             threadBans.Start();
-                            Thread.Sleep(5000);
                             Thread threadAdmins = new Thread(new ThreadStart(thread_Admins));
                             threadAdmins.IsBackground = true;
                             threadAdmins.Start();
@@ -1393,6 +1392,7 @@ namespace DaRT
         {
             try
             {
+                while (pendingPlayers || pendingBans || pendingAdmins || pendingDatabase) Thread.Sleep(500);
                 pendingPlayers = true;
 
                 this.Invoke((MethodInvoker)delegate
@@ -1413,6 +1413,14 @@ namespace DaRT
 
                 if (players != null && players.Count > 0)
                 {
+                    List<ListViewItem> items = new List<ListViewItem>();
+                    for (int i = 0; i < players.Count; i++)
+                    {
+                        PlayerToSql(players[i]);
+                        String[] entries = { "", players[i].number.ToString(), players[i].ip, players[i].ping, players[i].guid, players[i].name, players[i].status, GetComment(players[i].guid) };
+                        items.Add(new ListViewItem(entries));
+                        items[i].ImageIndex = i;
+                    }
                     ImageList imageList = new ImageList();
                     imageList.ColorDepth = ColorDepth.Depth32Bit;
 
@@ -1427,17 +1435,6 @@ namespace DaRT
                         playerList.Items.Clear();
                         playerList.SmallImageList = imageList;
                         playerList.ListViewItemSorter = null;
-                    });
-                    List<ListViewItem> items = new List<ListViewItem>();
-                    for (int i = 0; i < players.Count; i++)
-                    {
-                        PlayerToSql(players[i]);
-                        String[] entries = { "", players[i].number.ToString(), players[i].ip, players[i].ping, players[i].guid, players[i].name, players[i].status, GetComment(players[i].guid) };
-                        items.Add(new ListViewItem(entries));
-                        items[i].ImageIndex = i;
-                    }
-                    playerList.Invoke((MethodInvoker)delegate
-                    {
                         playerList.Items.AddRange(items.ToArray());
                         playerList.ListViewItemSorter = playerSorter;
                     });
@@ -1504,6 +1501,7 @@ namespace DaRT
         {
             try
             {
+                while (pendingPlayers || pendingBans || pendingAdmins || pendingDatabase) Thread.Sleep(500);
                 pendingBans = true;
 
                 if (rcon.Connected)
@@ -1563,6 +1561,7 @@ namespace DaRT
         {
             try
             {
+                while (pendingPlayers || pendingBans || pendingAdmins || pendingDatabase) Thread.Sleep(500);
                 pendingDatabase = true;
                 
                 // Clear cache, set virtual list size
@@ -1590,8 +1589,9 @@ namespace DaRT
                 pendingDatabase = false;
             }
         }
-        private void thread_Admins()
+        public void thread_Admins()
         {
+            while (pendingPlayers || pendingBans || pendingAdmins || pendingDatabase) Thread.Sleep(500);
             pendingAdmins = true;
             List<string> admins = rcon.getAdmins();
             this.Invoke((MethodInvoker)delegate
@@ -1601,7 +1601,7 @@ namespace DaRT
             });
             pendingAdmins = false;
         }
-        private void thread_Banner()
+        public void thread_Banner()
         {
             try
             {
@@ -1636,7 +1636,7 @@ namespace DaRT
             }
         }
 
-        private void thread_News()
+        public void thread_News()
         {
             try
             {
@@ -1692,7 +1692,7 @@ namespace DaRT
                 }
             }
         }
-        private void thread_Sync()
+        public void thread_Sync()
         {
             this.Invoke((MethodInvoker)delegate
             {
@@ -2606,8 +2606,9 @@ namespace DaRT
         {
             String comment = "";
             // Get comment for GUID
-            if (Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open)
+            if (Settings.Default.dbRemote)
             {
+                while (remoteconnection.State == ConnectionState.Fetching) Thread.Sleep(100);
                 using (MySqlCommand command = new MySqlCommand("SELECT comment FROM comments WHERE guid = @guid", remoteconnection))
                 {
                     command.Parameters.Add(new MySqlParameter("@guid",guid));
@@ -2615,6 +2616,7 @@ namespace DaRT
                     {
                         if (!reader.IsClosed && reader.HasRows && reader.Read())
                             comment = this.GetSafeString(reader, 0);
+                        reader.Close();
                     }
                 }
             }
@@ -2628,6 +2630,7 @@ namespace DaRT
                     {
                         if (!reader.IsClosed && reader.HasRows && reader.Read())
                             comment = this.GetSafeString(reader, 0);
+                        reader.Close();
                     }
                 }
             }
@@ -2647,7 +2650,7 @@ namespace DaRT
 
             if (Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open)
             {
-                using (MySqlCommand command = new MySqlCommand("INSERT OR REPLACE INTO comments (guid, comment, date) VALUES (@guid, @comment, @date)", remoteconnection))
+                using (MySqlCommand command = new MySqlCommand("INSERT INTO comments (guid, comment, date) VALUES (@guid, @comment, @date) ON DUPLICATE KEY UPDATE comment=@comment, date=@date", remoteconnection))
                 {
                     command.Parameters.Clear();
                     command.Parameters.Add(new MySqlParameter("@guid", guid));
@@ -2725,6 +2728,7 @@ namespace DaRT
                         {
                             if (player.status != "Initializing")
                             {
+                                reader.Close();
                                 using (SqliteCommand addCommand = new SqliteCommand("INSERT INTO players (id, lastip, lastseen, guid, name, lastseenon, synced) VALUES(NULL, @lastip, @lastseen, @guid, @name, @lastseenon, 0)", connection))
                                 {
                                     addCommand.Parameters.Clear();
@@ -2739,6 +2743,7 @@ namespace DaRT
                         }
                         else
                         {
+                            reader.Close();
                             using (SqliteCommand updateCommand = new SqliteCommand("UPDATE players SET lastip = @lastip, lastseen = @lastseen, lastseenon = @lastseenon, synced = 0 WHERE guid = @guid AND name = @name", connection))
                             {
                                 updateCommand.Parameters.Clear();
@@ -2748,12 +2753,14 @@ namespace DaRT
                                 updateCommand.Parameters.Add(new SqliteParameter("@name", player.name));
                                 updateCommand.Parameters.Add(new SqliteParameter("@lastseenon", host.Text));
                                 updateCommand.ExecuteNonQuery();
-                            }
+                             }
                         }
+                        reader.Close();
                     }
                 }
                 if (Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open)
                 {
+                    while (remoteconnection.State == ConnectionState.Fetching) Thread.Sleep(100);
                     using (MySqlCommand selectCommand = new MySqlCommand("SELECT id, guid, name FROM players WHERE guid = @guid AND name = @name LIMIT 0, 1", remoteconnection))
                     {
                         selectCommand.Parameters.Clear();
@@ -2764,6 +2771,7 @@ namespace DaRT
                         {
                             if (!reader.Read())
                             {
+                                reader.Close();
                                 if (player.status != "Initializing")
                                 {
                                     using (MySqlCommand addCommand = new MySqlCommand("INSERT INTO players (lastip, lastseen, guid, name, lastseenon) VALUES(@lastip, @lastseen, @guid, @name, @lastseenon)", remoteconnection))
@@ -2780,6 +2788,7 @@ namespace DaRT
                             }
                             else
                             {
+                                reader.Close();
                                 using (MySqlCommand updateCommand = new MySqlCommand("UPDATE players SET lastip = @lastip, lastseen = @lastseen, lastseenon = @lastseenon WHERE guid = @guid AND name = @name", remoteconnection))
                                 {
                                     updateCommand.Parameters.Clear();
@@ -2791,6 +2800,7 @@ namespace DaRT
                                     updateCommand.ExecuteNonQuery();
                                 }
                             }
+                            reader.Close();
                         }
                     }
                 }
@@ -2799,6 +2809,7 @@ namespace DaRT
             {
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
+                this.Log(player.name, LogType.Debug, false);
             }
         }
         #endregion 
@@ -3029,6 +3040,41 @@ namespace DaRT
         {
             GUImanualBans gui = new GUImanualBans(rcon);
             gui.ShowDialog();
+        }
+        private void loadBans_Click(object sender, EventArgs args)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Bans file|bans.txt";
+            dialog.Title = Resources.Strings.Rel_bans;
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(dialog.OpenFile()))
+                {
+                    String line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        String[] items = line.Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+                        if (items.Length == 1)
+                            BanToSql(new Ban(items[0], 0, "Banned by DaRT!"));
+                        else if (items.Length == 3)
+                        {
+                            if (items[1] == "-1")
+                                BanToSql(new Ban(items[0], 0, items[2]));
+                            else
+                            {
+                                try
+                                {
+                                    BanToSql(new Ban(items[0], int.Parse(items[1]), items[2]));
+                                }
+                                catch
+                                {
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
         }
 
         private void hosts_Click(object sender, EventArgs args)

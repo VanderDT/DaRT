@@ -712,4 +712,7 @@ DaRT нашол существующую базу и будет пытаться
   <data name="Use_Remote" xml:space="preserve">
     <value>Использовать удаленную базу данных</value>
   </data>
+  <data name="Load_bans_txt" xml:space="preserve">
+    <value>Загрузка bans.txt в Базу</value>
+  </data>
 </root>

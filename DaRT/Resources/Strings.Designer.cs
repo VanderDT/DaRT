@@ -1044,6 +1044,15 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Load ban.txt in SQL.
+        /// </summary>
+        internal static string Load_bans_txt {
+            get {
+                return ResourceManager.GetString("Load_bans_txt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Load host.
         /// </summary>
         internal static string Load_host {

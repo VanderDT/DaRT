@@ -110,6 +110,7 @@
     <Reference Include="MySql.Data, Version=6.8.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>data\lib\MySql.Data.dll</HintPath>
+	  <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -433,10 +434,12 @@
     <None Include="data\lib\Mono.Data.Sqlite.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="data\lib\MySql.Data.dll" />
-    <Content Include="data\lib\sqlite3.dll">
+    <None Include="data\lib\MySql.Data.dll">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
+    <None Include="data\lib\sqlite3.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="icon.ico" />
     <None Include="Resources\logo.png" />
     <None Include="Resources\dart.png" />

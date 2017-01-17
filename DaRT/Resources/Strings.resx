@@ -711,4 +711,7 @@ Console mode allows you to execute RCon commands directly on the server.</value>
   <data name="Use_Remote" xml:space="preserve">
     <value>Use Remote data Base</value>
   </data>
+  <data name="Load_bans_txt" xml:space="preserve">
+    <value>Load ban.txt in SQL</value>
+  </data>
 </root>

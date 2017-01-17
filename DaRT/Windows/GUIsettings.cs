@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using DaRT.Properties;
 using System.Diagnostics;
@@ -262,7 +263,9 @@ namespace DaRT
 
         private void checkupdate_Click(object sender, EventArgs e)
         {
-            gui.InitializeNews();
+            Thread thread = new Thread(new ThreadStart(gui.thread_News));
+            thread.IsBackground = true;
+            thread.Start();
         }
         private void dbRemote_Click(object sender, EventArgs e)
         {
