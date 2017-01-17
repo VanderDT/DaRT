@@ -14,7 +14,6 @@ namespace DaRT
     public partial class GUIcomment : Form
     {
         private GUImain gui = null;
-        private SqliteConnection connection = null;
         private String guid = "";
         private String mode = "";
 
@@ -22,40 +21,19 @@ namespace DaRT
         {
             InitializeComponent();
         }
-        public void Comment(GUImain gui, SqliteConnection connection, String name, String guid, String mode)
+        public void Comment(GUImain gui, String name, String guid, String mode)
         {
             this.gui = gui;
-            this.connection = connection;
             this.Text = Resources.Strings.Comment + " " + name;
             this.guid = guid;
             this.mode = mode;
+            input.Text = gui.GetComment(guid);
 
-            SqliteCommand command = new SqliteCommand(connection);
-            command.CommandText = "SELECT comment FROM comments WHERE guid = @guid";
-            command.Parameters.Add(new SqliteParameter("@guid", guid));
-
-            SqliteDataReader reader = command.ExecuteReader();
-
-            if (reader.Read())
-                input.Text = gui.GetSafeString(reader, 0);
-
-            reader.Close();
-            reader.Dispose();
-            command.Dispose();
         }
 
         private void apply_Click(object sender, EventArgs e)
         {
-            SqliteCommand command = new SqliteCommand(connection);
-            String date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
-            command.CommandText = "INSERT OR REPLACE INTO comments (guid, comment, date) VALUES (@guid, @comment, @date)";
-            command.Parameters.Add(new SqliteParameter("@guid", guid));
-            command.Parameters.Add(new SqliteParameter("@comment", input.Text));
-            command.Parameters.Add(new SqliteParameter("@date", date));
-            command.ExecuteNonQuery();
-
-            command.Dispose();
+            gui.SetComment(guid, input.Text);
 
             if (mode == "players")
             {

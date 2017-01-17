@@ -530,7 +530,6 @@
             this.all.Size = new System.Drawing.Size(1009, 178);
             this.all.TabIndex = 1;
             this.all.Text = "";
-            this.all.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
             this.all.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.LinkClicked);
             this.all.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.DblClick_log);
             // 
@@ -557,7 +556,6 @@
             this.console.Size = new System.Drawing.Size(1009, 178);
             this.console.TabIndex = 2;
             this.console.Text = "";
-            this.console.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
             this.console.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.LinkClicked);
             this.console.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.DblClick_log);
             // 
@@ -584,7 +582,6 @@
             this.chat.Size = new System.Drawing.Size(1009, 178);
             this.chat.TabIndex = 3;
             this.chat.Text = "";
-            this.chat.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
             this.chat.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.LinkClicked);
             this.chat.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.DblClick_log);
             // 
@@ -611,7 +608,6 @@
             this.logs.Size = new System.Drawing.Size(1009, 178);
             this.logs.TabIndex = 3;
             this.logs.Text = "";
-            this.logs.MouseDown += new System.Windows.Forms.MouseEventHandler(this.console_MouseDown);
             this.logs.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.LinkClicked);
             this.logs.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.DblClick_log);
             // 

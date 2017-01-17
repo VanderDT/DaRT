@@ -51,8 +51,6 @@ namespace DaRT
         private List<Location> locations = new List<Location>();
         private SqliteConnection connection;
         private MySqlConnection remoteconnection;
-        private SqliteCommand command;
-        private MySqlCommand remotecommand;
         private ContextMenuStrip playerContextMenu;
         private ContextMenuStrip bansContextMenu;
         private ContextMenuStrip playerDBContextMenu;
@@ -99,19 +97,19 @@ namespace DaRT
                 connection = new SqliteConnection(@"Data Source=data\db\dart.db");
                 connection.Open();
 
-                using (command = new SqliteCommand("CREATE TABLE IF NOT EXISTS players (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, lastip VARCHAR(100) NOT NULL, lastseen VARCHAR(100) NOT NULL, guid VARCHAR(32) NOT NULL, name VARCHAR(100) NOT NULL, lastseenon VARCHAR(20), location VARCHAR(2), synced INTEGER)", connection))
+                using (SqliteCommand command = new SqliteCommand("CREATE TABLE IF NOT EXISTS players (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, lastip VARCHAR(100) NOT NULL, lastseen VARCHAR(100) NOT NULL, guid VARCHAR(32) NOT NULL, name VARCHAR(100) NOT NULL, lastseenon VARCHAR(20), location VARCHAR(2), synced INTEGER)", connection))
                 {
                     command.ExecuteNonQuery();
                 }
-                using (command = new SqliteCommand("CREATE TABLE IF NOT EXISTS bans (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, guid VARCHAR(32) NOT NULL, date VARCHAR(20), reason VARCHAR(100), host VARCHAR(20) NOT NULL, synced INTEGER)", connection))
+                using (SqliteCommand command = new SqliteCommand("CREATE TABLE IF NOT EXISTS bans (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, guid VARCHAR(32) NOT NULL, date VARCHAR(20), reason VARCHAR(100), host VARCHAR(20) NOT NULL, synced INTEGER)", connection))
                 {
                     command.ExecuteNonQuery();
                 }
-                using (command = new SqliteCommand("CREATE TABLE IF NOT EXISTS comments (guid VARCHAR(32) NOT NULL PRIMARY KEY, comment VARCHAR(256) NOT NULL, date VARCHAR(20))", connection))
+                using (SqliteCommand command = new SqliteCommand("CREATE TABLE IF NOT EXISTS comments (guid VARCHAR(32) NOT NULL PRIMARY KEY, comment VARCHAR(256) NOT NULL, date VARCHAR(20))", connection))
                 {
                     command.ExecuteNonQuery();
                 }
-                using (command = new SqliteCommand("CREATE TABLE IF NOT EXISTS hosts (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, host VARCHAR(100) NOT NULL, port VARCHAR(32) NOT NULL, password VARCHAR(100) NOT NULL)", connection))
+                using (SqliteCommand command = new SqliteCommand("CREATE TABLE IF NOT EXISTS hosts (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, host VARCHAR(100) NOT NULL, port VARCHAR(32) NOT NULL, password VARCHAR(100) NOT NULL)", connection))
                 {
                     command.ExecuteNonQuery();
                 }
@@ -128,17 +126,17 @@ namespace DaRT
             {
                 remoteconnection = new MySqlConnection(String.Format("Database={1};Data Source={0};User Id={2};Password={3}", Settings.Default.dbHost,Settings.Default.dbBase,Settings.Default.dbUser,Settings.Default.dbPassword));
                 remoteconnection.Open();
-                using (remotecommand = new MySqlCommand("CREATE TABLE IF NOT EXISTS players (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, lastip VARCHAR(100) NOT NULL, lastseen DATETIME NOT NULL, guid VARCHAR(32) NOT NULL, name VARCHAR(100) NOT NULL, lastseenon VARCHAR(20), location VARCHAR(2))", remoteconnection))
+                using (MySqlCommand command = new MySqlCommand("CREATE TABLE IF NOT EXISTS players (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, lastip VARCHAR(100) NOT NULL, lastseen DATETIME NOT NULL, guid VARCHAR(32) NOT NULL, name VARCHAR(100) NOT NULL, lastseenon VARCHAR(20))", remoteconnection))
                 {
-                    remotecommand.ExecuteNonQuery();
+                    command.ExecuteNonQuery();
                 }
-                using (remotecommand = new MySqlCommand("CREATE TABLE IF NOT EXISTS bans (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, guid VARCHAR(32) NOT NULL, date DATETIME, reason VARCHAR(100), host VARCHAR(20) NOT NULL)", remoteconnection))
+                using (MySqlCommand command = new MySqlCommand("CREATE TABLE IF NOT EXISTS bans (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, guid VARCHAR(32) NOT NULL, date DATETIME, reason VARCHAR(100), host VARCHAR(20) NOT NULL)", remoteconnection))
                 {
-                    remotecommand.ExecuteNonQuery();
+                    command.ExecuteNonQuery();
                 }
-                using (remotecommand = new MySqlCommand("CREATE TABLE IF NOT EXISTS comments (guid VARCHAR(32) NOT NULL PRIMARY KEY, comment VARCHAR(256) NOT NULL, date DATETIME)", remoteconnection))
+                using (MySqlCommand command = new MySqlCommand("CREATE TABLE IF NOT EXISTS comments (guid VARCHAR(32) NOT NULL PRIMARY KEY, comment VARCHAR(256) NOT NULL, date DATETIME)", remoteconnection))
                 {
-                    remotecommand.ExecuteNonQuery();
+                    command.ExecuteNonQuery();
                 }
 
             }
@@ -562,7 +560,7 @@ namespace DaRT
                     ListViewItem item = playerList.SelectedItems[0];
                     String name = item.SubItems[5].Text;
                     String guid = item.SubItems[4].Text;
-                    gui.Comment(this, connection, name, guid, "players");
+                    gui.Comment(this, name, guid, "players");
                 }
                 else if (tabControl.SelectedTab.Name == "bansTab")
                 {
@@ -571,7 +569,7 @@ namespace DaRT
                     String guid = item.SubItems[1].Text;
                     if (guid.Length == 32)
                     {
-                        gui.Comment(this, connection, name, guid, "bans");
+                        gui.Comment(this, name, guid, "bans");
                     }
                     else
                     {
@@ -584,7 +582,7 @@ namespace DaRT
                     ListViewItem item = playerDBList.SelectedItems[0];
                     String name = item.SubItems[4].Text;
                     String guid = item.SubItems[3].Text;
-                    gui.Comment(this, connection, name, guid, "player database");
+                    gui.Comment(this, name, guid, "player database");
                 }
             }
             catch(Exception e)
@@ -605,15 +603,21 @@ namespace DaRT
             String name = item.SubItems[4].Text;
 
             // Delete from player database...
-            command = new SqliteCommand(connection);
-
-            command.CommandText = "DELETE FROM players WHERE guid = @guid AND name = @name";
-            command.Parameters.Add(new SqliteParameter("@guid", guid));
-            command.Parameters.Add(new SqliteParameter("@name", name));
-            command.ExecuteNonQuery();
-
-            command.Dispose();
-
+            using (SqliteCommand command = new SqliteCommand("DELETE FROM players WHERE guid = @guid AND name = @name", connection))
+            {
+                command.Parameters.Add(new SqliteParameter("@guid", guid));
+                command.Parameters.Add(new SqliteParameter("@name", name));
+                command.ExecuteNonQuery();
+            }
+            if (Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open)
+            {
+                using (MySqlCommand command = new MySqlCommand("DELETE FROM players WHERE guid = @guid AND name = @name", remoteconnection))
+                {
+                    command.Parameters.Add(new SqliteParameter("@guid", guid));
+                    command.Parameters.Add(new SqliteParameter("@name", name));
+                    command.ExecuteNonQuery();
+                }
+            }
             playerDBList.Items.Remove(item);
 
             this.Log(String.Format(Resources.Strings.Deleted,name), LogType.Console, false);
@@ -1271,7 +1275,7 @@ namespace DaRT
                             try
                             {
                                 // Check if host is already in database
-                                using (command = new SqliteCommand("SELECT * FROM hosts WHERE host = @host AND port = @port", connection))
+                                using (SqliteCommand command = new SqliteCommand("SELECT * FROM hosts WHERE host = @host AND port = @port", connection))
                                 {
                                     command.Parameters.Clear();
                                     command.Parameters.Add(new SqliteParameter("@host", host.Text));
@@ -1427,6 +1431,7 @@ namespace DaRT
                     List<ListViewItem> items = new List<ListViewItem>();
                     for (int i = 0; i < players.Count; i++)
                     {
+                        PlayerToSql(players[i]);
                         String[] entries = { "", players[i].number.ToString(), players[i].ip, players[i].ping, players[i].guid, players[i].name, players[i].status, GetComment(players[i].guid) };
                         items.Add(new ListViewItem(entries));
                         items[i].ImageIndex = i;
@@ -1466,7 +1471,7 @@ namespace DaRT
                     for (int i = 0; i < players.Count; i++)
                     {
                         String lastip = players[i].ip;
-                        String lastseen = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                        
                         String guid = players[i].guid;
                         String name = players[i].name;
                         String status = players[i].status;
@@ -1474,53 +1479,7 @@ namespace DaRT
 
                         if (Settings.Default.savePlayers)
                         {
-                            try
-                            {
-                                using (SqliteCommand selectCommand = new SqliteCommand("SELECT id, guid, name FROM players WHERE guid = @guid AND name = @name LIMIT 0, 1", connection))
-                                {
-                                    selectCommand.Parameters.Clear();
-                                    selectCommand.Parameters.Add(new SqliteParameter("@guid", guid));
-                                    selectCommand.Parameters.Add(new SqliteParameter("@name", name));
 
-                                    using (SqliteDataReader reader = selectCommand.ExecuteReader())
-                                    {
-                                        if (!reader.Read())
-                                        {
-                                            if (status != "Initializing")
-                                            {
-                                                using (SqliteCommand addCommand = new SqliteCommand("INSERT INTO players (id, lastip, lastseen, guid, name, lastseenon, synced) VALUES(NULL, @lastip, @lastseen, @guid, @name, @lastseenon, 0)", connection))
-                                                {
-                                                    addCommand.Parameters.Clear();
-                                                    addCommand.Parameters.Add(new SqliteParameter("@lastip", lastip));
-                                                    addCommand.Parameters.Add(new SqliteParameter("@lastseen", lastseen));
-                                                    addCommand.Parameters.Add(new SqliteParameter("@guid", guid));
-                                                    addCommand.Parameters.Add(new SqliteParameter("@name", name));
-                                                    addCommand.Parameters.Add(new SqliteParameter("@lastseenon", lastseenon));
-                                                    addCommand.ExecuteNonQuery();
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            using (SqliteCommand updateCommand = new SqliteCommand("UPDATE players SET lastip = @lastip, lastseen = @lastseen, lastseenon = @lastseenon, synced = 0 WHERE guid = @guid AND name = @name", connection))
-                                            {
-                                                updateCommand.Parameters.Clear();
-                                                updateCommand.Parameters.Add(new SqliteParameter("@lastip", lastip));
-                                                updateCommand.Parameters.Add(new SqliteParameter("@lastseen", lastseen));
-                                                updateCommand.Parameters.Add(new SqliteParameter("@guid", guid));
-                                                updateCommand.Parameters.Add(new SqliteParameter("@name", name));
-                                                updateCommand.Parameters.Add(new SqliteParameter("@lastseenon", lastseenon));
-                                                updateCommand.ExecuteNonQuery();
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            catch(Exception e)
-                            {
-                                this.Log(e.Message, LogType.Debug, false);
-                                this.Log(e.StackTrace, LogType.Debug, false);
-                            }
                         }
                     }
                 }
@@ -1751,40 +1710,31 @@ namespace DaRT
                 if (File.Exists("data/db/players.db"))
                     File.Copy("data/db/players.db", "data/db/players.db_bak");
 
-                this.Log("Reading database...", LogType.Console, false);
-                command = new SqliteCommand(connection);
-                command.CommandText = "SELECT guid, name, lastip, lastseenon, location, lastseen FROM players WHERE synced = 0";
-
-                SqliteDataReader reader = command.ExecuteReader();
-
                 List<Player> sync = new List<Player>();
-
-                while (reader.Read())
+                this.Log("Reading database...", LogType.Console, false);
+                using (SqliteCommand command = new SqliteCommand("SELECT guid, name, lastip, lastseenon, location, lastseen FROM players WHERE synced = 0", connection))
                 {
-                    String guid = this.GetSafeString(reader, 0);
-                    String name = this.GetSafeString(reader, 1);
-                    String lastip = this.GetSafeString(reader, 2);
-                    String lastseenon = this.GetSafeString(reader, 3);
-                    String location = this.GetSafeString(reader, 4);
-                    String lastseen = this.GetSafeString(reader, 5);
+                    using (SqliteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            String guid = this.GetSafeString(reader, 0);
+                            String name = this.GetSafeString(reader, 1);
+                            String lastip = this.GetSafeString(reader, 2);
+                            String lastseenon = this.GetSafeString(reader, 3);
+                            String location = this.GetSafeString(reader, 4);
+                            String lastseen = this.GetSafeString(reader, 5);
 
-                    sync.Add(new Player(0, lastip, "", guid, name, "", lastseen, lastseenon, location));
+                            sync.Add(new Player(0, lastip, "", guid, name, "", lastseen, lastseenon, location));
+                        }
+
+                        reader.Close();
+                    }
                 }
 
-                reader.Close();
-                reader.Dispose();
-                command.Dispose();
-
                 this.Log("Wiping database...", LogType.Console, false);
-                command = new SqliteCommand(connection);
-                command.CommandText = "DELETE FROM players";
-                command.ExecuteNonQuery();
-                command.Dispose();
-
-                command = new SqliteCommand(connection);
-                command.CommandText = "DELETE FROM Sqlite_sequence WHERE 'name' = 'players'";
-                command.ExecuteNonQuery();
-                command.Dispose();
+                using(SqliteCommand command = new SqliteCommand("DELETE FROM players",connection)) command.ExecuteNonQuery();
+                using(SqliteCommand command = new SqliteCommand("DELETE FROM Sqlite_sequence WHERE 'name' = 'players'",connection)) command.ExecuteNonQuery();
 
                 this.Log("Contacting master server...", LogType.Console, false);
                 this.Log(String.Format("Syncing {0} players from database...", sync.Count), LogType.Console, false);
@@ -1846,27 +1796,28 @@ namespace DaRT
 
                     if (status == 200 && responseStream.ContentLength != 0)
                     {
-                        command = new SqliteCommand(connection);
-                        command.CommandText = "INSERT INTO players (id, lastip, lastseen, guid, name, lastseenon, location, synced) VALUES(NULL, @lastip, @lastseen, @guid, @name, @lastseenon, @location, 1)";
-
-                        using (StreamReader stream = new StreamReader(responseStream.GetResponseStream()))
+                        using (SqliteCommand command = new SqliteCommand("INSERT INTO players (id, lastip, lastseen, guid, name, lastseenon, location, synced) VALUES(NULL, @lastip, @lastseen, @guid, @name, @lastseenon, @location, 1)", connection))
                         {
-                            String line;
-                            int received = 0;
-                            while ((line = stream.ReadLine()) != null)
-                            {
-                                String[] items = line.Split(new char[] { ';' }, 6, StringSplitOptions.RemoveEmptyEntries);
 
-                                command.Parameters.Add(new SqliteParameter("@lastip", items[1]));
-                                command.Parameters.Add(new SqliteParameter("@lastseen", items[4]));
-                                command.Parameters.Add(new SqliteParameter("@guid", items[0]));
-                                command.Parameters.Add(new SqliteParameter("@name", items[5]));
-                                command.Parameters.Add(new SqliteParameter("@lastseenon", items[2]));
-                                command.Parameters.Add(new SqliteParameter("@location", items[3]));
-                                command.ExecuteNonQuery();
-                                received++;
+                            using (StreamReader stream = new StreamReader(responseStream.GetResponseStream()))
+                            {
+                                String line;
+                                int received = 0;
+                                while ((line = stream.ReadLine()) != null)
+                                {
+                                    String[] items = line.Split(new char[] { ';' }, 6, StringSplitOptions.RemoveEmptyEntries);
+
+                                    command.Parameters.Add(new SqliteParameter("@lastip", items[1]));
+                                    command.Parameters.Add(new SqliteParameter("@lastseen", items[4]));
+                                    command.Parameters.Add(new SqliteParameter("@guid", items[0]));
+                                    command.Parameters.Add(new SqliteParameter("@name", items[5]));
+                                    command.Parameters.Add(new SqliteParameter("@lastseenon", items[2]));
+                                    command.Parameters.Add(new SqliteParameter("@location", items[3]));
+                                    command.ExecuteNonQuery();
+                                    received++;
+                                }
+                                this.Log("Received " + received + "players from master server.", LogType.Console, false);
                             }
-                            this.Log("Received " + received + "players from master server.", LogType.Console, false);
                         }
                     }
                     else
@@ -1979,6 +1930,13 @@ namespace DaRT
             else
                 return reader.GetString(index);
         }
+        public string GetSafeString(MySqlDataReader reader, int index)
+        {
+            if (reader.IsDBNull(index))
+                return string.Empty;
+            else
+                return reader.GetString(index);
+        }
         private bool isPort(String number)
         {
             try
@@ -2039,14 +1997,6 @@ namespace DaRT
         public void kick(Kick kick)
         {
             rcon.kick(kick);
-        }
-        public void banIP(BanIP ban)
-        {
-            rcon.banIP(ban);
-        }
-        public void banOffline(BanOffline ban)
-        {
-            rcon.banOffline(ban);
         }
 
         public void Log(object message, LogType type, bool important)
@@ -2285,7 +2235,7 @@ namespace DaRT
         {
             try
             {
-                using (command = new SqliteCommand("SELECT location FROM players WHERE lastip = @lastip AND location != ''", connection))
+                using (SqliteCommand command = new SqliteCommand("SELECT location FROM players WHERE lastip = @lastip AND location != ''", connection))
                 {
                     command.Parameters.Clear();
                     command.Parameters.Add(new SqliteParameter("@lastip", ip));
@@ -2339,12 +2289,12 @@ namespace DaRT
 
                             if (location != "")
                             {
-                                using (command = new SqliteCommand("UPDATE players SET location = @location WHERE lastip = @lastip", connection))
+                                using (SqliteCommand updatecommand = new SqliteCommand("UPDATE players SET location = @location WHERE lastip = @lastip", connection))
                                 {
-                                    command.Parameters.Clear();
-                                    command.Parameters.Add(new SqliteParameter("@location", location));
-                                    command.Parameters.Add(new SqliteParameter("@lastip", ip));
-                                    command.ExecuteNonQuery();
+                                    updatecommand.Parameters.Clear();
+                                    updatecommand.Parameters.Add(new SqliteParameter("@location", location));
+                                    updatecommand.Parameters.Add(new SqliteParameter("@lastip", ip));
+                                    updatecommand.ExecuteNonQuery();
                                 }
 
                                 if (File.Exists("data/img/flags/" + location + ".gif"))
@@ -2387,7 +2337,7 @@ namespace DaRT
             try
             {
                 string location = "?";
-                using (command = new SqliteCommand("SELECT country FROM location WHERE start <= @ip AND end >= @ip", connection))
+                using (SqliteCommand command = new SqliteCommand("SELECT country FROM location WHERE start <= @ip AND end >= @ip", connection))
                 {
                     command.Parameters.Add(new SqliteParameter("@ip", this.IPToInt(IPAddress.Parse(ip))));
 
@@ -2413,57 +2363,114 @@ namespace DaRT
             List<ListViewItem> items = new List<ListViewItem>();
             try
             {
-                command = new SqliteCommand(connection);
+                searchtext = "%" + searchtext + "%";
 
-                command.CommandText = "SELECT players.id, players.lastip, players.lastseen, players.guid, players.name, players.lastseenon, comments.comment FROM players LEFT JOIN comments ON players.guid = comments.guid ";
-
-                if (filter != -1 && searchtext != "")
+                if (Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open)
                 {
-                    searchtext = "%" + searchtext + "%";
-                    switch (filter)
+                    using (MySqlCommand command = new MySqlCommand("SELECT players.id, players.lastip, players.lastseen, players.guid, players.name, players.lastseenon, comments.comment FROM players LEFT JOIN comments ON players.guid = comments.guid ", remoteconnection))
                     {
-                        case 0:
-                            command.CommandText += "WHERE players.name LIKE(@name) ";
-                            command.Parameters.Add(new SqliteParameter("@name", searchtext));
-                            break;
 
-                        case 1:
-                            command.CommandText += "WHERE players.guid LIKE(@guid) ";
-                            command.Parameters.Add(new SqliteParameter("@guid", searchtext));
-                            break;
+                        if (filter != -1 && searchtext != "%%")
+                        {
+                            switch (filter)
+                            {
+                                case 0:
+                                    command.CommandText += "WHERE players.name LIKE(@name) ";
+                                    command.Parameters.Add(new MySqlParameter("@name", searchtext));
+                                    break;
 
-                        case 2:
-                            command.CommandText += "WHERE players.lastip LIKE(@lastip) ";
-                            command.Parameters.Add(new SqliteParameter("@lastip", searchtext));
-                            break;
+                                case 1:
+                                    command.CommandText += "WHERE players.guid LIKE(@guid) ";
+                                    command.Parameters.Add(new MySqlParameter("@guid", searchtext));
+                                    break;
 
-                        case 3:
-                            command.CommandText += "WHERE comments.comment LIKE(@comment) ";
-                            command.Parameters.Add(new SqliteParameter("@comment", searchtext));
-                            break;
+                                case 2:
+                                    command.CommandText += "WHERE players.lastip LIKE(@lastip) ";
+                                    command.Parameters.Add(new MySqlParameter("@lastip", searchtext));
+                                    break;
+
+                                case 3:
+                                    command.CommandText += "WHERE comments.comment LIKE(@comment) ";
+                                    command.Parameters.Add(new MySqlParameter("@comment", searchtext));
+                                    break;
+                            }
+                        }
+
+                        command.CommandText += "ORDER BY id ASC";
+
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                int id = reader.GetInt32(0);
+                                String lastip = this.GetSafeString(reader, 1);
+                                String lastseen = this.GetSafeString(reader, 2);
+                                String guid = this.GetSafeString(reader, 3);
+                                String name = this.GetSafeString(reader, 4);
+                                String lastseenon = this.GetSafeString(reader, 5);
+                                String comment = this.GetSafeString(reader, 6);
+
+                                String[] row = { id.ToString(), lastip, lastseen, guid, name, lastseenon, comment };
+                                items.Add(new ListViewItem(row));
+                            }
+                            reader.Close();
+                        }
+                    }
+
+                }
+                else
+                {
+                    using (SqliteCommand command = new SqliteCommand(connection))
+                    {
+                        command.CommandText = "SELECT players.id, players.lastip, players.lastseen, players.guid, players.name, players.lastseenon, comments.comment FROM players LEFT JOIN comments ON players.guid = comments.guid ";
+
+                        if (filter != -1 && searchtext != "%%")
+                        {
+                            switch (filter)
+                            {
+                                case 0:
+                                    command.CommandText += "WHERE players.name LIKE(@name) ";
+                                    command.Parameters.Add(new SqliteParameter("@name", searchtext));
+                                    break;
+
+                                case 1:
+                                    command.CommandText += "WHERE players.guid LIKE(@guid) ";
+                                    command.Parameters.Add(new SqliteParameter("@guid", searchtext));
+                                    break;
+
+                                case 2:
+                                    command.CommandText += "WHERE players.lastip LIKE(@lastip) ";
+                                    command.Parameters.Add(new SqliteParameter("@lastip", searchtext));
+                                    break;
+
+                                case 3:
+                                    command.CommandText += "WHERE comments.comment LIKE(@comment) ";
+                                    command.Parameters.Add(new SqliteParameter("@comment", searchtext));
+                                    break;
+                            }
+                        }
+
+                        command.CommandText += "ORDER BY id ASC";
+
+                        using (SqliteDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                int id = reader.GetInt32(0);
+                                String lastip = this.GetSafeString(reader, 1);
+                                String lastseen = this.GetSafeString(reader, 2);
+                                String guid = this.GetSafeString(reader, 3);
+                                String name = this.GetSafeString(reader, 4);
+                                String lastseenon = this.GetSafeString(reader, 5);
+                                String comment = this.GetSafeString(reader, 6);
+
+                                String[] row = { id.ToString(), lastip, lastseen, guid, name, lastseenon, comment };
+                                items.Add(new ListViewItem(row));
+                            }
+                            reader.Close();
+                        }
                     }
                 }
-
-                command.CommandText += "ORDER BY id ASC";
-
-                SqliteDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    int id = reader.GetInt32(0);
-                    String lastip = this.GetSafeString(reader, 1);
-                    String lastseen = this.GetSafeString(reader, 2);
-                    String guid = this.GetSafeString(reader, 3);
-                    String name = this.GetSafeString(reader, 4);
-                    String lastseenon = this.GetSafeString(reader, 5);
-                    String comment = this.GetSafeString(reader, 6);
-
-                    String[] row = { id.ToString(), lastip, lastseen, guid, name, lastseenon, comment };
-                    items.Add(new ListViewItem(row));
-                }
-                reader.Close();
-                reader.Dispose();
-                command.Dispose();
             }
             catch (Exception e)
             {
@@ -2497,118 +2504,95 @@ namespace DaRT
             }
             else
             {
-                #region BRS
-                /*using (TcpClient client = new TcpClient())
-                        {
-                            client.Connect(IPAddress.Parse(host.Text), Int32.Parse(port.Text));
-                            client.SendTimeout = 15000;
-                            client.ReceiveTimeout = 15000;
-
-                            Socket socket = client.Client;
-
-                            byte[] buffer = Encoding.UTF8.GetBytes(password.Text);
-                            socket.Send(buffer);
-
-                            buffer = new byte[4];
-                            socket.Receive(buffer);
-
-                            int length = BitConverter.ToInt32(buffer, 0);
-                            socket.ReceiveBufferSize = length;
-
-                            buffer = Encoding.UTF8.GetBytes("OK");
-                            socket.Send(buffer);
-
-                            buffer = new byte[length];
-                            int tempLength = 0;
-                            int tempPos = 0;
-                            byte[] tempBuffer = new byte[1024];
-                            while ((tempLength = socket.Receive(tempBuffer, 1024, SocketFlags.None)) != 0)
-                            {
-                                Array.Copy(tempBuffer, 0, buffer, tempPos, tempLength);
-                                tempPos += tempLength;
-                            }
-
-                            String brsBans = Encoding.UTF8.GetString(buffer);
-                            bans.Clear();
-
-                            using (StringReader reader = new StringReader(brsBans))
-                            {
-                                String line;
-                                int number = 0;
-                                while ((line = reader.ReadLine()) != null)
-                                {
-                                    String[] items = line.Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                                    if (items.Length > 0)
-                                    {
-                                        String ipguid = items[0];
-                                        String time = items[1];
-                                        String reason = "(No reason)";
-                                        if (time == "-1")
-                                            time = "perm";
-                                        else
-                                        {
-                                            time = GetDuration(double.Parse(time)).ToString();
-
-                                            if (Int32.Parse(time) < 0)
-                                                time = "expired";
-                                        }
-
-                                        if (items.Length >= 3) reason = items[2];
-
-                                        if (ipguid.IndexOf('.') == -1)
-                                        {
-                                            bans.Add(new Ban(number.ToString(), ipguid, time, reason));
-                                            number++;
-                                        }
-                                    }
-
-                                }
-                            }
-                        }*/
-                #endregion
                 try
                 {
-                    command = new SqliteCommand(connection);
-
-                    command.CommandText = "SELECT bans.id, bans.guid, bans.duration, bans.reason, comments.comment FROM players LEFT JOIN comments ON bans.guid = comments.guid ";
-
-                    searchtext = "%" + searchtext + "%";
-                    if (filter != -1 && searchtext != "%%") switch (filter)
-                        {
-                            case 0:
-                                command.CommandText += "WHERE bans.guid LIKE(@guid) ";
-                                command.Parameters.Add(new SqliteParameter("@guid", searchtext));
-                                break;
-
-                            case 1:
-                                command.CommandText += "WHERE bans.reason LIKE(@lastip) ";
-                                command.Parameters.Add(new SqliteParameter("@lastip", searchtext));
-                                break;
-
-                            case 2:
-                                command.CommandText += "WHERE comments.comment LIKE(@comment) ";
-                                command.Parameters.Add(new SqliteParameter("@comment", searchtext));
-                                break;
-                        }
-
-                    command.CommandText += "ORDER BY id ASC";
-
-                    SqliteDataReader reader = command.ExecuteReader();
-
-                    while (reader.Read())
+                    if (Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open)
                     {
-                        int id = reader.GetInt32(0);
-                        String guid = this.GetSafeString(reader, 1);
-                        String duration = this.GetSafeString(reader, 2);
-                        String reason = this.GetSafeString(reader, 3);
-                        String comment = this.GetSafeString(reader, 4);
+                        using (MySqlCommand command = new MySqlCommand("SELECT bans.id, bans.guid, bans.duration, bans.reason, comments.comment FROM players LEFT JOIN comments ON bans.guid = comments.guid ", remoteconnection))
+                        {
+       
+                            searchtext = "%" + searchtext + "%";
+                            if (filter != -1 && searchtext != "%%") switch (filter)
+                                {
+                                    case 0:
+                                        command.CommandText += "WHERE bans.guid LIKE(@guid) ";
+                                        command.Parameters.Add(new MySqlParameter("@guid", searchtext));
+                                        break;
 
-                        String[] entries = { id.ToString(), guid, duration, reason, comment };
-                        items.Add(new ListViewItem(entries));
+                                    case 1:
+                                        command.CommandText += "WHERE bans.reason LIKE(@lastip) ";
+                                        command.Parameters.Add(new MySqlParameter("@lastip", searchtext));
+                                        break;
+
+                                    case 2:
+                                        command.CommandText += "WHERE comments.comment LIKE(@comment) ";
+                                        command.Parameters.Add(new MySqlParameter("@comment", searchtext));
+                                        break;
+                                }
+
+                            command.CommandText += "ORDER BY id ASC";
+
+                            using (MySqlDataReader reader = command.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    int id = reader.GetInt32(0);
+                                    String guid = this.GetSafeString(reader, 1);
+                                    String duration = this.GetSafeString(reader, 2);
+                                    String reason = this.GetSafeString(reader, 3);
+                                    String comment = this.GetSafeString(reader, 4);
+
+                                    String[] entries = { id.ToString(), guid, duration, reason, comment };
+                                    items.Add(new ListViewItem(entries));
+                                }
+                                reader.Close();
+                            }
+                        }
                     }
-                    reader.Close();
-                    reader.Dispose();
-                    command.Dispose();
+                    else
+                    {
+                        using (SqliteCommand command = new SqliteCommand(connection))
+                        {
+                            command.CommandText = "SELECT bans.id, bans.guid, bans.duration, bans.reason, comments.comment FROM players LEFT JOIN comments ON bans.guid = comments.guid ";
+
+                            searchtext = "%" + searchtext + "%";
+                            if (filter != -1 && searchtext != "%%") switch (filter)
+                                {
+                                    case 0:
+                                        command.CommandText += "WHERE bans.guid LIKE(@guid) ";
+                                        command.Parameters.Add(new SqliteParameter("@guid", searchtext));
+                                        break;
+
+                                    case 1:
+                                        command.CommandText += "WHERE bans.reason LIKE(@lastip) ";
+                                        command.Parameters.Add(new SqliteParameter("@lastip", searchtext));
+                                        break;
+
+                                    case 2:
+                                        command.CommandText += "WHERE comments.comment LIKE(@comment) ";
+                                        command.Parameters.Add(new SqliteParameter("@comment", searchtext));
+                                        break;
+                                }
+
+                            command.CommandText += "ORDER BY id ASC";
+
+                            using (SqliteDataReader reader = command.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    int id = reader.GetInt32(0);
+                                    String guid = this.GetSafeString(reader, 1);
+                                    String duration = this.GetSafeString(reader, 2);
+                                    String reason = this.GetSafeString(reader, 3);
+                                    String comment = this.GetSafeString(reader, 4);
+
+                                    String[] entries = { id.ToString(), guid, duration, reason, comment };
+                                    items.Add(new ListViewItem(entries));
+                                }
+                                reader.Close();
+                            }
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
@@ -2622,11 +2606,22 @@ namespace DaRT
         {
             String comment = "";
             // Get comment for GUID
-            try
+            if (Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open)
             {
-                using (command = new SqliteCommand("SELECT comment FROM comments WHERE guid = @guid", connection))
+                using (MySqlCommand command = new MySqlCommand("SELECT comment FROM comments WHERE guid = @guid", remoteconnection))
                 {
-                    command.Parameters.Clear();
+                    command.Parameters.Add(new MySqlParameter("@guid",guid));
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (!reader.IsClosed && reader.HasRows && reader.Read())
+                            comment = this.GetSafeString(reader, 0);
+                    }
+                }
+            }
+            else
+            {
+                using (SqliteCommand command = new SqliteCommand("SELECT comment FROM comments WHERE guid = @guid", connection))
+                {
                     command.Parameters.Add(new SqliteParameter("@guid", guid));
 
                     using (SqliteDataReader reader = command.ExecuteReader())
@@ -2636,12 +2631,175 @@ namespace DaRT
                     }
                 }
             }
+            return comment;
+        }
+        public void SetComment(String guid,String comment)
+        {
+            String date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            using (SqliteCommand command = new SqliteCommand("INSERT OR REPLACE INTO comments (guid, comment, date) VALUES (@guid, @comment, @date)", connection))
+            {
+                command.Parameters.Clear();
+                command.Parameters.Add(new SqliteParameter("@guid", guid));
+                command.Parameters.Add(new SqliteParameter("@comment", comment));
+                command.Parameters.Add(new SqliteParameter("@date", date));
+                command.ExecuteNonQuery();
+            }
+
+            if (Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open)
+            {
+                using (MySqlCommand command = new MySqlCommand("INSERT OR REPLACE INTO comments (guid, comment, date) VALUES (@guid, @comment, @date)", remoteconnection))
+                {
+                    command.Parameters.Clear();
+                    command.Parameters.Add(new MySqlParameter("@guid", guid));
+                    command.Parameters.Add(new MySqlParameter("@comment", comment));
+                    command.Parameters.Add(new MySqlParameter("@date", date));
+                    command.ExecuteNonQuery();
+                }
+            }
+
+        }
+        public void BanToSql(Ban ban)
+        {
+            String date = "NULL";
+            Int32 duration = Int32.Parse(ban.time);
+            if (duration > 0)
+                date = DateTime.Now.AddMinutes(duration).ToString("yyyy-MM-dd HH:mm:ss");
+            using (SqliteCommand command = new SqliteCommand("INSERT INTO bans (guid, date, reason, host) VALUES (@guid, @date, @reason, @host)", connection))
+            {
+                command.Parameters.Clear();
+                command.Parameters.Add(new SqliteParameter("@guid", ban.ipguid));
+                command.Parameters.Add(new SqliteParameter("@date", date));
+                command.Parameters.Add(new SqliteParameter("@reason", ban.reason));
+                command.Parameters.Add(new SqliteParameter("@host", host.Text));
+                command.ExecuteNonQuery();
+            }
+
+            if (Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open)
+            {
+                using (MySqlCommand command = new MySqlCommand("INSERT INTO bans (guid, date, reason, host) VALUES (@guid, @date, @reason, @host)", remoteconnection))
+                {
+                    command.Parameters.Clear();
+                    command.Parameters.Add(new MySqlParameter("@guid", ban.ipguid));
+                    command.Parameters.Add(new MySqlParameter("@date", date));
+                    command.Parameters.Add(new MySqlParameter("@reason", ban.reason));
+                    command.Parameters.Add(new MySqlParameter("@host", host.Text));
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+        public void UnBanToSql(String id)
+        {
+            using (SqliteCommand command = new SqliteCommand("DELETE FROM bans WHERE id=@id AND host=@host", connection))
+            {
+                command.Parameters.Clear();
+                command.Parameters.Add(new SqliteParameter("@id", id));
+                command.Parameters.Add(new SqliteParameter("@host", host.Text));
+                command.ExecuteNonQuery();
+            }
+
+            if (Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open)
+            {
+                using (MySqlCommand command = new MySqlCommand("DELETE FROM bans WHERE id=@id AND host=@host", remoteconnection))
+                {
+                    command.Parameters.Clear();
+                    command.Parameters.Add(new MySqlParameter("@id", id));
+                    command.Parameters.Add(new MySqlParameter("@host", host.Text));
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+        public void PlayerToSql(Player player)
+        {
+            try
+            {
+                String lastseen = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                using (SqliteCommand selectCommand = new SqliteCommand("SELECT id, guid, name FROM players WHERE guid = @guid AND name = @name LIMIT 0, 1", connection))
+                {
+                    selectCommand.Parameters.Clear();
+                    selectCommand.Parameters.Add(new SqliteParameter("@guid", player.guid));
+                    selectCommand.Parameters.Add(new SqliteParameter("@name", player.name));
+
+                    using (SqliteDataReader reader = selectCommand.ExecuteReader())
+                    {
+                        if (!reader.Read())
+                        {
+                            if (player.status != "Initializing")
+                            {
+                                using (SqliteCommand addCommand = new SqliteCommand("INSERT INTO players (id, lastip, lastseen, guid, name, lastseenon, synced) VALUES(NULL, @lastip, @lastseen, @guid, @name, @lastseenon, 0)", connection))
+                                {
+                                    addCommand.Parameters.Clear();
+                                    addCommand.Parameters.Add(new SqliteParameter("@lastip", player.ip));
+                                    addCommand.Parameters.Add(new SqliteParameter("@lastseen", lastseen));
+                                    addCommand.Parameters.Add(new SqliteParameter("@guid", player.guid));
+                                    addCommand.Parameters.Add(new SqliteParameter("@name", player.name));
+                                    addCommand.Parameters.Add(new SqliteParameter("@lastseenon", host.Text));
+                                    addCommand.ExecuteNonQuery();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            using (SqliteCommand updateCommand = new SqliteCommand("UPDATE players SET lastip = @lastip, lastseen = @lastseen, lastseenon = @lastseenon, synced = 0 WHERE guid = @guid AND name = @name", connection))
+                            {
+                                updateCommand.Parameters.Clear();
+                                updateCommand.Parameters.Add(new SqliteParameter("@lastip",player.ip));
+                                updateCommand.Parameters.Add(new SqliteParameter("@lastseen", lastseen));
+                                updateCommand.Parameters.Add(new SqliteParameter("@guid", player.guid));
+                                updateCommand.Parameters.Add(new SqliteParameter("@name", player.name));
+                                updateCommand.Parameters.Add(new SqliteParameter("@lastseenon", host.Text));
+                                updateCommand.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                }
+                if (Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open)
+                {
+                    using (MySqlCommand selectCommand = new MySqlCommand("SELECT id, guid, name FROM players WHERE guid = @guid AND name = @name LIMIT 0, 1", remoteconnection))
+                    {
+                        selectCommand.Parameters.Clear();
+                        selectCommand.Parameters.Add(new MySqlParameter("@guid", player.guid));
+                        selectCommand.Parameters.Add(new MySqlParameter("@name", player.name));
+
+                        using (MySqlDataReader reader = selectCommand.ExecuteReader())
+                        {
+                            if (!reader.Read())
+                            {
+                                if (player.status != "Initializing")
+                                {
+                                    using (MySqlCommand addCommand = new MySqlCommand("INSERT INTO players (lastip, lastseen, guid, name, lastseenon) VALUES(@lastip, @lastseen, @guid, @name, @lastseenon)", remoteconnection))
+                                    {
+                                        addCommand.Parameters.Clear();
+                                        addCommand.Parameters.Add(new MySqlParameter("@lastip", player.ip));
+                                        addCommand.Parameters.Add(new MySqlParameter("@lastseen", lastseen));
+                                        addCommand.Parameters.Add(new MySqlParameter("@guid", player.guid));
+                                        addCommand.Parameters.Add(new MySqlParameter("@name", player.name));
+                                        addCommand.Parameters.Add(new MySqlParameter("@lastseenon", host.Text));
+                                        addCommand.ExecuteNonQuery();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                using (MySqlCommand updateCommand = new MySqlCommand("UPDATE players SET lastip = @lastip, lastseen = @lastseen, lastseenon = @lastseenon WHERE guid = @guid AND name = @name", remoteconnection))
+                                {
+                                    updateCommand.Parameters.Clear();
+                                    updateCommand.Parameters.Add(new MySqlParameter("@lastip", player.ip));
+                                    updateCommand.Parameters.Add(new MySqlParameter("@lastseen", lastseen));
+                                    updateCommand.Parameters.Add(new MySqlParameter("@guid", player.guid));
+                                    updateCommand.Parameters.Add(new MySqlParameter("@name", player.name));
+                                    updateCommand.Parameters.Add(new MySqlParameter("@lastseenon", host.Text));
+                                    updateCommand.ExecuteNonQuery();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             catch (Exception e)
             {
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
             }
-            return comment;
         }
         #endregion 
 
@@ -2867,12 +3025,6 @@ namespace DaRT
             gui.ShowDialog();
         }
 
-        private void addBan_Click(object sender, EventArgs args)
-        {
-            // TODO: REIMPLEMENT
-            //GUIbanGUID gui = new GUIbanGUID(this);
-            //gui.ShowDialog();
-        }
         private void addBans_Click(object sender, EventArgs args)
         {
             GUImanualBans gui = new GUImanualBans(rcon);
@@ -2881,7 +3033,7 @@ namespace DaRT
 
         private void hosts_Click(object sender, EventArgs args)
         {
-            GUIhosts gui = new GUIhosts(this, connection, command);
+            GUIhosts gui = new GUIhosts(this, connection);
             gui.ShowDialog();
         }
         private void copy_click(object sender, EventArgs args)
@@ -2909,10 +3061,6 @@ namespace DaRT
             logs.AppendText(String.Format(Resources.Strings.InitApp, version));
         }
 
-        private void console_MouseDown(object sender, MouseEventArgs args)
-        {
-            
-        }
         private void DblClick_log(object sender, MouseEventArgs args)
         {
             String text = ((DaRT.ExtendedRichTextBox)sender).SelectedText.Trim();

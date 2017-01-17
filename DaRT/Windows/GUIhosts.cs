@@ -14,21 +14,19 @@ namespace DaRT
     {
         private GUImain gui;
         private SqliteConnection _connection;
-        private SqliteCommand _command;
 
-        public GUIhosts(GUImain gui, SqliteConnection connection, SqliteCommand command)
+        public GUIhosts(GUImain gui, SqliteConnection connection)
         {
             InitializeComponent();
             InitializeList();
 
             this.gui = gui;
             _connection = connection;
-            _command = command;
 
-            using (_command = new SqliteCommand("SELECT host, port, password FROM hosts ORDER BY id DESC", _connection))
+            using (SqliteCommand command = new SqliteCommand("SELECT host, port, password FROM hosts ORDER BY id DESC", _connection))
             {
 
-                using (SqliteDataReader reader = _command.ExecuteReader())
+                using (SqliteDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -120,16 +118,15 @@ namespace DaRT
         }
         private void delete_click(object sender, EventArgs e)
         {
-            using (_command = new SqliteCommand("DELETE FROM hosts WHERE host = @host AND port = @port", _connection))
+            using (SqliteCommand command = new SqliteCommand("DELETE FROM hosts WHERE host = @host AND port = @port", _connection))
             {
                 ListViewItem item = list.SelectedItems[0];
                 list.Items.Remove(item);
                 String host = item.SubItems[0].Text;
                 String port = item.SubItems[1].Text;
-                _command.Parameters.Clear();
-                _command.Parameters.Add(new SqliteParameter("@host", host));
-                _command.Parameters.Add(new SqliteParameter("@port", port));
-                _command.ExecuteNonQuery();
+                command.Parameters.Add(new SqliteParameter("@host", host));
+                command.Parameters.Add(new SqliteParameter("@port", port));
+                command.ExecuteNonQuery();
             }
         }
 

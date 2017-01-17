@@ -485,28 +485,13 @@ namespace DaRT
 
                 if (_form != null) _form.Log(String.Format(Resources.Strings.Banned ,ban.Name), LogType.Console, false);
             }
-        }
-        public void banIP(BanIP ban)
-        {
-            _client.SendCommand("banIP " + ban.id + " " + ban.duration + " " + ban.reason);
-            if (_form != null) _form.Log(String.Format(Resources.Strings.Banned, ban.name), LogType.Console, false);
-        }
-        public void banOffline(BanOffline ban)
-        {
-            _client.SendCommand("addBan " + ban.guid + " " + ban.duration + " " + ban.reason);
-            if (ban.name != "")
-            {
-                if (_form != null) _form.Log(String.Format(Resources.Strings.Banned, ban.name), LogType.Console, false);
-            }
-            else
-            {
-                if (_form != null) _form.Log(String.Format(Resources.Strings.Banned, ban.guid), LogType.Console, false);
-            }
+            if(Settings.Default.dartbrs) _form.BanToSql(ban);
         }
         public void unban(String id)
         {
             _client.SendCommand("removeBan " + id);
             if (_form != null) _form.Log(Resources.Strings.Ban_removed, LogType.Console, false);
+            if (Settings.Default.dartbrs) _form.UnBanToSql(id);
         }
 
         private void HandleMessage(BattlEyeMessageEventArgs args)
