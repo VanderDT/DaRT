@@ -768,7 +768,14 @@ namespace DaRT
             foreach(ListViewItem item in bansList.Items)
             {
                 if (!item.SubItems[2].Text.Equals(Resources.Strings.Expired))
-                    bansAll += String.Format("{0} {1} {2}\r\n", item.SubItems[1].Text, (item.SubItems[2].Text.Equals("perm"))?"-1": item.SubItems[2].Text, item.SubItems[3].Text);
+                {
+                    String time;
+                    if (item.SubItems[2].Text.Equals(Resources.Strings.perm))
+                        time = "-1";
+                    else
+                        time = Convert.ToInt32(DateTime.ParseExact(item.SubItems[2].Text, Settings.Default.DateFormat, Thread.CurrentThread.CurrentCulture).Subtract(new DateTime(1970, 1, 1)).TotalSeconds).ToString();
+                    bansAll += String.Format("{0} {1} {2}\r\n", item.SubItems[1].Text, time, item.SubItems[3].Text);
+                }
             }
             try
             {
@@ -2474,7 +2481,7 @@ namespace DaRT
                                     String reason = this.GetSafeString(reader, 3);
                                     String comment = this.GetSafeString(reader, 4);
 
-                                    String[] entries = { id.ToString(), guid, (duration.Equals("NULL"))? Resources.Strings.perm : duration, reason, comment };
+                                    String[] entries = { id.ToString(), guid, (duration.Equals(""))? Resources.Strings.perm : duration, reason, comment };
                                     items.Add(new ListViewItem(entries));
                                 }
                                 reader.Close();
@@ -2594,7 +2601,7 @@ namespace DaRT
         }
         public void BanToSql(Ban ban, bool synced = false)
         {
-            String date = "NULL";
+            String date = null;
             if (ban.Duration > 0)
                 date = DateTime.Now.AddMinutes(ban.Duration).ToString(Settings.Default.DateFormat);
             synced = synced ||(Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open);
@@ -2736,6 +2743,15 @@ namespace DaRT
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
                 this.Log(player.name, LogType.Debug, false);
+            }
+        }
+
+        public void PlayerDisconnect(String id, String name = "")
+        {
+            foreach(ListViewItem item in playerList.Items)
+            {
+                if ((!id.Equals("") && item.SubItems[1].Equals(id))||(!name.Equals("") && item.SubItems[5].Text.Contains(name)))
+                    playerList.Items.Remove(item);
             }
         }
         #endregion 

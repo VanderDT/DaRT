@@ -254,7 +254,6 @@ namespace DaRT
         private void parsePlayers(String response)
         {
             _players.Clear();
-            _form.Log("reciving players", LogType.Debug, false);
             using (StringReader reader = new StringReader(response))
             {
                 string line;
@@ -299,7 +298,6 @@ namespace DaRT
         public void parseBans(String response)
         {
             _bans.Clear();
-            _form.Log("reciving bans", LogType.Debug, false);
             using (StringReader reader = new StringReader(response))
             {
                 String line;
@@ -503,9 +501,9 @@ namespace DaRT
             string message = args.Message;
             if (_initialized)
             {
-                if (message.Contains("Connected RCon admins:")) this.parseAdmins(message);
-                if (message.Contains("Players on server:")) this.parsePlayers(message);
-                if (message.StartsWith("GUID Bans:")) this.parseBans(message);
+                //if (message.Contains("Connected RCon admins:")) this.parseAdmins(message);
+                //if (message.Contains("Players on server:")) this.parsePlayers(message);
+                //if (message.StartsWith("GUID Bans:")) this.parseBans(message);
                 if (Settings.Default.autoKicks && message.StartsWith("(")) this.checkMessage(message, false);
                 if (Settings.Default.autoBans && message.StartsWith("(")) this.checkMessage(message, true);
                 // Message filtering
@@ -564,9 +562,8 @@ namespace DaRT
 
                             if (Settings.Default.refreshOnJoin && message.EndsWith("disconnected") && !_form.pendingPlayers)
                             {
-                                Thread thread = new Thread(new ThreadStart(_form.thread_Player));
-                                thread.IsBackground = true;
-                                thread.Start();
+                                String[] items = message.Remove(7, 1).Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+                                _form.PlayerDisconnect(items[1]);
                             }
 
                             // Connect/disconnect/kick/ban messages
@@ -590,7 +587,16 @@ namespace DaRT
                         {
                             // Admin login
                             if (Settings.Default.showAdminMessages && message.EndsWith("logged in"))
-                                _form.Log(message, LogType.Console, false);
+                            {
+                                _form.Log(message, LogType.Console, true);
+                                if (Settings.Default.refreshOnJoin && !_form.pendingAdmins)
+                                {
+                                    Thread thread = new Thread(new ThreadStart(_form.thread_Admins));
+                                    thread.IsBackground = true;
+                                    thread.Start();
+                                }
+
+                            }
                             else if (Settings.Default.showAdminChat)
                                 _form.Log(message, LogType.AdminChat, false);
                         }
