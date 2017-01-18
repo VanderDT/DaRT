@@ -112,6 +112,7 @@ namespace DaRT
             dbBase.Enabled = dbRemote.Checked;
             dbUser.Enabled = dbRemote.Checked;
             dbPassword.Enabled = dbRemote.Checked;
+            syncBase.Enabled = dbRemote.Checked;
             dbHost.Text = Settings.Default.dbHost;
             dbBase.Text = Settings.Default.dbBase;
             dbUser.Text = Settings.Default.dbUser;
@@ -267,12 +268,20 @@ namespace DaRT
             thread.IsBackground = true;
             thread.Start();
         }
+        private void syncBase_Click(object sender, EventArgs e)
+        {
+            Thread thread = new Thread(new ThreadStart(gui.thread_Sync));
+            thread.IsBackground = true;
+            thread.Start();
+            this.Close();
+        }
         private void dbRemote_Click(object sender, EventArgs e)
         {
             dbHost.Enabled = dbRemote.Checked;
             dbBase.Enabled = dbRemote.Checked;
             dbUser.Enabled = dbRemote.Checked;
             dbPassword.Enabled = dbRemote.Checked;
+            syncBase.Enabled = dbRemote.Checked;
         }
 
     }

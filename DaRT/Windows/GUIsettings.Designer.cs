@@ -122,6 +122,7 @@
             this.dbHost = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
             this.dbRemote = new System.Windows.Forms.CheckBox();
+            this.syncBase = new System.Windows.Forms.Button();
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.updates = new System.Windows.Forms.CheckBox();
             this.dart = new System.Windows.Forms.LinkLabel();
@@ -453,8 +454,8 @@
             // 
             // tabControl
             // 
-            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.tabPage1);
             this.tabControl.Controls.Add(this.tabPage2);
@@ -1056,6 +1057,7 @@
             this.tabPage5.Controls.Add(this.dbHost);
             this.tabPage5.Controls.Add(this.label22);
             this.tabPage5.Controls.Add(this.dbRemote);
+            this.tabPage5.Controls.Add(this.syncBase);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Size = new System.Drawing.Size(495, 298);
@@ -1078,7 +1080,7 @@
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(56, 13);
             this.label25.TabIndex = 7;
-            this.label25.Text = global::DaRT.Resources.Strings.Password ;
+            this.label25.Text = global::DaRT.Resources.Strings.Password;
             // 
             // dbUser
             // 
@@ -1140,6 +1142,16 @@
             this.dbRemote.UseVisualStyleBackColor = true;
             this.dbRemote.Click += new System.EventHandler(this.dbRemote_Click);
             // 
+            // synsBase
+            // 
+            this.syncBase.Location = new System.Drawing.Point(265, 40);
+            this.syncBase.Name = "syncBase";
+            this.syncBase.Size = new System.Drawing.Size(130, 23);
+            this.syncBase.TabIndex = 9;
+            this.syncBase.Text = global::DaRT.Resources.Strings.Sync_Database;
+            this.syncBase.UseVisualStyleBackColor = true;
+            this.syncBase.Click += new System.EventHandler(this.syncBase_Click);
+            // 
             // tabPage6
             // 
             this.tabPage6.Controls.Add(this.updates);
@@ -1193,7 +1205,7 @@
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(112, 13);
             this.label19.TabIndex = 42;
-            this.label19.Text = "Honorable Mention:";
+            this.label19.Text = global::DaRT.Resources.Strings.Mention;
             // 
             // epm
             // 
@@ -1239,7 +1251,7 @@
             this.dartthread.Size = new System.Drawing.Size(115, 13);
             this.dartthread.TabIndex = 38;
             this.dartthread.TabStop = true;
-            this.dartthread.Text = "Official forum thread";
+            this.dartthread.Text = global::DaRT.Resources.Strings.forum_link;
             this.dartthread.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkClicked);
             // 
             // label18
@@ -1262,7 +1274,7 @@
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(454, 50);
             this.label17.TabIndex = 36;
-            this.label17.Text = "Thank you for using DaRT!";
+            this.label17.Text = global::DaRT.Resources.Strings.DaRT_thank;
             // 
             // label16
             // 
@@ -1273,7 +1285,7 @@
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(423, 104);
             this.label16.TabIndex = 35;
-            this.label16.Text = resources.GetString("label16.Text");
+            this.label16.Text = global::DaRT.Resources.Strings.licence;
             // 
             // label15
             // 
@@ -1284,7 +1296,7 @@
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(329, 52);
             this.label15.TabIndex = 34;
-            this.label15.Text = resources.GetString("label15.Text");
+            this.label15.Text = global::DaRT.Resources.Strings.lib_lic;
             // 
             // checkupdate
             // 
@@ -1309,7 +1321,7 @@
             this.MaximizeBox = false;
             this.Name = "GUIsettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Settings";
+            this.Text = global::DaRT.Resources.Strings.Settings;
             this.tabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -1426,6 +1438,7 @@
         private System.Windows.Forms.Button checkupdate;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.CheckBox dbRemote;
+        private System.Windows.Forms.Button syncBase;
         private System.Windows.Forms.TextBox dbHost;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.TextBox dbPassword;

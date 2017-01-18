@@ -64,11 +64,12 @@ namespace DaRT
         StreamWriter chatWriter;
         StreamWriter logWriter;
         public IWebProxy proxy;
-        bool pendingConnect = false;
+        public bool pendingConnect = false;
         public bool pendingPlayers = false;
         public bool pendingAdmins = false;
-        bool pendingBans = false;
-        bool pendingDatabase = false;
+        public bool pendingBans = false;
+        public bool pendingDatabase = false;
+        public bool pendingSync = false;
 
         private List<string> _buffer;
 
@@ -374,7 +375,7 @@ namespace DaRT
             executeContextMenu.Items.Add("-");
             //executeContextMenu.Items.Add("Manually add a ban", null, addBan_Click);
             executeContextMenu.Items.Add(Resources.Strings.Multiban, null, addBans_Click);
-            if(Settings.Default.dbRemote) executeContextMenu.Items.Add(Resources.Strings.Load_bans_txt, null, loadBans_Click);
+            if(Settings.Default.dartbrs) executeContextMenu.Items.Add(Resources.Strings.Load_bans_txt, null, loadBans_Click);
         }
         private void InitializeConsole()
         {
@@ -749,7 +750,7 @@ namespace DaRT
         {
             foreach(ListViewItem item in bansList.Items)
             {
-                if (item.SubItems[2].Text.Equals("expired"))
+                if (item.SubItems[2].Text.Equals(Resources.Strings.Expired))
                 {
                     rcon.unban(item.SubItems[0].Text);
                     bansList.Items.Remove(item);
@@ -762,7 +763,7 @@ namespace DaRT
             String bansAll = "";
             foreach(ListViewItem item in bansList.Items)
             {
-                if (!item.SubItems[2].Text.Equals("expired"))
+                if (!item.SubItems[2].Text.Equals(Resources.Strings.Expired))
                     bansAll += String.Format("{0} {1} {2}\r\n", item.SubItems[1].Text, (item.SubItems[2].Text.Equals("perm"))?"-1": item.SubItems[2].Text, item.SubItems[3].Text);
             }
             try
@@ -1392,7 +1393,7 @@ namespace DaRT
         {
             try
             {
-                while (pendingPlayers || pendingBans || pendingAdmins || pendingDatabase) Thread.Sleep(500);
+                while (pendingPlayers || pendingBans || pendingAdmins || pendingDatabase || pendingSync) Thread.Sleep(500);
                 pendingPlayers = true;
 
                 this.Invoke((MethodInvoker)delegate
@@ -1501,7 +1502,7 @@ namespace DaRT
         {
             try
             {
-                while (pendingPlayers || pendingBans || pendingAdmins || pendingDatabase) Thread.Sleep(500);
+                while (pendingPlayers || pendingBans || pendingAdmins || pendingDatabase || pendingSync) Thread.Sleep(500);
                 pendingBans = true;
 
                 if (rcon.Connected)
@@ -1561,7 +1562,7 @@ namespace DaRT
         {
             try
             {
-                while (pendingPlayers || pendingBans || pendingAdmins || pendingDatabase) Thread.Sleep(500);
+                while (pendingPlayers || pendingBans || pendingAdmins || pendingDatabase || pendingSync) Thread.Sleep(500);
                 pendingDatabase = true;
                 
                 // Clear cache, set virtual list size
@@ -1591,7 +1592,7 @@ namespace DaRT
         }
         public void thread_Admins()
         {
-            while (pendingPlayers || pendingBans || pendingAdmins || pendingDatabase) Thread.Sleep(500);
+            while (pendingPlayers || pendingBans || pendingAdmins || pendingDatabase || pendingSync) Thread.Sleep(500);
             pendingAdmins = true;
             List<string> admins = rcon.getAdmins();
             this.Invoke((MethodInvoker)delegate
@@ -1694,24 +1695,67 @@ namespace DaRT
         }
         public void thread_Sync()
         {
-            this.Invoke((MethodInvoker)delegate
-            {
-                this.Enabled = false;
-            });
-
+            if (!Settings.Default.dbRemote) return;
+            while (pendingPlayers || pendingBans || pendingAdmins || pendingDatabase || pendingSync) Thread.Sleep(500);
+            pendingSync = true;
             this.Log("Starting player database sync...", LogType.Console, false);
             this.Log("This could take a while depending on how many players are in the database.", LogType.Console, false);
             this.Log("Please do not close DaRT during the process.", LogType.Console, false);
-            playerDBList.Items.Clear();
 
             try
             {
                 this.Log("Creating a backup of the existing database...", LogType.Console, false);
-                if (File.Exists("data/db/players.db"))
-                    File.Copy("data/db/players.db", "data/db/players.db_bak");
+                if (File.Exists("data/db/dart.db"))
+                    File.Copy("data/db/dart.db", "data/db/dart.db_bak");
+                //Get remote players in local base
+                Settings.Default.dbRemote = false;
+                int Count = 0;
+                this.Log("Contacting remote SQL server...", LogType.Console, false);
+                using (MySqlCommand command = new MySqlCommand("SELECT id, lastip, lastseen, guid, name, lastseenon FROM players", remoteconnection))
+                {
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int id = reader.GetInt32(0);
+                            String lastip = this.GetSafeString(reader, 1);
+                            String lastseen = this.GetSafeString(reader, 2);
+                            String guid = this.GetSafeString(reader, 3);
+                            String name = this.GetSafeString(reader, 4);
+                            String lastseenon = this.GetSafeString(reader, 5);
 
-                List<Player> sync = new List<Player>();
-                this.Log("Reading database...", LogType.Console, false);
+                            PlayerToSql(new Player(id, lastip, "", guid, name, "", lastseen, lastseenon,""), true);
+                            Count++;
+                        }
+                        reader.Close();
+                    }
+                }
+                this.Log(String.Format("Synced {0} players from remote database...", Count), LogType.Console, false);
+                Count = 0;
+                using (MySqlCommand command = new MySqlCommand("SELECT guid, date, reason FROM bans WHERE host=@host", remoteconnection))
+                {
+                    command.Parameters.Add(new MySqlParameter("@host", host.Text));
+
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            String guid = this.GetSafeString(reader, 0);
+                            String date = this.GetSafeString(reader, 1);
+                            String reason = this.GetSafeString(reader, 2);
+
+                            BanToSql(new Ban(guid,0,reason), true);
+                            Count++;
+                        }
+                        reader.Close();
+                    }
+                }
+                this.Log(String.Format("Synced {0} bans from remote database...", Count), LogType.Console, false);
+
+                Settings.Default.dbRemote = true;
+
+                this.Log("Reading local database...", LogType.Console, false);
+                List<Player> syncPlayers = new List<Player>();
                 using (SqliteCommand command = new SqliteCommand("SELECT guid, name, lastip, lastseenon, location, lastseen FROM players WHERE synced = 0", connection))
                 {
                     using (SqliteDataReader reader = command.ExecuteReader())
@@ -1725,122 +1769,66 @@ namespace DaRT
                             String location = this.GetSafeString(reader, 4);
                             String lastseen = this.GetSafeString(reader, 5);
 
-                            sync.Add(new Player(0, lastip, "", guid, name, "", lastseen, lastseenon, location));
+                            syncPlayers.Add(new Player(0, lastip, "", guid, name, "", lastseen, lastseenon, location));
+                        }
+
+                        reader.Close();
+                    }
+                }
+                
+                this.Log(String.Format("Syncing {0} players from local database...", syncPlayers.Count), LogType.Console, false);
+
+                foreach(Player player in syncPlayers)
+                {
+                    PlayerToSql(player, true);
+                }
+                syncPlayers.Clear();
+                this.Log("Player sync complete.", LogType.Console, false);
+                Count = 0;
+                using (SqliteCommand command = new SqliteCommand("SELECT guid, date, reason FROM bans WHERE synced = 0 AND host=@host", connection))
+                {
+                    command.Parameters.Add(new SqliteParameter("@host", host.Text));
+                    using (SqliteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            String guid = this.GetSafeString(reader, 0);
+                            String duration = this.GetSafeString(reader, 1);
+                            String reason = this.GetSafeString(reader, 2);
+
+                            using (MySqlCommand rcommand = new MySqlCommand("INSERT INTO bans (guid, date, reason, host) VALUES (@guid, @date, @reason, @host)", remoteconnection))
+                            {
+                                rcommand.Parameters.Add(new MySqlParameter("@guid", guid));
+                                rcommand.Parameters.Add(new MySqlParameter("@date", duration));
+                                rcommand.Parameters.Add(new MySqlParameter("@reason", reason));
+                                rcommand.Parameters.Add(new MySqlParameter("@host", host.Text));
+                                rcommand.ExecuteNonQuery();
+                            }
+                            Count++;
                         }
 
                         reader.Close();
                     }
                 }
 
-                this.Log("Wiping database...", LogType.Console, false);
-                using(SqliteCommand command = new SqliteCommand("DELETE FROM players",connection)) command.ExecuteNonQuery();
-                using(SqliteCommand command = new SqliteCommand("DELETE FROM Sqlite_sequence WHERE 'name' = 'players'",connection)) command.ExecuteNonQuery();
+                this.Log(String.Format("Syncing {0} bans from local database...", Count), LogType.Console, false);
 
-                this.Log("Contacting master server...", LogType.Console, false);
-                this.Log(String.Format("Syncing {0} players from database...", sync.Count), LogType.Console, false);
-
-                foreach (Player player in sync)
-                {
-                    String data = String.Format("key={0}&guid={1}&ip={2}&lastseenon={3}&location={4}&lastseen={5}&name={6}", "l2k3g4jlksjaalkjhgt4whjkgsh4sap4", player.guid, player.ip, player.lastseenon, player.location, player.lastseen, player.name);
-
-                    ServicePointManager.ServerCertificateValidationCallback += new System.Net.Security.RemoteCertificateValidationCallback(certCheck);
-                    HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("https://forum.swisscraft.eu/DaRT Sync/submit.php");
-                    request.Proxy = proxy;
-                    request.UserAgent = "DaRT " + version;
-                    request.KeepAlive = false;
-                    request.ProtocolVersion = HttpVersion.Version10;
-                    request.Method = "POST";
-
-                    byte[] postBytes = Encoding.ASCII.GetBytes(data);
-
-                    request.ContentType = "application/x-www-form-urlencoded";
-                    request.ContentLength = postBytes.Length;
-                    
-                    Stream requestStream = request.GetRequestStream();
-                    requestStream.Write(postBytes, 0, postBytes.Length);
-                    requestStream.Close();
-
-                    HttpWebResponse responseStream = (HttpWebResponse)request.GetResponse();
-                    int status = (int)responseStream.StatusCode;
-
-                    responseStream.Close();
-
-                    if (status != 200)
-                        throw new Exception();
-                }
-
-                this.Log("Requesting new database...", LogType.Console, false);
-                if (connection.State == ConnectionState.Open)
-                {
-                    String data = String.Format("key={0}", "l2k3g4jlksjaalkjhgt4whjkgsh4sap4");
-
-                    ServicePointManager.ServerCertificateValidationCallback += new System.Net.Security.RemoteCertificateValidationCallback(certCheck);
-                    HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("https://forum.swisscraft.eu/DaRT Sync/get.php");
-                    request.Proxy = proxy;
-                    request.UserAgent = "DaRT " + version;
-                    request.KeepAlive = false;
-                    request.ProtocolVersion = HttpVersion.Version10;
-                    request.Method = "POST";
-
-                    byte[] postBytes = Encoding.ASCII.GetBytes(data);
-
-                    request.ContentType = "application/x-www-form-urlencoded";
-                    request.ContentLength = postBytes.Length;
-                    
-                    Stream requestStream = request.GetRequestStream();
-                    requestStream.Write(postBytes, 0, postBytes.Length);
-                    requestStream.Close();
-
-                    HttpWebResponse responseStream = (HttpWebResponse)request.GetResponse();
-                    int status = (int)responseStream.StatusCode;
-
-                    if (status == 200 && responseStream.ContentLength != 0)
-                    {
-                        using (SqliteCommand command = new SqliteCommand("INSERT INTO players (id, lastip, lastseen, guid, name, lastseenon, location, synced) VALUES(NULL, @lastip, @lastseen, @guid, @name, @lastseenon, @location, 1)", connection))
-                        {
-
-                            using (StreamReader stream = new StreamReader(responseStream.GetResponseStream()))
-                            {
-                                String line;
-                                int received = 0;
-                                while ((line = stream.ReadLine()) != null)
-                                {
-                                    String[] items = line.Split(new char[] { ';' }, 6, StringSplitOptions.RemoveEmptyEntries);
-
-                                    command.Parameters.Add(new SqliteParameter("@lastip", items[1]));
-                                    command.Parameters.Add(new SqliteParameter("@lastseen", items[4]));
-                                    command.Parameters.Add(new SqliteParameter("@guid", items[0]));
-                                    command.Parameters.Add(new SqliteParameter("@name", items[5]));
-                                    command.Parameters.Add(new SqliteParameter("@lastseenon", items[2]));
-                                    command.Parameters.Add(new SqliteParameter("@location", items[3]));
-                                    command.ExecuteNonQuery();
-                                    received++;
-                                }
-                                this.Log("Received " + received + "players from master server.", LogType.Console, false);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        responseStream.Close();
-                        throw new Exception();
-                    }
-                    responseStream.Close();
-                }
-
-                this.Log("Player sync complete.", LogType.Console, false);
+                using (SqliteCommand command = new SqliteCommand("UPDATE bans SET synced=1 WHERE synced=0", connection)) command.ExecuteNonQuery();
+                this.Log("Bans sync complete.", LogType.Console, false);
+                pendingSync = false;
             }
             catch(Exception e)
             {
+                
                 this.Log("Something went wrong.", LogType.Console, false);
                 this.Log("Restoring backup...", LogType.Console, false);
 
                 connection.Close();
 
-                if (File.Exists("data/db/players.db_bak"))
+                if (File.Exists("data/db/dart.db_bak"))
                 {
-                    File.Delete("data/db/players.db");
-                    File.Copy("data/db/players.db_bak", "data/db/players.db");
+                    File.Delete("data/db/dart.db");
+                    File.Copy("data/db/dart.db_bak", "data/db/dart.db");
                 }
 
                 connection.Open();
@@ -1848,64 +1836,8 @@ namespace DaRT
                 this.Log("Please try again later.", LogType.Console, false);
                 this.Log(e.Message, LogType.Debug, false);
                 this.Log(e.StackTrace, LogType.Debug, false);
+                pendingSync = false;
             }
-
-            this.Invoke((MethodInvoker)delegate
-            {
-                this.Enabled = true;
-            });
-
-            /*
-            this.Log("Reading database...");
-            command = new SqliteCommand(connection);
-
-            command.CommandText = "SELECT id, lastip, lastseen, guid, name, lastseenon, location FROM players WHERE synced != 1 ORDER BY id ASC";
-
-            SqliteDataReader reader = command.ExecuteReader();
-
-            List<Player> sync = new List<Player>();
-
-            while (reader.Read())
-            {
-                String id = reader[0].ToString();
-                String lastip = reader[1].ToString();
-                String lastseen = reader[2].ToString();
-                String guid = reader[3].ToString();
-                String name = reader[4].ToString();
-                String lastseenon = reader[5].ToString();
-                String location = reader[6].ToString();
-
-                sync.Add(new Player(id, lastip, "", guid, name, "", lastseen, lastseenon, location));
-            }
-
-            this.Log("Submitting database...");
-            foreach (Player player in sync)
-            {
-                String data = String.Format("key={0}&lastip={1}&lastseen={2}&guid={3}&name={4}&server={5}&location={6}", "l2k3g4jlksjaalkjhgt4whjkgsh4sap4", player.ip, player.lastseen, player.guid, player.name, player.lastseenon, player.location);
-
-                ServicePointManager.ServerCertificateValidationCallback += new System.Net.Security.RemoteCertificateValidationCallback(certCheck);
-                HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("https://forum.swisscraft.eu/DaRT sync.php");
-                request.Proxy = proxy;
-                request.UserAgent = "DaRT " + version;
-                request.KeepAlive = false;
-                request.ProtocolVersion = HttpVersion.Version10;
-                request.Method = "POST";
-
-                byte[] postBytes = Encoding.ASCII.GetBytes(data);
-
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = postBytes.Length;
-                Stream requestStream = request.GetRequestStream();
-
-                requestStream.Write(postBytes, 0, postBytes.Length);
-                requestStream.Close();
-
-                HttpWebResponse responseStream = (HttpWebResponse)request.GetResponse();
-                String response = new StreamReader(responseStream.GetResponseStream()).ReadToEnd();
-            }
-
-            this.Log("Finished sync, thank you for your support!");
-             */
         }
         #endregion
 
@@ -1934,6 +1866,8 @@ namespace DaRT
         {
             if (reader.IsDBNull(index))
                 return string.Empty;
+            else if (reader.GetFieldType(index) == typeof(DateTime))
+                return reader.GetDateTime(index).ToString(Settings.Default.DateFormat);
             else
                 return reader.GetString(index);
         }
@@ -1954,15 +1888,8 @@ namespace DaRT
         }
         public bool isIP(String ip)
         {
-            try
-            {
-                IPAddress.Parse(ip);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            IPAddress address;
+            return IPAddress.TryParse(ip, out address); ;
         }
         private Image GetImage(String text)
         {
@@ -2488,16 +2415,17 @@ namespace DaRT
                 foreach(Ban ban in rcon.getBans())
                 {
                     String comment = "";
-                    if (ban.ipguid.Length == 32)
+                    if (ban.GUID.Length == 32)
                     {
-                        comment = GetComment(ban.ipguid);
+                        comment = GetComment(ban.GUID);
                     }
                     if (filter == -1 || searchtext.Equals("") ||
-                        (filter == 0 && ban.ipguid.ToLower().Contains(searchtext)) ||
-                        (filter == 1 && ban.reason.ToLower().Contains(searchtext)) ||
+                        (filter == 0 && ban.GUID.ToLower().Contains(searchtext)) ||
+                        (filter == 1 && ban.Reason.ToLower().Contains(searchtext)) ||
                         (filter == 2 && comment.ToLower().Contains(searchtext)))
                     {
-                        String[] entries = { ban.number, ban.ipguid, ban.time, ban.reason, comment };
+                        String time = (ban.Duration > 0) ? DateTime.Now.AddMinutes(ban.Duration).ToString(Settings.Default.DateFormat) : (ban.Duration == 0) ? Resources.Strings.Expired:Resources.Strings.perm;
+                        String[] entries = { ban.ID.ToString(), ban.GUID, time, ban.Reason, comment };
                         items.Add(new ListViewItem(entries));
                     }
                 }
@@ -2508,7 +2436,7 @@ namespace DaRT
                 {
                     if (Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open)
                     {
-                        using (MySqlCommand command = new MySqlCommand("SELECT bans.id, bans.guid, bans.duration, bans.reason, comments.comment FROM players LEFT JOIN comments ON bans.guid = comments.guid ", remoteconnection))
+                        using (MySqlCommand command = new MySqlCommand("SELECT bans.id, bans.guid, bans.date, bans.reason, comments.comment FROM players LEFT JOIN comments ON bans.guid = comments.guid ", remoteconnection))
                         {
        
                             searchtext = "%" + searchtext + "%";
@@ -2542,7 +2470,7 @@ namespace DaRT
                                     String reason = this.GetSafeString(reader, 3);
                                     String comment = this.GetSafeString(reader, 4);
 
-                                    String[] entries = { id.ToString(), guid, duration, reason, comment };
+                                    String[] entries = { id.ToString(), guid, (duration.Equals("NULL"))? Resources.Strings.perm : duration, reason, comment };
                                     items.Add(new ListViewItem(entries));
                                 }
                                 reader.Close();
@@ -2553,7 +2481,7 @@ namespace DaRT
                     {
                         using (SqliteCommand command = new SqliteCommand(connection))
                         {
-                            command.CommandText = "SELECT bans.id, bans.guid, bans.duration, bans.reason, comments.comment FROM players LEFT JOIN comments ON bans.guid = comments.guid ";
+                            command.CommandText = "SELECT bans.id, bans.guid, bans.date, bans.reason, comments.comment FROM bans LEFT JOIN comments ON bans.guid = comments.guid ";
 
                             searchtext = "%" + searchtext + "%";
                             if (filter != -1 && searchtext != "%%") switch (filter)
@@ -2586,7 +2514,7 @@ namespace DaRT
                                     String reason = this.GetSafeString(reader, 3);
                                     String comment = this.GetSafeString(reader, 4);
 
-                                    String[] entries = { id.ToString(), guid, duration, reason, comment };
+                                    String[] entries = { id.ToString(), guid, (duration.Equals("NULL")) ? Resources.Strings.perm : duration, reason, comment };
                                     items.Add(new ListViewItem(entries));
                                 }
                                 reader.Close();
@@ -2612,6 +2540,7 @@ namespace DaRT
                 using (MySqlCommand command = new MySqlCommand("SELECT comment FROM comments WHERE guid = @guid", remoteconnection))
                 {
                     command.Parameters.Add(new MySqlParameter("@guid",guid));
+
                     using (MySqlDataReader reader = command.ExecuteReader())
                     {
                         if (!reader.IsClosed && reader.HasRows && reader.Read())
@@ -2638,10 +2567,9 @@ namespace DaRT
         }
         public void SetComment(String guid,String comment)
         {
-            String date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            String date = DateTime.Now.ToString(Settings.Default.DateFormat);
             using (SqliteCommand command = new SqliteCommand("INSERT OR REPLACE INTO comments (guid, comment, date) VALUES (@guid, @comment, @date)", connection))
             {
-                command.Parameters.Clear();
                 command.Parameters.Add(new SqliteParameter("@guid", guid));
                 command.Parameters.Add(new SqliteParameter("@comment", comment));
                 command.Parameters.Add(new SqliteParameter("@date", date));
@@ -2652,7 +2580,6 @@ namespace DaRT
             {
                 using (MySqlCommand command = new MySqlCommand("INSERT INTO comments (guid, comment, date) VALUES (@guid, @comment, @date) ON DUPLICATE KEY UPDATE comment=@comment, date=@date", remoteconnection))
                 {
-                    command.Parameters.Clear();
                     command.Parameters.Add(new MySqlParameter("@guid", guid));
                     command.Parameters.Add(new MySqlParameter("@comment", comment));
                     command.Parameters.Add(new MySqlParameter("@date", date));
@@ -2661,19 +2588,19 @@ namespace DaRT
             }
 
         }
-        public void BanToSql(Ban ban)
+        public void BanToSql(Ban ban, bool synced = false)
         {
             String date = "NULL";
-            Int32 duration = Int32.Parse(ban.time);
-            if (duration > 0)
-                date = DateTime.Now.AddMinutes(duration).ToString("yyyy-MM-dd HH:mm:ss");
-            using (SqliteCommand command = new SqliteCommand("INSERT INTO bans (guid, date, reason, host) VALUES (@guid, @date, @reason, @host)", connection))
+            if (ban.Duration > 0)
+                date = DateTime.Now.AddMinutes(ban.Duration).ToString(Settings.Default.DateFormat);
+            synced = synced ||(Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open);
+            using (SqliteCommand command = new SqliteCommand("INSERT INTO bans (guid, date, reason, host, synced) VALUES (@guid, @date, @reason, @host, @synced)", connection))
             {
-                command.Parameters.Clear();
-                command.Parameters.Add(new SqliteParameter("@guid", ban.ipguid));
+                command.Parameters.Add(new SqliteParameter("@guid", ban.GUID));
                 command.Parameters.Add(new SqliteParameter("@date", date));
-                command.Parameters.Add(new SqliteParameter("@reason", ban.reason));
+                command.Parameters.Add(new SqliteParameter("@reason", ban.Reason));
                 command.Parameters.Add(new SqliteParameter("@host", host.Text));
+                command.Parameters.Add(new SqliteParameter("@synced", (synced) ? 1 : 0));
                 command.ExecuteNonQuery();
             }
 
@@ -2681,10 +2608,9 @@ namespace DaRT
             {
                 using (MySqlCommand command = new MySqlCommand("INSERT INTO bans (guid, date, reason, host) VALUES (@guid, @date, @reason, @host)", remoteconnection))
                 {
-                    command.Parameters.Clear();
-                    command.Parameters.Add(new MySqlParameter("@guid", ban.ipguid));
+                    command.Parameters.Add(new MySqlParameter("@guid", ban.GUID));
                     command.Parameters.Add(new MySqlParameter("@date", date));
-                    command.Parameters.Add(new MySqlParameter("@reason", ban.reason));
+                    command.Parameters.Add(new MySqlParameter("@reason", ban.Reason));
                     command.Parameters.Add(new MySqlParameter("@host", host.Text));
                     command.ExecuteNonQuery();
                 }
@@ -2694,7 +2620,6 @@ namespace DaRT
         {
             using (SqliteCommand command = new SqliteCommand("DELETE FROM bans WHERE id=@id AND host=@host", connection))
             {
-                command.Parameters.Clear();
                 command.Parameters.Add(new SqliteParameter("@id", id));
                 command.Parameters.Add(new SqliteParameter("@host", host.Text));
                 command.ExecuteNonQuery();
@@ -2704,23 +2629,23 @@ namespace DaRT
             {
                 using (MySqlCommand command = new MySqlCommand("DELETE FROM bans WHERE id=@id AND host=@host", remoteconnection))
                 {
-                    command.Parameters.Clear();
                     command.Parameters.Add(new MySqlParameter("@id", id));
                     command.Parameters.Add(new MySqlParameter("@host", host.Text));
                     command.ExecuteNonQuery();
                 }
             }
         }
-        public void PlayerToSql(Player player)
+        public void PlayerToSql(Player player, bool synced = false)
         {
             try
             {
-                String lastseen = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                String lastseen = DateTime.Now.ToString(Settings.Default.DateFormat);
                 using (SqliteCommand selectCommand = new SqliteCommand("SELECT id, guid, name FROM players WHERE guid = @guid AND name = @name LIMIT 0, 1", connection))
                 {
-                    selectCommand.Parameters.Clear();
                     selectCommand.Parameters.Add(new SqliteParameter("@guid", player.guid));
                     selectCommand.Parameters.Add(new SqliteParameter("@name", player.name));
+
+                    synced = synced || (Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open);
 
                     using (SqliteDataReader reader = selectCommand.ExecuteReader())
                     {
@@ -2729,14 +2654,14 @@ namespace DaRT
                             if (player.status != "Initializing")
                             {
                                 reader.Close();
-                                using (SqliteCommand addCommand = new SqliteCommand("INSERT INTO players (id, lastip, lastseen, guid, name, lastseenon, synced) VALUES(NULL, @lastip, @lastseen, @guid, @name, @lastseenon, 0)", connection))
+                                using (SqliteCommand addCommand = new SqliteCommand("INSERT INTO players (id, lastip, lastseen, guid, name, lastseenon, synced) VALUES(NULL, @lastip, @lastseen, @guid, @name, @lastseenon, @synced)", connection))
                                 {
-                                    addCommand.Parameters.Clear();
                                     addCommand.Parameters.Add(new SqliteParameter("@lastip", player.ip));
                                     addCommand.Parameters.Add(new SqliteParameter("@lastseen", lastseen));
                                     addCommand.Parameters.Add(new SqliteParameter("@guid", player.guid));
                                     addCommand.Parameters.Add(new SqliteParameter("@name", player.name));
                                     addCommand.Parameters.Add(new SqliteParameter("@lastseenon", host.Text));
+                                    addCommand.Parameters.Add(new SqliteParameter("@synced", (synced) ? 1 : 0));
                                     addCommand.ExecuteNonQuery();
                                 }
                             }
@@ -2744,14 +2669,14 @@ namespace DaRT
                         else
                         {
                             reader.Close();
-                            using (SqliteCommand updateCommand = new SqliteCommand("UPDATE players SET lastip = @lastip, lastseen = @lastseen, lastseenon = @lastseenon, synced = 0 WHERE guid = @guid AND name = @name", connection))
+                            using (SqliteCommand updateCommand = new SqliteCommand("UPDATE players SET lastip = @lastip, lastseen = @lastseen, lastseenon = @lastseenon, synced = @synced WHERE guid = @guid AND name = @name", connection))
                             {
-                                updateCommand.Parameters.Clear();
                                 updateCommand.Parameters.Add(new SqliteParameter("@lastip",player.ip));
                                 updateCommand.Parameters.Add(new SqliteParameter("@lastseen", lastseen));
                                 updateCommand.Parameters.Add(new SqliteParameter("@guid", player.guid));
                                 updateCommand.Parameters.Add(new SqliteParameter("@name", player.name));
                                 updateCommand.Parameters.Add(new SqliteParameter("@lastseenon", host.Text));
+                                updateCommand.Parameters.Add(new SqliteParameter("@synced", (synced) ? 1 : 0));
                                 updateCommand.ExecuteNonQuery();
                              }
                         }
@@ -2763,7 +2688,6 @@ namespace DaRT
                     while (remoteconnection.State == ConnectionState.Fetching) Thread.Sleep(100);
                     using (MySqlCommand selectCommand = new MySqlCommand("SELECT id, guid, name FROM players WHERE guid = @guid AND name = @name LIMIT 0, 1", remoteconnection))
                     {
-                        selectCommand.Parameters.Clear();
                         selectCommand.Parameters.Add(new MySqlParameter("@guid", player.guid));
                         selectCommand.Parameters.Add(new MySqlParameter("@name", player.name));
 
@@ -2776,7 +2700,6 @@ namespace DaRT
                                 {
                                     using (MySqlCommand addCommand = new MySqlCommand("INSERT INTO players (lastip, lastseen, guid, name, lastseenon) VALUES(@lastip, @lastseen, @guid, @name, @lastseenon)", remoteconnection))
                                     {
-                                        addCommand.Parameters.Clear();
                                         addCommand.Parameters.Add(new MySqlParameter("@lastip", player.ip));
                                         addCommand.Parameters.Add(new MySqlParameter("@lastseen", lastseen));
                                         addCommand.Parameters.Add(new MySqlParameter("@guid", player.guid));
@@ -2791,7 +2714,6 @@ namespace DaRT
                                 reader.Close();
                                 using (MySqlCommand updateCommand = new MySqlCommand("UPDATE players SET lastip = @lastip, lastseen = @lastseen, lastseenon = @lastseenon WHERE guid = @guid AND name = @name", remoteconnection))
                                 {
-                                    updateCommand.Parameters.Clear();
                                     updateCommand.Parameters.Add(new MySqlParameter("@lastip", player.ip));
                                     updateCommand.Parameters.Add(new MySqlParameter("@lastseen", lastseen));
                                     updateCommand.Parameters.Add(new MySqlParameter("@guid", player.guid));
@@ -3064,7 +2986,8 @@ namespace DaRT
                             {
                                 try
                                 {
-                                    BanToSql(new Ban(items[0], int.Parse(items[1]), items[2]));
+                                    DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                                    BanToSql(new Ban(items[0], Convert.ToInt32(dtDateTime.AddSeconds(int.Parse(items[1])).ToLocalTime().Subtract(DateTime.Now).TotalMinutes), items[2]));
                                 }
                                 catch
                                 {

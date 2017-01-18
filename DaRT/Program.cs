@@ -308,7 +308,7 @@ namespace DaRT
 
                                 foreach (Player player in p)
                                 {
-                                    rcon.Ban(new Ban(player.number.ToString(), player.name, "0", reason));
+                                    rcon.Ban(new Ban(player.number, player.name, player.guid, player.ip,0, reason, true));
                                 }
                             }
                             else if (exec.StartsWith("exec"))

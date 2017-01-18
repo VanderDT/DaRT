@@ -53,17 +53,13 @@ namespace DaRT
             return String.Format("{0}\t{1}\t{2}",_guid,_duration,_reason);
         }
 
-        public String number = "";
-        public String ipguid = "";
-        public String time = "";
-        public String reason = "";
-
-        public Ban(String number, String ipguid, String time, String reason)
+        public Ban(int id, string guid, int duration, string reason)
         {
-            this.number = number;
-            this.ipguid = ipguid;
-            this.time = time;
-            this.reason = reason;
+            _id = id;
+            _guid = guid;
+            _duration = duration;
+            _reason = reason;
+            _online = false;
         }
 
         public Ban(string guid, int duration, string reason)

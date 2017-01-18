@@ -692,7 +692,7 @@ DaRT нашол существующую базу и будет пытаться
     <value>Снять пароль</value>
   </data>
   <data name="Use_BRS" xml:space="preserve">
-    <value>Использовать DaRT BRS</value>
+    <value>Хранить баны в Базе</value>
   </data>
   <data name="Vehicle_chat" xml:space="preserve">
     <value>Показать транспортный чат</value>
@@ -714,5 +714,11 @@ DaRT нашол существующую базу и будет пытаться
   </data>
   <data name="Load_bans_txt" xml:space="preserve">
     <value>Загрузка bans.txt в Базу</value>
+  </data>
+  <data name="Sync_Database" xml:space="preserve">
+    <value>Синхронизация баз</value>
+  </data>
+  <data name="perm" xml:space="preserve">
+    <value>Вечный</value>
   </data>
 </root>

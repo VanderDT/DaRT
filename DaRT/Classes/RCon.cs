@@ -313,26 +313,30 @@ namespace DaRT
 
                         if (items.Length == 4)
                         {
-                            String number = items[0];
-                            String ipguid = items[1];
+                            int id = Int32.Parse(items[0]);
+                            String guid = items[1];
                             String time = items[2];
                             String reason = items[3];
 
-                            if (time == "-")
-                                time = "expired";
+                            if (time.Equals("-"))
+                                time = "0";
+                            if (time.Equals("perm"))
+                                time = "-1";
 
-                            _bans.Add(new Ban(number, ipguid, time, reason));
+                            _bans.Add(new Ban(id, guid, Int32.Parse(time), reason));
                         }
                         else if (items.Length == 3)
                         {
-                            String number = items[0];
-                            String ipguid = items[1];
+                            int id = Int32.Parse(items[0]);
+                            String guid = items[1];
                             String time = items[2];
 
-                            if (time == "-")
-                                time = "expired";
+                            if (time.Equals("-"))
+                                time = "0";
+                            if (time.Equals("perm"))
+                                time = "-1";
 
-                            _bans.Add(new Ban(number, ipguid, time, "(No reason)"));
+                            _bans.Add(new Ban(id, guid, Int32.Parse(time), "(No reason)"));
                         }
                     }
                 }

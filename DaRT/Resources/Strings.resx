@@ -691,7 +691,7 @@ Console mode allows you to execute RCon commands directly on the server.</value>
     <value>Unlock server</value>
   </data>
   <data name="Use_BRS" xml:space="preserve">
-    <value>Use DaRT Ban Relay Server</value>
+    <value>Save Bans in SQL</value>
   </data>
   <data name="Vehicle_chat" xml:space="preserve">
     <value>Show vehicle chat</value>
@@ -713,5 +713,14 @@ Console mode allows you to execute RCon commands directly on the server.</value>
   </data>
   <data name="Load_bans_txt" xml:space="preserve">
     <value>Load ban.txt in SQL</value>
+  </data>
+  <data name="Sync_Database" xml:space="preserve">
+    <value>Sync Database</value>
+  </data>
+  <data name="perm" xml:space="preserve">
+    <value>Permanent</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value />
   </data>
 </root>
