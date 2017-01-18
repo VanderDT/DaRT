@@ -375,7 +375,11 @@ namespace DaRT
             executeContextMenu.Items.Add("-");
             //executeContextMenu.Items.Add("Manually add a ban", null, addBan_Click);
             executeContextMenu.Items.Add(Resources.Strings.Multiban, null, addBans_Click);
-            if(Settings.Default.dartbrs) executeContextMenu.Items.Add(Resources.Strings.Load_bans_txt, null, loadBans_Click);
+            if (Settings.Default.dartbrs)
+            {
+                executeContextMenu.Items.Add(Resources.Strings.Load_bans_txt, null, loadBans_Click);
+                executeContextMenu.Items.Add(Resources.Strings.Clear+" "+Resources.Strings.Bans, null, clearBans_Click);
+            }
         }
         private void InitializeConsole()
         {
@@ -2436,7 +2440,7 @@ namespace DaRT
                 {
                     if (Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open)
                     {
-                        using (MySqlCommand command = new MySqlCommand("SELECT bans.id, bans.guid, bans.date, bans.reason, comments.comment FROM players LEFT JOIN comments ON bans.guid = comments.guid ", remoteconnection))
+                        using (MySqlCommand command = new MySqlCommand("SELECT bans.id, bans.guid, bans.date, bans.reason, comments.comment FROM bans LEFT JOIN comments ON bans.guid = comments.guid ", remoteconnection))
                         {
        
                             searchtext = "%" + searchtext + "%";
@@ -2998,6 +3002,13 @@ namespace DaRT
 
                 }
             }
+        }
+        private void clearBans_Click(object sender, EventArgs args)
+        {
+            using (SqliteCommand command = new SqliteCommand("DROP TABLE bans;CREATE TABLE bans (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, guid VARCHAR(32) NOT NULL, date VARCHAR(20), reason VARCHAR(100), host VARCHAR(20) NOT NULL, synced INTEGER)", connection)) command.ExecuteNonQuery();
+            if(Settings.Default.dbRemote && remoteconnection.State == ConnectionState.Open)
+                using (MySqlCommand command = new MySqlCommand("DROP TABLE bans;CREATE TABLE bans (id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT, guid VARCHAR(32) NOT NULL, date DATETIME, reason VARCHAR(100), host VARCHAR(20) NOT NULL)", remoteconnection)) command.ExecuteNonQuery();
+            bansList.Items.Clear();
         }
 
         private void hosts_Click(object sender, EventArgs args)
