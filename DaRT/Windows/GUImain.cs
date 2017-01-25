@@ -619,8 +619,8 @@ namespace DaRT
             {
                 using (MySqlCommand command = new MySqlCommand("DELETE FROM players WHERE guid = @guid AND name = @name", remoteconnection))
                 {
-                    command.Parameters.Add(new SqliteParameter("@guid", guid));
-                    command.Parameters.Add(new SqliteParameter("@name", name));
+                    command.Parameters.Add(new MySqlParameter("@guid", guid));
+                    command.Parameters.Add(new MySqlParameter("@name", name));
                     command.ExecuteNonQuery();
                 }
             }
