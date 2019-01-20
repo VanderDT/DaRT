@@ -1085,7 +1085,7 @@ namespace DaRT.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
         public global::System.Drawing.Point WindowLocation {
             get {
                 return ((global::System.Drawing.Point)(this["WindowLocation"]));
@@ -1097,7 +1097,7 @@ namespace DaRT.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("640, 500")]
         public global::System.Drawing.Size WindowSize {
             get {
                 return ((global::System.Drawing.Size)(this["WindowSize"]));

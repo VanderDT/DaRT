@@ -75,9 +75,9 @@ namespace DaRT
 
         private void InitializeWindowSize()
         {
-            /*// Setting splitter size
-            splitContainer2.SplitterDistance = Settings.Default.splitter;
-            //splitContainer2.SplitterDistance = 330;
+            // Setting splitter size
+            //splitContainer2.SplitterDistance = Settings.Default.splitter;
+            splitContainer2.SplitterDistance = 330;
             if (Settings.Default.WindowLocation != null)
             {
                 this.Location = Settings.Default.WindowLocation;
@@ -87,7 +87,7 @@ namespace DaRT
             if (Settings.Default.WindowSize != null)
             {
                 this.Size = Settings.Default.WindowSize;
-            }*/
+            }
         }
         private void InitializeText()
         {
@@ -3317,6 +3317,12 @@ namespace DaRT
             //this.Log(String.Format("Width: {0}   Height: {1}", control.Size.Width, control.Size.Height), LogType.Console, false);
             if (FormWindowState.Minimized == this.WindowState)
             {
+                // Calculating splitter
+                int splitter;
+                if (this.Height != 606)
+                    Settings.Default.splitter = ((splitContainer2.SplitterDistance * 606) / this.Height);
+                else
+                    Settings.Default.splitter = splitContainer2.SplitterDistance;
                 this.notifyIcon.Visible = true;
                 //this.notifyIcon.BalloonTipText = this.version;
                 //this.notifyIcon.BalloonTipTitle = "Test";
@@ -3324,10 +3330,10 @@ namespace DaRT
                 this.Hide();
             }
 
-            else if (FormWindowState.Normal == this.WindowState)
+            /*else if (FormWindowState.Normal == this.WindowState)
             {
                 this.notifyIcon.Visible = false;
-            }
+            }*/
         }
 
         private void notifyIcon_DoubleClick(object sender, EventArgs e)
@@ -3381,18 +3387,20 @@ namespace DaRT
                 }
 
                 // Saving settings
-                Settings.Default.WindowLocation = this.Location;
+                
 
                 // Copy window size to app settings
                 if (this.WindowState == FormWindowState.Normal)
                 {
                     Settings.Default.WindowSize = this.Size;
+                    Settings.Default.WindowLocation = this.Location;
+                    //Settings.Default.splitter = splitter;
                 }
                 else
                 {
                     Settings.Default.WindowSize = this.RestoreBounds.Size;
+                    Settings.Default.WindowLocation = this.RestoreBounds.Location;
                 }
-                Settings.Default.splitter = splitter;
                 Settings.Default.refresh = autoRefresh.Checked;
                 Settings.Default.playerOrder = order;
                 Settings.Default.playerSizes = sizes;
@@ -3443,6 +3451,7 @@ namespace DaRT
                 logWriter.Close();
                 logWriter.Dispose();
             }
+            this.Close();
             System.Windows.Forms.Application.Exit();
         }
     }
