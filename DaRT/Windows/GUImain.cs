@@ -73,11 +73,21 @@ namespace DaRT
 
         private List<string> _buffer;
 
-        private void InitializeSplitter()
+        private void InitializeWindowSize()
         {
-            // Setting splitter size
-            //splitContainer2.SplitterDistance = Settings.Default.splitter;
-            splitContainer2.SplitterDistance = 330;
+            /*// Setting splitter size
+            splitContainer2.SplitterDistance = Settings.Default.splitter;
+            //splitContainer2.SplitterDistance = 330;
+            if (Settings.Default.WindowLocation != null)
+            {
+                this.Location = Settings.Default.WindowLocation;
+            }
+
+            // Set window size
+            if (Settings.Default.WindowSize != null)
+            {
+                this.Size = Settings.Default.WindowSize;
+            }*/
         }
         private void InitializeText()
         {
@@ -1083,91 +1093,14 @@ namespace DaRT
         }
         private void GUI_FormClosing(object sender, FormClosingEventArgs args)
         {
-            // Disconnecting BattleNET
-            if (disconnect.Enabled)
-            {
-                rcon.Disconnect();
-            }
-
-            try
-            {
-                // Calculating splitter
-                int splitter;
-                if (this.Height != 606)
-                    splitter = ((splitContainer2.SplitterDistance * 606) / this.Height);
-                else
-                    splitter = splitContainer2.SplitterDistance;
-
-                // Saving orders and sizes to config
-                String order = "";
-                String sizes = "";
-
-                for (int i = 0; i < playerList.Columns.Count; i++)
-                {
-                    if (i == 0)
-                    {
-                        order = playerList.Columns[i].DisplayIndex.ToString();
-                        sizes = playerList.Columns[i].Width.ToString();
-                    }
-                    else
-                    {
-                        order += ";" + playerList.Columns[i].DisplayIndex;
-                        sizes += ";" + playerList.Columns[i].Width;
-                    }
-                }
-
-                // Saving settings
-                Settings.Default["splitter"] = splitter;
-                Settings.Default["refresh"] = autoRefresh.Checked;
-                Settings.Default["playerOrder"] = order;
-                Settings.Default["playerSizes"] = sizes;
-                Settings.Default.Save();
-            }
-            catch(Exception e)
-            {
-                this.Log(e.Message, LogType.Debug, false);
-                this.Log(e.StackTrace, LogType.Debug, false);
-            }
-
-            try
-            {
-                connection.Close();
-                connection.Dispose();
-            }
-            catch(Exception e)
-            {
-                this.Log(e.Message, LogType.Debug, false);
-                this.Log(e.StackTrace, LogType.Debug, false);
-            }
-
-            if(Settings.Default.dbRemote) 
-                try
-                {
-                    remoteconnection.Close();
-                    remoteconnection.Dispose();
-                }
-                catch (Exception e)
-                {
-                    this.Log(e.Message, LogType.Debug, false);
-                    this.Log(e.StackTrace, LogType.Debug, false);
-                }
-
-            // Closing log file writer
-            if (consoleWriter != null)
-            {
-                consoleWriter.Close();
-                consoleWriter.Dispose();
-            }
-            if (chatWriter != null)
-            {
-                chatWriter.Close();
-                chatWriter.Dispose();
-            }
-            if (logWriter != null)
-            {
-                logWriter.Close();
-                logWriter.Dispose();
-            }
+            args.Cancel = true;
+            this.notifyIcon.Visible = true;
+            //this.notifyIcon.BalloonTipText = "Minimized to system tray";
+            //this.notifyIcon.BalloonTipTitle = "DaRT";
+            //this.notifyIcon.ShowBalloonTip(500);
+            this.WindowState = FormWindowState.Minimized;
+            this.ShowInTaskbar = false;
+            this.Hide();
         }
         private void tabControl_SelectedIndexChanged(object sender, EventArgs args)
         {
@@ -3077,7 +3010,7 @@ namespace DaRT
         }
         private void GUI_Load(object sender, EventArgs args)
         {
-            InitializeSplitter();
+            InitializeWindowSize();
             InitializeText();
             InitializeDatabase();
             if (Settings.Default.dbRemote) InitializeRemoteBase();
@@ -3376,6 +3309,141 @@ namespace DaRT
                 }
                 _queue.Clear();
             }
+        }
+
+        private void GUImain_Resize(object sender, EventArgs e)
+        {
+            //Control control = (Control)sender;
+            //this.Log(String.Format("Width: {0}   Height: {1}", control.Size.Width, control.Size.Height), LogType.Console, false);
+            if (FormWindowState.Minimized == this.WindowState)
+            {
+                this.notifyIcon.Visible = true;
+                //this.notifyIcon.BalloonTipText = this.version;
+                //this.notifyIcon.BalloonTipTitle = "Test";
+                //this.notifyIcon.ShowBalloonTip(500);
+                this.Hide();
+            }
+
+            else if (FormWindowState.Normal == this.WindowState)
+            {
+                this.notifyIcon.Visible = false;
+            }
+        }
+
+        private void notifyIcon_DoubleClick(object sender, EventArgs e)
+        {
+            this.Show();
+            if (this.WindowState != FormWindowState.Normal)
+            {
+                this.WindowState = FormWindowState.Normal;
+            }
+            this.BringToFront();
+        }
+
+        private void notifyIcon_Click(object sender, EventArgs e)
+        {
+            this.BringToFront();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Disconnecting BattleNET
+            if (disconnect.Enabled)
+            {
+                rcon.Disconnect();
+            }
+
+            try
+            {
+                // Calculating splitter
+                int splitter;
+                if (this.Height != 606)
+                    splitter = ((splitContainer2.SplitterDistance * 606) / this.Height);
+                else
+                    splitter = splitContainer2.SplitterDistance;
+
+                // Saving orders and sizes to config
+                String order = "";
+                String sizes = "";
+
+                for (int i = 0; i < playerList.Columns.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        order = playerList.Columns[i].DisplayIndex.ToString();
+                        sizes = playerList.Columns[i].Width.ToString();
+                    }
+                    else
+                    {
+                        order += ";" + playerList.Columns[i].DisplayIndex;
+                        sizes += ";" + playerList.Columns[i].Width;
+                    }
+                }
+
+                // Saving settings
+                Settings.Default.WindowLocation = this.Location;
+
+                // Copy window size to app settings
+                if (this.WindowState == FormWindowState.Normal)
+                {
+                    Settings.Default.WindowSize = this.Size;
+                }
+                else
+                {
+                    Settings.Default.WindowSize = this.RestoreBounds.Size;
+                }
+                Settings.Default.splitter = splitter;
+                Settings.Default.refresh = autoRefresh.Checked;
+                Settings.Default.playerOrder = order;
+                Settings.Default.playerSizes = sizes;
+                Settings.Default.Save();
+            }
+            catch (Exception ex)
+            {
+                this.Log(ex.Message, LogType.Debug, false);
+                this.Log(ex.StackTrace, LogType.Debug, false);
+            }
+
+            try
+            {
+                connection.Close();
+                connection.Dispose();
+            }
+            catch (Exception ex)
+            {
+                this.Log(ex.Message, LogType.Debug, false);
+                this.Log(ex.StackTrace, LogType.Debug, false);
+            }
+
+            if (Settings.Default.dbRemote)
+                try
+                {
+                    remoteconnection.Close();
+                    remoteconnection.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    this.Log(ex.Message, LogType.Debug, false);
+                    this.Log(ex.StackTrace, LogType.Debug, false);
+                }
+
+            // Closing log file writer
+            if (consoleWriter != null)
+            {
+                consoleWriter.Close();
+                consoleWriter.Dispose();
+            }
+            if (chatWriter != null)
+            {
+                chatWriter.Close();
+                chatWriter.Dispose();
+            }
+            if (logWriter != null)
+            {
+                logWriter.Close();
+                logWriter.Dispose();
+            }
+            System.Windows.Forms.Application.Exit();
         }
     }
 }

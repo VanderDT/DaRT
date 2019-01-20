@@ -79,6 +79,9 @@
             this.banner = new System.Windows.Forms.PictureBox();
             this.options = new System.Windows.Forms.ComboBox();
             this.timer = new System.Windows.Forms.Timer(this.components);
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -99,6 +102,7 @@
             this.tabChat.SuspendLayout();
             this.tabLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.banner)).BeginInit();
+            this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -206,9 +210,8 @@
             this.lastRefresh.AutoSize = true;
             this.lastRefresh.Location = new System.Drawing.Point(12, 273);
             this.lastRefresh.Name = "lastRefresh";
-            this.lastRefresh.Size = new System.Drawing.Size(100, 13);
+            this.lastRefresh.Size = new System.Drawing.Size(0, 13);
             this.lastRefresh.TabIndex = 12;
-            this.lastRefresh.Text = "";
             // 
             // refresh
             // 
@@ -257,7 +260,7 @@
             this.passwordLabel.Name = "passwordLabel";
             this.passwordLabel.Size = new System.Drawing.Size(53, 13);
             this.passwordLabel.TabIndex = 4;
-            this.passwordLabel.Text = global::DaRT.Resources.Strings.Password;
+            this.passwordLabel.Text = "Password";
             this.passwordLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // portLabel
@@ -267,7 +270,7 @@
             this.portLabel.Name = "portLabel";
             this.portLabel.Size = new System.Drawing.Size(26, 13);
             this.portLabel.TabIndex = 3;
-            this.portLabel.Text = global::DaRT.Resources.Strings.Port;
+            this.portLabel.Text = "Port";
             this.portLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // hostLabel
@@ -277,7 +280,7 @@
             this.hostLabel.Name = "hostLabel";
             this.hostLabel.Size = new System.Drawing.Size(29, 13);
             this.hostLabel.TabIndex = 2;
-            this.hostLabel.Text = global::DaRT.Resources.Strings.Host;
+            this.hostLabel.Text = "Host";
             this.hostLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // port
@@ -431,7 +434,7 @@
             this.playerCounter.AutoSize = true;
             this.playerCounter.Location = new System.Drawing.Point(823, 4);
             this.playerCounter.Name = "playerCounter";
-            this.playerCounter.Size = new System.Drawing.Size(53, 13);
+            this.playerCounter.Size = new System.Drawing.Size(0, 13);
             this.playerCounter.TabIndex = 16;
             // 
             // news
@@ -439,7 +442,7 @@
             this.news.AutoSize = true;
             this.news.Location = new System.Drawing.Point(252, 4);
             this.news.Name = "news";
-            this.news.Size = new System.Drawing.Size(82, 13);
+            this.news.Size = new System.Drawing.Size(0, 13);
             this.news.TabIndex = 19;
             this.news.Click += new System.EventHandler(this.news_Click);
             // 
@@ -449,7 +452,7 @@
             this.banCounter.AutoSize = true;
             this.banCounter.Location = new System.Drawing.Point(965, 4);
             this.banCounter.Name = "banCounter";
-            this.banCounter.Size = new System.Drawing.Size(43, 13);
+            this.banCounter.Size = new System.Drawing.Size(0, 13);
             this.banCounter.TabIndex = 17;
             // 
             // adminCounter
@@ -458,7 +461,7 @@
             this.adminCounter.AutoSize = true;
             this.adminCounter.Location = new System.Drawing.Point(896, 4);
             this.adminCounter.Name = "adminCounter";
-            this.adminCounter.Size = new System.Drawing.Size(53, 13);
+            this.adminCounter.Size = new System.Drawing.Size(0, 13);
             this.adminCounter.TabIndex = 18;
             // 
             // counter
@@ -658,7 +661,7 @@
             this.searchLabel.Name = "searchLabel";
             this.searchLabel.Size = new System.Drawing.Size(44, 13);
             this.searchLabel.TabIndex = 12;
-            this.searchLabel.Text = global::DaRT.Resources.Strings.Search+":";
+            this.searchLabel.Text = "Search:";
             // 
             // input
             // 
@@ -718,6 +721,29 @@
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.ContextMenuStrip = this.contextMenuStrip;
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "DaRT";
+            this.notifyIcon.Visible = true;
+            this.notifyIcon.Click += new System.EventHandler(this.notifyIcon_Click);
+            this.notifyIcon.DoubleClick += new System.EventHandler(this.notifyIcon_DoubleClick);
+            // 
+            // contextMenuStrip
+            // 
+            this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exitToolStripMenuItem});
+            this.contextMenuStrip.Name = "contextMenuStrip";
+            this.contextMenuStrip.Size = new System.Drawing.Size(153, 48);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Text = global::DaRT.Resources.Strings.Close;
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
             // GUImain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -726,13 +752,14 @@
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.MinimumSize = new System.Drawing.Size(1000, 610);
+            this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "GUImain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DaRT";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GUI_FormClosing);
             this.Load += new System.EventHandler(this.GUI_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GUI_KeyDown);
+            this.Resize += new System.EventHandler(this.GUImain_Resize);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -756,6 +783,7 @@
             this.tabChat.ResumeLayout(false);
             this.tabLog.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.banner)).EndInit();
+            this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -811,6 +839,9 @@
         public System.Windows.Forms.ProgressBar nextRefresh;
         private System.Windows.Forms.Label counter;
         private System.Windows.Forms.PictureBox dart;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
     }
 }
 
