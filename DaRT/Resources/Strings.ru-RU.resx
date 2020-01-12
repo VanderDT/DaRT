@@ -721,4 +721,10 @@ DaRT нашол существующую базу и будет пытаться
   <data name="perm" xml:space="preserve">
     <value>Вечный</value>
   </data>
+  <data name="Show_Scripts_log" xml:space="preserve">
+    <value>Показывать скртипт логи</value>
+  </data>
+  <data name="Web_Server" xml:space="preserve">
+    <value>Веб сервер</value>
+  </data>
 </root>

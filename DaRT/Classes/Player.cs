@@ -23,6 +23,11 @@ namespace DaRT
             return String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", number, ip, ping, guid, name, status);
         }
 
+        public string ToJson()
+        {
+            return String.Format("{{\"id\":{0},\"ip\":\"{1}\",\"ping\":{2},\"guid\":\"{3}\",\"name\":\"{4}\",\"status\":\"{5}\"}}", number, ip, ping, guid, name, status);
+        }
+
         public Player(int number, String ip, String ping, String guid, String name, String status)
         {
             this.number = number;

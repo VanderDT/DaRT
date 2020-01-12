@@ -123,7 +123,7 @@
             this.label22 = new System.Windows.Forms.Label();
             this.dbRemote = new System.Windows.Forms.CheckBox();
             this.syncBase = new System.Windows.Forms.Button();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
             this.updates = new System.Windows.Forms.CheckBox();
             this.dart = new System.Windows.Forms.LinkLabel();
             this.label19 = new System.Windows.Forms.Label();
@@ -135,13 +135,14 @@
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.checkupdate = new System.Windows.Forms.Button();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
-            this.tabPage6.SuspendLayout();
+            this.tabPage7.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -152,7 +153,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(69, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = global::DaRT.Resources.Strings.Data_settings;
+            this.label1.Text = "Data settings";
             // 
             // savePlayers
             // 
@@ -301,7 +302,7 @@
             this.showScriptsLog.Name = "showScriptsLog";
             this.showScriptsLog.Size = new System.Drawing.Size(105, 17);
             this.showScriptsLog.TabIndex = 25;
-            this.showScriptsLog.Text = "Show Scripts log";
+            this.showScriptsLog.Text = global::DaRT.Resources.Strings.Show_Scripts_log;
             this.showScriptsLog.UseVisualStyleBackColor = true;
             // 
             // showCreateVehicleLog
@@ -418,7 +419,7 @@
             this.dartbrs.AutoSize = true;
             this.dartbrs.Location = new System.Drawing.Point(242, 108);
             this.dartbrs.Name = "dartbrs";
-            this.dartbrs.Size = new System.Drawing.Size(163, 17);
+            this.dartbrs.Size = new System.Drawing.Size(113, 17);
             this.dartbrs.TabIndex = 38;
             this.dartbrs.Text = global::DaRT.Resources.Strings.Use_BRS;
             this.dartbrs.UseVisualStyleBackColor = true;
@@ -454,8 +455,8 @@
             // 
             // tabControl
             // 
-            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.tabPage1);
             this.tabControl.Controls.Add(this.tabPage2);
@@ -463,6 +464,7 @@
             this.tabControl.Controls.Add(this.tabPage4);
             this.tabControl.Controls.Add(this.tabPage5);
             this.tabControl.Controls.Add(this.tabPage6);
+            this.tabControl.Controls.Add(this.tabPage7);
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Margin = new System.Windows.Forms.Padding(0);
             this.tabControl.Name = "tabControl";
@@ -1078,7 +1080,7 @@
             this.label25.AutoSize = true;
             this.label25.Location = new System.Drawing.Point(8, 124);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(56, 13);
+            this.label25.Size = new System.Drawing.Size(53, 13);
             this.label25.TabIndex = 7;
             this.label25.Text = global::DaRT.Resources.Strings.Password;
             // 
@@ -1094,7 +1096,7 @@
             this.label24.AutoSize = true;
             this.label24.Location = new System.Drawing.Point(8, 98);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(32, 13);
+            this.label24.Size = new System.Drawing.Size(29, 13);
             this.label24.TabIndex = 5;
             this.label24.Text = global::DaRT.Resources.Strings.User;
             // 
@@ -1110,7 +1112,7 @@
             this.label23.AutoSize = true;
             this.label23.Location = new System.Drawing.Point(8, 72);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(59, 13);
+            this.label23.Size = new System.Drawing.Size(56, 13);
             this.label23.TabIndex = 3;
             this.label23.Text = global::DaRT.Resources.Strings.Data_base;
             // 
@@ -1126,7 +1128,7 @@
             this.label22.AutoSize = true;
             this.label22.Location = new System.Drawing.Point(8, 46);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(32, 13);
+            this.label22.Size = new System.Drawing.Size(29, 13);
             this.label22.TabIndex = 1;
             this.label22.Text = global::DaRT.Resources.Strings.Host;
             // 
@@ -1142,7 +1144,7 @@
             this.dbRemote.UseVisualStyleBackColor = true;
             this.dbRemote.Click += new System.EventHandler(this.dbRemote_Click);
             // 
-            // synsBase
+            // syncBase
             // 
             this.syncBase.Location = new System.Drawing.Point(265, 40);
             this.syncBase.Name = "syncBase";
@@ -1152,24 +1154,24 @@
             this.syncBase.UseVisualStyleBackColor = true;
             this.syncBase.Click += new System.EventHandler(this.syncBase_Click);
             // 
-            // tabPage6
+            // tabPage7
             // 
-            this.tabPage6.Controls.Add(this.updates);
-            this.tabPage6.Controls.Add(this.dart);
-            this.tabPage6.Controls.Add(this.label19);
-            this.tabPage6.Controls.Add(this.epm);
-            this.tabPage6.Controls.Add(this.battlenet);
-            this.tabPage6.Controls.Add(this.dartthread);
-            this.tabPage6.Controls.Add(this.label18);
-            this.tabPage6.Controls.Add(this.label17);
-            this.tabPage6.Controls.Add(this.label16);
-            this.tabPage6.Controls.Add(this.label15);
-            this.tabPage6.Location = new System.Drawing.Point(4, 22);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(495, 298);
-            this.tabPage6.TabIndex = 3;
-            this.tabPage6.Text = global::DaRT.Resources.Strings.About;
-            this.tabPage6.UseVisualStyleBackColor = true;
+            this.tabPage7.Controls.Add(this.updates);
+            this.tabPage7.Controls.Add(this.dart);
+            this.tabPage7.Controls.Add(this.label19);
+            this.tabPage7.Controls.Add(this.epm);
+            this.tabPage7.Controls.Add(this.battlenet);
+            this.tabPage7.Controls.Add(this.dartthread);
+            this.tabPage7.Controls.Add(this.label18);
+            this.tabPage7.Controls.Add(this.label17);
+            this.tabPage7.Controls.Add(this.label16);
+            this.tabPage7.Controls.Add(this.label15);
+            this.tabPage7.Location = new System.Drawing.Point(4, 22);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Size = new System.Drawing.Size(495, 298);
+            this.tabPage7.TabIndex = 3;
+            this.tabPage7.Text = global::DaRT.Resources.Strings.About;
+            this.tabPage7.UseVisualStyleBackColor = true;
             // 
             // updates
             // 
@@ -1205,7 +1207,7 @@
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(112, 13);
             this.label19.TabIndex = 42;
-            this.label19.Text = global::DaRT.Resources.Strings.Mention;
+            this.label19.Text = "Honorable Mention:";
             // 
             // epm
             // 
@@ -1251,7 +1253,7 @@
             this.dartthread.Size = new System.Drawing.Size(115, 13);
             this.dartthread.TabIndex = 38;
             this.dartthread.TabStop = true;
-            this.dartthread.Text = global::DaRT.Resources.Strings.forum_link;
+            this.dartthread.Text = "Official forum thread";
             this.dartthread.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkClicked);
             // 
             // label18
@@ -1261,7 +1263,7 @@
             this.label18.Location = new System.Drawing.Point(354, 170);
             this.label18.Margin = new System.Windows.Forms.Padding(10);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(96, 13);
+            this.label18.Size = new System.Drawing.Size(95, 13);
             this.label18.TabIndex = 37;
             this.label18.Text = "(You da real MVP)";
             // 
@@ -1272,9 +1274,9 @@
             this.label17.Location = new System.Drawing.Point(9, 124);
             this.label17.Margin = new System.Windows.Forms.Padding(10);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(454, 50);
+            this.label17.Size = new System.Drawing.Size(452, 50);
             this.label17.TabIndex = 36;
-            this.label17.Text = global::DaRT.Resources.Strings.DaRT_thank;
+            this.label17.Text = "Thank you for using DaRT!";
             // 
             // label16
             // 
@@ -1283,9 +1285,9 @@
             this.label16.Location = new System.Drawing.Point(15, 10);
             this.label16.Margin = new System.Windows.Forms.Padding(10);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(423, 104);
+            this.label16.Size = new System.Drawing.Size(422, 104);
             this.label16.TabIndex = 35;
-            this.label16.Text = global::DaRT.Resources.Strings.licence;
+            this.label16.Text = resources.GetString("label16.Text");
             // 
             // label15
             // 
@@ -1296,7 +1298,7 @@
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(329, 52);
             this.label15.TabIndex = 34;
-            this.label15.Text = global::DaRT.Resources.Strings.lib_lic;
+            this.label15.Text = resources.GetString("label15.Text");
             // 
             // checkupdate
             // 
@@ -1308,6 +1310,16 @@
             this.checkupdate.UseVisualStyleBackColor = true;
             this.checkupdate.Click += new System.EventHandler(this.checkupdate_Click);
             // 
+            // tabPage6
+            // 
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(495, 298);
+            this.tabPage6.TabIndex = 6;
+            this.tabPage6.Text = global::DaRT.Resources.Strings.Web_Server;
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
             // GUIsettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1317,7 +1329,7 @@
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.done);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Icon = global::DaRT.Properties.Resources.Icon;
             this.MaximizeBox = false;
             this.Name = "GUIsettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -1333,8 +1345,8 @@
             this.tabPage4.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
-            this.tabPage6.ResumeLayout(false);
-            this.tabPage6.PerformLayout();
+            this.tabPage7.ResumeLayout(false);
+            this.tabPage7.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1388,7 +1400,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.TabPage tabPage7;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label16;
@@ -1447,5 +1459,6 @@
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.TextBox dbBase;
         private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.TabPage tabPage6;
     }
 }

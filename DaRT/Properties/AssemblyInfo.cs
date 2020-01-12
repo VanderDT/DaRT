@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("DaRT")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("DomiStyle")]
+[assembly: AssemblyCompany("nXn")]
 [assembly: AssemblyProduct("DaRT")]
 [assembly: AssemblyCopyright("Copyright © DomiStyle 2012 - 2016")]
 [assembly: AssemblyTrademark("")]
@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.3.0.1")]
+[assembly: AssemblyVersion("2.3.0.2")]
 [assembly: AssemblyFileVersion("2.3.0.0")]
 [assembly: NeutralResourcesLanguage("en-US")]
 

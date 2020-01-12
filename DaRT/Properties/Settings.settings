@@ -286,5 +286,20 @@
     <Setting Name="WindowSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">640, 500</Value>
     </Setting>
+    <Setting Name="WebPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8080</Value>
+    </Setting>
+    <Setting Name="WebUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)">admin</Value>
+    </Setting>
+    <Setting Name="WebPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)">superkey</Value>
+    </Setting>
+    <Setting Name="WebServer" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="WebRoot" Type="System.String" Scope="User">
+      <Value Profile="(Default)">data/www</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -1106,5 +1106,65 @@ namespace DaRT.Properties {
                 this["WindowSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8080")]
+        public int WebPort {
+            get {
+                return ((int)(this["WebPort"]));
+            }
+            set {
+                this["WebPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("admin")]
+        public string WebUser {
+            get {
+                return ((string)(this["WebUser"]));
+            }
+            set {
+                this["WebUser"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("superkey")]
+        public string WebPassword {
+            get {
+                return ((string)(this["WebPassword"]));
+            }
+            set {
+                this["WebPassword"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool WebServer {
+            get {
+                return ((bool)(this["WebServer"]));
+            }
+            set {
+                this["WebServer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("data/www")]
+        public string WebRoot {
+            get {
+                return ((string)(this["WebRoot"]));
+            }
+            set {
+                this["WebRoot"] = value;
+            }
+        }
     }
 }

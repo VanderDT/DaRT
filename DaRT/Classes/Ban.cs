@@ -53,6 +53,11 @@ namespace DaRT
             return String.Format("{0}\t{1}\t{2}",_guid,_duration,_reason);
         }
 
+        public string ToJson()
+        {
+            return String.Format("{{\"id\":{0},\"guid\":\"{1}\",\"name\":\"{2}\",\"ip\":\"{3}\",\"duration\":\"{4}\",\"reason\":\"{5}\"}}", _id, _guid, _name, _ip, _duration, _reason);
+        }
+
         public Ban(int id, string guid, int duration, string reason)
         {
             _id = id;

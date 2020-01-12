@@ -197,7 +197,7 @@
             // 
             // logo
             // 
-            this.logo.Image = ((System.Drawing.Image)(resources.GetObject("logo.Image")));
+            this.logo.Image = global::DaRT.Properties.Resources.logo;
             this.logo.ImageLocation = "";
             this.logo.Location = new System.Drawing.Point(6, 4);
             this.logo.Name = "logo";
@@ -260,7 +260,7 @@
             this.passwordLabel.Name = "passwordLabel";
             this.passwordLabel.Size = new System.Drawing.Size(53, 13);
             this.passwordLabel.TabIndex = 4;
-            this.passwordLabel.Text = "Password";
+            this.passwordLabel.Text = global::DaRT.Resources.Strings.Password;
             this.passwordLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // portLabel
@@ -270,7 +270,7 @@
             this.portLabel.Name = "portLabel";
             this.portLabel.Size = new System.Drawing.Size(26, 13);
             this.portLabel.TabIndex = 3;
-            this.portLabel.Text = "Port";
+            this.portLabel.Text = global::DaRT.Resources.Strings.Port;
             this.portLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // hostLabel
@@ -280,7 +280,7 @@
             this.hostLabel.Name = "hostLabel";
             this.hostLabel.Size = new System.Drawing.Size(29, 13);
             this.hostLabel.TabIndex = 2;
-            this.hostLabel.Text = "Host";
+            this.hostLabel.Text = global::DaRT.Resources.Strings.Host;
             this.hostLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // port
@@ -661,7 +661,7 @@
             this.searchLabel.Name = "searchLabel";
             this.searchLabel.Size = new System.Drawing.Size(44, 13);
             this.searchLabel.TabIndex = 12;
-            this.searchLabel.Text = "Search:";
+            this.searchLabel.Text = global::DaRT.Resources.Strings.Search+":";
             // 
             // input
             // 
@@ -724,7 +724,7 @@
             // notifyIcon
             // 
             this.notifyIcon.ContextMenuStrip = this.contextMenuStrip;
-            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Icon = global::DaRT.Properties.Resources.Icon; ;
             this.notifyIcon.Text = "DaRT";
             this.notifyIcon.Visible = true;
             this.notifyIcon.Click += new System.EventHandler(this.notifyIcon_Click);
@@ -735,12 +735,12 @@
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exitToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(153, 48);
+            this.contextMenuStrip.Size = new System.Drawing.Size(104, 26);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.exitToolStripMenuItem.Text = global::DaRT.Resources.Strings.Close;
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -750,7 +750,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1184, 572);
             this.Controls.Add(this.splitContainer1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Icon = global::DaRT.Properties.Resources.Icon; ;
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "GUImain";

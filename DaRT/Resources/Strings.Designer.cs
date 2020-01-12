@@ -1598,6 +1598,15 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Show Scripts log.
+        /// </summary>
+        internal static string Show_Scripts_log {
+            get {
+                return ResourceManager.GetString("Show_Scripts_log", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Shutdown.
         /// </summary>
         internal static string Shutdown {
@@ -1815,6 +1824,15 @@ namespace DaRT.Resources {
         internal static string Vehicle_chat {
             get {
                 return ResourceManager.GetString("Vehicle_chat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Web Server.
+        /// </summary>
+        internal static string Web_Server {
+            get {
+                return ResourceManager.GetString("Web_Server", resourceCulture);
             }
         }
     }
