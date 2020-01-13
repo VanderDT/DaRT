@@ -49,6 +49,7 @@ namespace DaRT
         public String version;
         public RCon rcon;
         private ToolTip tooltip = new ToolTip();
+        public List<LogItem> loggingPool = new List<LogItem>();
         public List<Player> players = new List<Player>();
         public List<Ban> bans = new List<Ban>();
         private List<Location> locations = new List<Location>();
@@ -1883,7 +1884,6 @@ namespace DaRT
         {
             rcon.kick(kick);
         }
-
         public void Log(object message, LogType type, bool important)
         {
             // Return if logging is not possible
@@ -1901,7 +1901,7 @@ namespace DaRT
 
             if (type == LogType.Console)
             {
-                this.AddMessage(console, new LogItem(type, message, important), false, false);
+                this.AddMessage(console, new LogItem(type, message, important, DateTime.UtcNow), false, false);
                 if (Settings.Default.saveLog && consoleWriter != null) consoleWriter.WriteLine(DateTime.Now.ToString("[yyyy-MM-dd | HH:mm:ss]") + " " + message);
             }
 
@@ -1917,7 +1917,7 @@ namespace DaRT
                 type == LogType.AdminChat
                 )
             {
-                this.AddMessage(chat, new LogItem(type, message, important), true, false);
+                this.AddMessage(chat, new LogItem(type, message, important, DateTime.UtcNow), true, false);
                 if (Settings.Default.saveLog && chatWriter != null) chatWriter.WriteLine(DateTime.Now.ToString("[yyyy-MM-dd | HH:mm:ss]") + " " + message);
             }
 
@@ -1945,13 +1945,13 @@ namespace DaRT
                 type == LogType.WaypointStatementLog
                 )
             {
-                this.AddMessage(logs, new LogItem(type, message, important), false, true);
+                this.AddMessage(logs, new LogItem(type, message, important, DateTime.UtcNow), false, true);
                 if (Settings.Default.saveLog && logWriter != null) logWriter.WriteLine(DateTime.Now.ToString("[yyyy-MM-dd | HH:mm:ss]") + " " + message);
             }
 
             else if (Settings.Default.showDebug && type == LogType.Debug)
             {
-                this.AddMessage(console, new LogItem(type, message, important), false, false);
+                this.AddMessage(console, new LogItem(type, message, important, DateTime.UtcNow), false, false);
             }
         }
 
@@ -1962,6 +1962,17 @@ namespace DaRT
             if (_queue == null)
                 _queue = new List<LogItem>();
 
+            loggingPool.Add(item);
+            int last = 0;
+            foreach (LogItem i in loggingPool)
+            {
+                if (i.Date.AddHours(4) > DateTime.Now)
+                {
+                    last = loggingPool.IndexOf(i);
+                    break;
+                }
+            }
+            loggingPool.RemoveRange(0,last);
             if (allowMessages.Checked)
             {
                 string message = item.Message;
@@ -3573,7 +3584,7 @@ namespace DaRT
                 if (Headers.ContainsKey("Content-Type") && Headers["Content-Type"] == "application/json") pattern = "\"([^\"]+)\":\"?([^,\"]+)\"?,?";
                 if(pattern!="")foreach (Match m in Regex.Matches(Uri.UnescapeDataString(body), pattern, RegexOptions.Multiline)) 
                 {
-                    //main.Log(m.Groups[1].Value + " = " + m.Groups[2].Value, LogType.Debug, false);
+                    main.Log(m.Groups[1].Value + " = " + m.Groups[2].Value, LogType.Debug, false);
                     vars[m.Groups[1].Value] = m.Groups[2].Value;
                 }
             }
@@ -3596,6 +3607,19 @@ namespace DaRT
                 SendJson(Client, ob);
                 return;
             }
+            if (RequestUri.IndexOf("chat") >= 0)
+            {
+                List<String> ob = new List<String>();
+                //main.Log(vars["type"], LogType.Debug, false);
+                foreach (DaRT.LogItem o in main.loggingPool)
+                {
+                    if ((vars.ContainsKey("type") && (vars["type"].Contains(o.Type.ToString()) || o.Type.ToString().Contains(vars["type"])))
+                        || (vars.ContainsKey("timestamp") && o.Date >= (DateTime)(new DateTime(1970, 1, 1)).AddMilliseconds(long.Parse(vars["timestamp"]))))
+                        ob.Add(o.ToJson());
+                }
+                SendJson(Client, ob);
+                return;
+            }
             if (RequestUri.EndsWith("/"))
             {
                 RequestUri += "index.html";
@@ -3608,7 +3632,7 @@ namespace DaRT
             if (data.GetType().ToString().StartsWith("System.Collections.Generic.List")) Content = "[" + String.Join(",", (List<String>)data) + "]";
             if (data.GetType().ToString().StartsWith("System.String")) Content = (String)data;
             byte[] ContentBuffer = Encoding.UTF8.GetBytes(Content);
-            string Headers = "HTTP/1.1 200 OK\nContent-Type: application/json\nContent-Length: " + ContentBuffer.Length + "\n\n";
+            string Headers = "HTTP/1.1 200 OK\nContent-Type: application/json\nConnection: close\nContent-Length: " + ContentBuffer.Length + "\n\n";
             byte[] HeadersBuffer = Encoding.ASCII.GetBytes(Headers);
             Client.GetStream().Write(HeadersBuffer, 0, HeadersBuffer.Length);
             Client.GetStream().Write(ContentBuffer, 0, ContentBuffer.Length);
@@ -3680,5 +3704,40 @@ namespace DaRT
             Client.Close();
         }
     }
+    public class ReplaceString
+    {
+        static readonly IDictionary<string, string> mr = new Dictionary<string, string>();
 
+        const string ms = @"[\a\b\f\n\r\t\v\\""]";
+
+        public static string ToLiteral(string inp)
+        {
+            return Regex.Replace(inp, ms, match);
+        }
+
+        private static string match(Match m)
+        {
+            string match = m.ToString();
+            if (mr.ContainsKey(match))
+            {
+                return mr[match];
+            }
+            throw new NotSupportedException();
+        }
+        static ReplaceString()
+        {
+            mr.Add("\a", @"\a");
+            mr.Add("\b", @"\b");
+            mr.Add("\f", @"\f");
+            mr.Add("\n", @"\n");
+            mr.Add("\r", @"\r");
+            mr.Add("\t", @"\t");
+            mr.Add("\v", @"\v");
+
+            mr.Add("\\", @"\\");
+            mr.Add("\0", @"\0");
+
+            mr.Add("\"", "\\\"");
+        }
+    }
 }
