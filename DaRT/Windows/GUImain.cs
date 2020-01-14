@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -49,6 +50,7 @@ namespace DaRT
         public String version;
         public RCon rcon;
         private ToolTip tooltip = new ToolTip();
+        public HttpListener webService = null; 
         public List<LogItem> loggingPool = new List<LogItem>();
         public List<Player> players = new List<Player>();
         public List<Ban> bans = new List<Ban>();
@@ -1179,10 +1181,167 @@ namespace DaRT
         }
         #endregion
 
+        #region WebServer
+        public void SendFile(HttpListenerResponse Response, String FilePath)
+        {
+            if (!File.Exists(FilePath))
+            {
+                Response.StatusCode = 404;
+                Response.Close();
+                return;
+            }
+            string Extension = FilePath.Substring(FilePath.LastIndexOf('.'));
+            string ContentType = "";
+
+            switch (Extension)
+            {
+                case ".htm":
+                case ".html":
+                    ContentType = "text/html";
+                    break;
+                case ".css":
+                    ContentType = "text/stylesheet";
+                    break;
+                case ".js":
+                    ContentType = "text/javascript";
+                    break;
+                case ".jpg":
+                    ContentType = "image/jpeg";
+                    break;
+                case ".jpeg":
+                case ".png":
+                case ".gif":
+                    ContentType = "image/" + Extension.Substring(1);
+                    break;
+                default:
+                    if (Extension.Length > 1)
+                    {
+                        ContentType = "application/" + Extension.Substring(1);
+                    }
+                    else
+                    {
+                        ContentType = "application/octet-stream";
+                    }
+                    break;
+            }
+            FileStream FS;
+            try
+            {
+                FS = new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            }
+            catch (Exception)
+            {
+                Response.StatusCode = 500;
+                Response.Close();
+                return;
+            }
+            Response.ContentType = ContentType;
+            Response.ContentLength64 = FS.Length;
+            byte[] Buffer = new byte[1024];
+            int Count;
+            while (FS.Position < FS.Length)
+            {
+                Count = FS.Read(Buffer, 0, Buffer.Length);
+                Response.OutputStream.Write(Buffer, 0, Count);
+            }
+            FS.Close();
+            Response.OutputStream.Close();
+        }
+        public void SendJson(HttpListenerResponse Response, Object data)
+        {
+            String Content = "";
+            if (data.GetType().ToString().StartsWith("System.Collections.Generic.List")) Content = "[" + String.Join(",", (List<String>)data) + "]";
+            if (data.GetType().ToString().StartsWith("System.String")) Content = (String)data;
+            byte[] ContentBuffer = Encoding.UTF8.GetBytes(Content);
+            Response.ContentType = "application/json";
+            Response.ContentLength64 = ContentBuffer.Length;
+            Response.OutputStream.Write(ContentBuffer, 0, ContentBuffer.Length);
+            Response.OutputStream.Close();
+        }
+        static void ProcessRequest(HttpListenerContext context)
+        {
+            System.Threading.Thread.Sleep(10*1000);
+            Console.WriteLine("Response");
+        }
+        private void ClientThread(Object StateInfo)
+        {
+            HttpListenerContext context = (HttpListenerContext)StateInfo;
+            HttpListenerBasicIdentity identity = (HttpListenerBasicIdentity)context.User.Identity;
+            HttpListenerRequest Request = context.Request;
+            HttpListenerResponse Response = context.Response;
+            if (!identity.Name.Equals("Admin") || !identity.Password.Equals("test"))
+            {
+                Response.StatusCode = 401;
+                return;
+            }
+            this.Log(Request.Url.Query, LogType.Console, false);
+
+            String Path = Request.Url.AbsolutePath;
+            if (Request.HttpMethod.Equals("POST"))
+            {
+                System.IO.StreamReader reader = new System.IO.StreamReader(Request.InputStream, Request.ContentEncoding);
+                String pattern = "";
+                if (Request.Headers["Content-Type"] == "application/x-www-form-urlencoded") pattern = "^([^=]+)=(.+)";
+                if (Request.Headers["Content-Type"] == "application/json") pattern = "\"([^\"]+)\":\"?([^,\"]+)\"?,?";
+                if (pattern != "")
+                    foreach (Match m in Regex.Matches(Uri.UnescapeDataString(reader.ReadToEnd()), pattern, RegexOptions.Multiline))
+                    {
+                        this.Log(m.Groups[1].Value + " = " + m.Groups[2].Value, LogType.Debug, false);
+                        Request.QueryString[m.Groups[1].Value] = m.Groups[2].Value;
+                    }
+            }
+            if (Path.Equals("/playersList"))
+            {
+                List<String> ob = new List<String>();
+                foreach (DaRT.Player o in players) ob.Add(o.ToJson());
+                SendJson(Response, ob);
+                return;
+            }
+            if (Path.Equals("/bansList"))
+            {
+                List<String> ob = new List<String>();
+                foreach (DaRT.Ban o in bans) ob.Add(o.ToJson());
+                SendJson(Response, ob);
+                return;
+            }
+            if (Path.Equals("/chat"))
+            {
+                List<String> ob = new List<String>();
+                foreach (DaRT.LogItem o in loggingPool)
+                {
+                    if ((Request.QueryString["type"] != null && (Request.QueryString["type"].Contains(o.Type.ToString()) || o.Type.ToString().Contains(Request.QueryString["type"])))
+                        || (Request.QueryString["timestamp"] != null && o.Date >= (DateTime)(new DateTime(1970, 1, 1)).AddMilliseconds(long.Parse(Request.QueryString["timestamp"]))))
+                        ob.Add(o.ToJson());
+                }
+                SendJson(Response, ob);
+                return;
+            }
+
+            if (Path.EndsWith("/"))
+            {
+                Path += "index.html";
+            }
+            SendFile(Response, Settings.Default.WebRoot + Path);
+        }
+        #endregion
+
         #region Threads
         public void thread_Web()
         {
-            new WebServer(this);
+            int MaxThreadsCount = Environment.ProcessorCount * 4;
+            ThreadPool.SetMaxThreads(MaxThreadsCount, MaxThreadsCount);
+            ThreadPool.SetMinThreads(2, 2);
+            webService = new HttpListener();
+            webService.Prefixes.Add(String.Format("http://*:{0}/", Settings.Default.WebPort));
+            webService.Realm = "DaRT@"+host.Text;
+            webService.AuthenticationSchemes = AuthenticationSchemes.Basic;
+            webService.Start();
+ 
+            while (true)
+            {
+                var context = webService.GetContext();
+                ThreadPool.QueueUserWorkItem(new WaitCallback(ClientThread), context);
+            }                    
         }
         public void thread_Connect()
         {
@@ -3479,229 +3638,12 @@ namespace DaRT
                 logWriter.Close();
                 logWriter.Dispose();
             }
+            if (webService != null)
+            {
+                webService.Stop();
+            }
             this.Close();
             System.Windows.Forms.Application.Exit();
-        }
-    }
-    class WebServer
-    {
-        TcpListener Listener;
-        static GUImain ControlForm;
-
-        public WebServer(GUImain contr)
-        {
-            int MaxThreadsCount = Environment.ProcessorCount * 4;
-            ThreadPool.SetMaxThreads(MaxThreadsCount, MaxThreadsCount);
-            ThreadPool.SetMinThreads(2, 2);
-
-            Listener = new TcpListener(IPAddress.Any, Settings.Default.WebPort);
-            Listener.Start();
-            ControlForm = contr;
-            
-            while (true)
-            {
-                ThreadPool.QueueUserWorkItem(new WaitCallback(ClientThread), Listener.AcceptTcpClient());
-            }
-        }
-
-        static void ClientThread(Object StateInfo)
-        {
-            new Client((TcpClient)StateInfo, Settings.Default.WebRoot, ControlForm);
-        }
-
-        ~WebServer()
-        {
-            if (Listener != null)
-            {
-                Listener.Stop();
-            }
-        }
-    }
-    class Client
-    {
-        private void SendError(TcpClient Client, int Code)
-        {
-            string CodeStr = Code.ToString() + " " + ((HttpStatusCode)Code).ToString();
-            string Html = "<html><body><h1>" + CodeStr + "</h1></body></html>";
-            string Str = "HTTP/1.1 " + CodeStr + "\nContent-type: text/html\nContent-Length:" + Html.Length.ToString() + "\n\n" + Html;
-            byte[] Buffer = Encoding.ASCII.GetBytes(Str);
-            Client.GetStream().Write(Buffer, 0, Buffer.Length);
-            Client.Close();
-        }
-        public Client(TcpClient Client, String rootDir, GUImain main)
-        {
-            string Request = "";
-            byte[] Buffer = new byte[1024];
-            int Count;
-            while ((Count = Client.GetStream().Read(Buffer, 0, Buffer.Length)) > 0)
-            {
-                Request += Encoding.ASCII.GetString(Buffer, 0, Count);
-                if (Request.IndexOf("\r\n\r\n") >= 0 || Request.Length > 4096) break;
-            }
-            //main.Log(global::DaRT.Resources.Strings.Web_Server + "\n" + Request, LogType.Debug, false);
-
-            Match ReqMatch = Regex.Match(Request, @"^(\w+)\s+([^\s\?]+)\??([^\s]+)?\s+HTTP\/.*|");
-
-            if (ReqMatch == Match.Empty)
-            {
-                SendError(Client, 400);
-                return;
-            }
-
-            String RequestType = ReqMatch.Groups[1].Value;
-            String RequestUri = Uri.UnescapeDataString(ReqMatch.Groups[2].Value);
-            if (RequestType.Length < 3)
-            {
-                Client.Close();
-                return;
-            }
-            if (RequestUri.IndexOf("..") >= 0)
-            {
-                SendError(Client, 400);
-                return;
-            }
-            Dictionary<String, String> vars = new Dictionary<string, string>();
-            if (ReqMatch.Groups[3].Value != "")
-            {
-                foreach (Match m in Regex.Matches(Uri.UnescapeDataString(ReqMatch.Groups[3].Value), @"([^=]+)=([^&]+)&?"))
-                {
-                    vars[m.Groups[1].Value] = m.Groups[2].Value;
-                }
-            }
-            Dictionary<String, String> Headers = new Dictionary<string, string>();
-            foreach (Match m in Regex.Matches(Request, "^([\\w-]+):\\s?([^\r\n]+)", RegexOptions.Multiline))
-            {
-                //main.Log(m.Groups[1].Value + " = " + m.Groups[2].Value, LogType.Debug, false);
-                Headers[m.Groups[1].Value] = m.Groups[2].Value;
-            }
-            //main.Log(global::DaRT.Resources.Strings.Web_Server + ": " + String.Join(",",Headers.Keys), LogType.Debug, false);
-            if (RequestType.Equals("POST"))
-            {
-
-                String body = Request.Split(new[] { "\n\n","\r\n\r\n" }, StringSplitOptions.None)[1];
-                String pattern = "";
-                if (Headers.ContainsKey("Content-Type") && Headers["Content-Type"] == "application/x-www-form-urlencoded") pattern = "^([^=]+)=(.+)";
-                if (Headers.ContainsKey("Content-Type") && Headers["Content-Type"] == "application/json") pattern = "\"([^\"]+)\":\"?([^,\"]+)\"?,?";
-                if(pattern!="")foreach (Match m in Regex.Matches(Uri.UnescapeDataString(body), pattern, RegexOptions.Multiline)) 
-                {
-                    main.Log(m.Groups[1].Value + " = " + m.Groups[2].Value, LogType.Debug, false);
-                    vars[m.Groups[1].Value] = m.Groups[2].Value;
-                }
-            }
-            if (vars.ContainsKey("test"))
-            {
-                SendJson(Client, String.Format("{{\"test\":{0}}}",vars["test"]));
-                return;
-            }
-            if (RequestUri.IndexOf("playerList") >= 0)
-            {
-                List<String> ob = new List<String>();
-                foreach (DaRT.Player o in main.players) ob.Add(o.ToJson());
-                SendJson(Client, ob);
-                return;
-            }
-            if (RequestUri.IndexOf("banList") >= 0)
-            {
-                List<String> ob = new List<String>();
-                foreach (DaRT.Ban o in main.bans) ob.Add(o.ToJson());
-                SendJson(Client, ob);
-                return;
-            }
-            if (RequestUri.IndexOf("chat") >= 0)
-            {
-                List<String> ob = new List<String>();
-                //main.Log(vars["type"], LogType.Debug, false);
-                foreach (DaRT.LogItem o in main.loggingPool)
-                {
-                    if ((vars.ContainsKey("type") && (vars["type"].Contains(o.Type.ToString()) || o.Type.ToString().Contains(vars["type"])))
-                        || (vars.ContainsKey("timestamp") && o.Date >= (DateTime)(new DateTime(1970, 1, 1)).AddMilliseconds(long.Parse(vars["timestamp"]))))
-                        ob.Add(o.ToJson());
-                }
-                SendJson(Client, ob);
-                return;
-            }
-            if (RequestUri.EndsWith("/"))
-            {
-                RequestUri += "index.html";
-            }
-            SendFile(Client, rootDir + "/" + RequestUri);
-        }
-        public void SendJson(TcpClient Client, Object data)
-        {
-            String Content = "";
-            if (data.GetType().ToString().StartsWith("System.Collections.Generic.List")) Content = "[" + String.Join(",", (List<String>)data) + "]";
-            if (data.GetType().ToString().StartsWith("System.String")) Content = (String)data;
-            byte[] ContentBuffer = Encoding.UTF8.GetBytes(Content);
-            string Headers = "HTTP/1.1 200 OK\nContent-Type: application/json\nConnection: close\nContent-Length: " + ContentBuffer.Length + "\n\n";
-            byte[] HeadersBuffer = Encoding.ASCII.GetBytes(Headers);
-            Client.GetStream().Write(HeadersBuffer, 0, HeadersBuffer.Length);
-            Client.GetStream().Write(ContentBuffer, 0, ContentBuffer.Length);
-            Client.Close();
-        }
-        public void SendFile(TcpClient Client, String FilePath)
-        {
-            if (!File.Exists(FilePath))
-            {
-                SendError(Client, 404);
-                return;
-            }
-            string Extension = FilePath.Substring(FilePath.LastIndexOf('.'));
-            string ContentType = "";
-
-            switch (Extension)
-            {
-                case ".htm":
-                case ".html":
-                    ContentType = "text/html";
-                    break;
-                case ".css":
-                    ContentType = "text/stylesheet";
-                    break;
-                case ".js":
-                    ContentType = "text/javascript";
-                    break;
-                case ".jpg":
-                    ContentType = "image/jpeg";
-                    break;
-                case ".jpeg":
-                case ".png":
-                case ".gif":
-                    ContentType = "image/" + Extension.Substring(1);
-                    break;
-                default:
-                    if (Extension.Length > 1)
-                    {
-                        ContentType = "application/" + Extension.Substring(1);
-                    }
-                    else
-                    {
-                        ContentType = "application/unknown";
-                    }
-                    break;
-            }
-            FileStream FS;
-            try
-            {
-                FS = new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            }
-            catch (Exception)
-            {
-                SendError(Client, 500);
-                return;
-            }
-
-            string Headers = "HTTP/1.1 200 OK\nContent-Type: " + ContentType + "\nContent-Length: " + FS.Length + "\n\n";
-            byte[] HeadersBuffer = Encoding.ASCII.GetBytes(Headers);
-            Client.GetStream().Write(HeadersBuffer, 0, HeadersBuffer.Length);
-            byte[] Buffer = new byte[1024];
-            int Count;
-            while (FS.Position < FS.Length)
-            {
-                Count = FS.Read(Buffer, 0, Buffer.Length);
-                Client.GetStream().Write(Buffer, 0, Count);
-            }
-            FS.Close();
-            Client.Close();
         }
     }
     public class ReplaceString
@@ -3733,10 +3675,8 @@ namespace DaRT
             mr.Add("\r", @"\r");
             mr.Add("\t", @"\t");
             mr.Add("\v", @"\v");
-
             mr.Add("\\", @"\\");
             mr.Add("\0", @"\0");
-
             mr.Add("\"", "\\\"");
         }
     }
