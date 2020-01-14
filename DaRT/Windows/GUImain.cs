@@ -1246,6 +1246,7 @@ namespace DaRT
             }
             FS.Close();
             Response.OutputStream.Close();
+            Response.Close();
         }
         public void SendJson(HttpListenerResponse Response, Object data)
         {
@@ -1257,11 +1258,7 @@ namespace DaRT
             Response.ContentLength64 = ContentBuffer.Length;
             Response.OutputStream.Write(ContentBuffer, 0, ContentBuffer.Length);
             Response.OutputStream.Close();
-        }
-        static void ProcessRequest(HttpListenerContext context)
-        {
-            System.Threading.Thread.Sleep(10*1000);
-            Console.WriteLine("Response");
+            Response.Close();
         }
         private void ClientThread(Object StateInfo)
         {
@@ -1269,9 +1266,10 @@ namespace DaRT
             HttpListenerBasicIdentity identity = (HttpListenerBasicIdentity)context.User.Identity;
             HttpListenerRequest Request = context.Request;
             HttpListenerResponse Response = context.Response;
-            if (!identity.Name.Equals("Admin") || !identity.Password.Equals("test"))
+            if (!identity.Name.Equals(Settings.Default.WebUser) || !identity.Password.Equals(Settings.Default.WebPassword))
             {
                 Response.StatusCode = 401;
+                Response.Close();
                 return;
             }
             this.Log(Request.Url.Query, LogType.Console, false);
@@ -1321,7 +1319,15 @@ namespace DaRT
             {
                 Path += "index.html";
             }
-            SendFile(Response, Settings.Default.WebRoot + Path);
+            if(Path.StartsWith("/flags/"))
+            {
+                Path = "data/img"+Path;
+            }
+            else
+            {
+                Path = Settings.Default.WebRoot + Path;
+            }
+            SendFile(Response,  Path);
         }
         #endregion
 
