@@ -7,16 +7,16 @@ namespace DaRT
 {
     public class Player
     {
-        public int number;
-        public String ip;
-        public String ping;
-        public String guid;
-        public String name;
-        public String status;
-        public String lastseen;
-        public String lastseenon;
-        public String location;
-        public String comment;
+        public int number = -1;
+        public String ip = "";
+        public String ping = "";
+        public String guid = "";
+        public String name = "";
+        public String status = "";
+        public String lastseen = "";
+        public String lastseenon = "";
+        public String location = "";
+        public String comment = "";
 
         public override string ToString()
         {
@@ -26,6 +26,20 @@ namespace DaRT
         public string ToJson()
         {
             return String.Format("{{\"id\":{0},\"ip\":\"{1}\",\"ping\":{2},\"guid\":\"{3}\",\"name\":\"{4}\",\"status\":\"{5}\"}}", number, ip, ping, guid, name, status);
+        }
+        public Player()
+        { 
+        
+        }
+
+        public Player(int number, String ip, String name)
+        {
+            this.number = number;
+            this.ip = ip;
+            this.ping = "-1";
+            this.guid = "NOGUID";
+            this.name = name;
+            this.status = "Lobby";
         }
 
         public Player(int number, String ip, String ping, String guid, String name, String status)

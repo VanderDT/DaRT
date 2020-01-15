@@ -2871,13 +2871,38 @@ namespace DaRT
             }
         }
 
-        public void PlayerDisconnect(String id, String name = "")
+        public void PlayerConnect(Player player)
         {
-            foreach(ListViewItem item in playerList.Items)
+            this.Invoke((MethodInvoker)delegate
             {
-                if ((!id.Equals("") && item.SubItems[1].Equals(id))||(!name.Equals("") && item.SubItems[5].Text.Contains(name)))
-                    playerList.Items.Remove(item);
-            }
+                Player target = players.Find(x =>( x.number.Equals(player.number)&&x.name.Equals(player.name)));
+                if (target != null)
+                {
+                    target = player;
+                    ListViewItem item = playerList.FindItemWithText(player.name, true, 0);
+                    item.SubItems[4].Text = player.guid;
+                    item.SubItems[7].Text = GetComment(player.guid);
+                }
+                else
+                {
+                    String[] items = { "", player.number.ToString(), player.ip, player.ping, player.guid, player.name, player.status, "" };
+                    ListViewItem item = new ListViewItem(items);
+                    item.ImageIndex = -1;
+
+                    playerList.Items.Add(item);
+                    players.Add(player);
+                }
+            });
+        }
+
+        public void PlayerDisconnect(Player player)
+        {
+            this.Invoke((MethodInvoker)delegate {
+                ListViewItem item = playerList.FindItemWithText(player.guid, true, 0);
+                playerList.Items.Remove(item);
+                players.Remove(player);
+
+            });
         }
         #endregion 
 

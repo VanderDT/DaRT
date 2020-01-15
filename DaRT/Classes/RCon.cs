@@ -501,6 +501,7 @@ namespace DaRT
             string message = args.Message;
             if (_initialized)
             {
+                //if (Settings.Default.showLogErrors) _form.Log(message, LogType.Debug, false);
                 //if (message.Contains("Connected RCon admins:")) this.parseAdmins(message);
                 //if (message.Contains("Players on server:")) this.parsePlayers(message);
                 //if (message.StartsWith("GUID Bans:")) this.parseBans(message);
@@ -557,13 +558,25 @@ namespace DaRT
                         }
                         else if (message.StartsWith("Player #"))
                         {
-                            if (_pending != "" && message.EndsWith(" " + _pending + " disconnected"))
-                                _pendingLeft = true;
-
-                            if (Settings.Default.refreshOnJoin && message.EndsWith("disconnected") && !_form.pendingPlayers)
+                            String[] items = message.Remove(0, 8).Split(' ');
+                            if (message.EndsWith(" disconnected"))
                             {
-                                String[] items = message.Remove(7, 1).Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                                _form.PlayerDisconnect(items[1]);
+                                Player p = _players.Find(x => (x.number.ToString() == items[0]&&x.name.Equals(items[1])));
+                                _form.PlayerDisconnect(p);
+                                _players.Remove(p);
+                            }
+                            else if(message.EndsWith(" connected"))
+                            {
+                                Player p = new Player(int.Parse(items[0]),items[2],items[1]);
+                                _form.PlayerConnect(p);
+                                _players.Add(p);
+
+                            }
+                            else if (message.Contains("GUID"))
+                            {
+                                Player p = _players.Find(x => (x.number.ToString() == items[0] && x.name.Equals(items[1])));
+                                p.guid = items[5];
+                                _form.PlayerConnect(p);
                             }
 
                             // Connect/disconnect/kick/ban messages
@@ -576,12 +589,6 @@ namespace DaRT
                             if (Settings.Default.showVerificationMessages)
                                 _form.Log(message, LogType.Console, false);
 
-                            if (Settings.Default.refreshOnJoin && !_form.pendingPlayers)
-                            {
-                                Thread thread = new Thread(new ThreadStart(_form.thread_Player));
-                                thread.IsBackground = true;
-                                thread.Start();
-                            }
                         }
                         else if (message.StartsWith("RCon admin #"))
                         {
