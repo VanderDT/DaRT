@@ -727,4 +727,10 @@ DaRT нашол существующую базу и будет пытаться
   <data name="Web_Server" xml:space="preserve">
     <value>Веб сервер</value>
   </data>
+  <data name="Web_Enable" xml:space="preserve">
+    <value>Включить Ваб Сервер</value>
+  </data>
+  <data name="Web_Root" xml:space="preserve">
+    <value>Корневая папка</value>
+  </data>
 </root>

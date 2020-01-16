@@ -1828,6 +1828,24 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Enable WebServer.
+        /// </summary>
+        internal static string Web_Enable {
+            get {
+                return ResourceManager.GetString("Web_Enable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Root dir.
+        /// </summary>
+        internal static string Web_Root {
+            get {
+                return ResourceManager.GetString("Web_Root", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Web Server.
         /// </summary>
         internal static string Web_Server {

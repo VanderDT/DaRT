@@ -50,7 +50,6 @@ namespace DaRT
         public String version;
         public RCon rcon;
         private ToolTip tooltip = new ToolTip();
-        public HttpListener webService = null; 
         public List<LogItem> loggingPool = new List<LogItem>();
         public List<Player> players = new List<Player>();
         public List<Ban> bans = new List<Ban>();
@@ -69,6 +68,7 @@ namespace DaRT
         StreamWriter consoleWriter;
         StreamWriter chatWriter;
         StreamWriter logWriter;
+        public HttpListener webService;
         public IWebProxy proxy;
         public bool pendingConnect = false;
         public bool pendingPlayers = false;
@@ -76,6 +76,19 @@ namespace DaRT
         public bool pendingBans = false;
         public bool pendingDatabase = false;
         public bool pendingSync = false;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (components != null) components.Dispose();
+                if (webService != null) webService.Close();
+                if (logWriter != null) logWriter.Dispose();
+                if (chatWriter != null) chatWriter.Dispose();
+                if (consoleWriter != null) consoleWriter.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
         private List<string> _buffer;
 
@@ -433,7 +446,7 @@ namespace DaRT
             thread.IsBackground = true;
             thread.Start();
         }
-        private void InitialazeWeb()
+        public void InitialazeWeb()
         {
             // Starting web server
             Thread thread = new Thread(new ThreadStart(thread_Web));
@@ -1248,17 +1261,18 @@ namespace DaRT
             Response.OutputStream.Close();
             Response.Close();
         }
-        public void SendJson(HttpListenerResponse Response, Object data)
+        public void SendJson(HttpListenerResponse Response, Object data, bool KeepAllive = false)
         {
             String Content = "";
             if (data.GetType().ToString().StartsWith("System.Collections.Generic.List")) Content = "[" + String.Join(",", (List<String>)data) + "]";
             if (data.GetType().ToString().StartsWith("System.String")) Content = (String)data;
+            Response.AddHeader("Connection",KeepAllive ? "keep-alive" : "close");
             byte[] ContentBuffer = Encoding.UTF8.GetBytes(Content);
             Response.ContentType = "application/json";
             Response.ContentLength64 = ContentBuffer.Length;
             Response.OutputStream.Write(ContentBuffer, 0, ContentBuffer.Length);
             Response.OutputStream.Close();
-            Response.Close();
+            if(!KeepAllive) Response.Close();
         }
         private void ClientThread(Object StateInfo)
         {
@@ -1311,7 +1325,9 @@ namespace DaRT
                         || (Request.QueryString["timestamp"] != null && o.Date >= (DateTime)(new DateTime(1970, 1, 1)).AddMilliseconds(long.Parse(Request.QueryString["timestamp"]))))
                         ob.Add(o.ToJson());
                 }
-                SendJson(Response, ob);
+                context.Response.KeepAlive = context.Request.KeepAlive;
+                SendJson(Response, ob, context.Request.KeepAlive);
+                //context.Request.
                 return;
             }
 
@@ -1761,6 +1777,7 @@ namespace DaRT
             }
         }
 
+
         public void thread_News()
         {
             try
@@ -1770,15 +1787,18 @@ namespace DaRT
                     this.news.Text = Resources.Strings.Loading_news;
 
                 });
+                Uri address = new Uri(Settings.Default.ReleaseUrl);
+                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | (SecurityProtocolType)(0xc0 | 0x300 | 0xc00);
                 WebClient client = new WebClient();
                 client.Encoding = System.Text.Encoding.UTF8;
                 client.Headers.Add("user-agent", "DaRT " + version);
-                String request = client.DownloadString(Settings.Default.ReleaseUrl);
+                String request = client.DownloadString(address);
                 client.Dispose();
-                System.Text.RegularExpressions.Match info = new System.Text.RegularExpressions.Regex("<a href=\"(.+DaRT/releases/tag/(.[^\"]+))\"?.>(.[^<]+)</a>").Match(request);
-                String size = new System.Text.RegularExpressions.Regex("<small class=\"text-gray float-right\">(.[^<]+)</small>").Match(request).Groups[1].Value;
+                Match info = new System.Text.RegularExpressions.Regex("href=\"(.+DaRT/releases/tag/(.[^\"]+))\"[^>]*>(.[^<]+)</").Match(request);
+                String size = new System.Text.RegularExpressions.Regex("DaRT.zip</span>\\s*</a>\\s*<small class=\"[^\"]+\">(.[^<]+)</small>").Match(request).Groups[1].Value;
                 String baseUrl = new System.Text.RegularExpressions.Regex(@"https?:\/\/(.[^\/]+)").Match(Settings.Default.ReleaseUrl).Value;
-                String url =  baseUrl + new System.Text.RegularExpressions.Regex("<a href=\"(.+DaRT/releases/download/.[^\"]+)\" rel=\"nofollow\">").Match(request).Groups[1].Value;
+                String url =  baseUrl + new System.Text.RegularExpressions.Regex("href=\"(.+DaRT/releases/download/.[^\"]+\\.zip)\"").Match(request).Groups[1].Value;
                 String desc = new System.Text.RegularExpressions.Regex(@"<p>(.[^<]+\.)</p>").Match(request).Groups[1].Value;
                 //new System.Text.RegularExpressions.Regex(@"<title>(.[^<]+)</title>").Match(request).Groups[1].Value;
                 if(!version.Equals(info.Groups[2].Value))
@@ -2891,6 +2911,7 @@ namespace DaRT
 
                     playerList.Items.Add(item);
                     players.Add(player);
+                    setPlayerCount(players.Count);
                 }
             });
         }
@@ -2901,6 +2922,7 @@ namespace DaRT
                 ListViewItem item = playerList.FindItemWithText(player.guid, true, 0);
                 playerList.Items.Remove(item);
                 players.Remove(player);
+                setPlayerCount(players.Count);
 
             });
         }
@@ -3240,7 +3262,7 @@ namespace DaRT
             InitializeConsole();
             InitializeBanner();
             if (Settings.Default.Check_update) InitializeNews();
-            InitialazeWeb();
+            if (Settings.Default.WebServer) InitialazeWeb();
             InitializeProxy();
             InitializeProgressBar();
             InitializeFonts();
@@ -3672,6 +3694,7 @@ namespace DaRT
             if (webService != null)
             {
                 webService.Stop();
+                webService.Close();
             }
             this.Close();
             System.Windows.Forms.Application.Exit();

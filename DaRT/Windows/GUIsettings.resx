@@ -117,20 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label16.Text" xml:space="preserve">
-    <value>DaRT (DayZ RCon Tool) was developed by Perfler Dominik (github.com/DomiStyle)
-in 2012 and translation and improve by Alexander (github.com/NeiroNx) in 2017
-as response to the lack of proper RCon applications for DayZ servers
-at that given time.
-
-This overhauled version is provided as a community service and thank you
-for all the server administrators out there 
-who are still in need for a proper RCon tool - even after such a long time.</value>
-  </data>
-  <data name="label15.Text" xml:space="preserve">
-    <value>This software uses the BattleNET library
-created by Marcel de Vries (github.com/marceldev89)
-and Robert van der Boorn (github.com/vipeax)
-which is licensed under the GNU Lesser General Public License.</value>
-  </data>
 </root>

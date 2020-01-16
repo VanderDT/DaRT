@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die mit einer Assembly verknüpft sind.
 [assembly: AssemblyTitle("DaRT")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Dayz BattleEYE remote console Tool")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("nXn")]
 [assembly: AssemblyProduct("DaRT")]
-[assembly: AssemblyCopyright("Copyright © DomiStyle 2012 - 2016")]
+[assembly: AssemblyCopyright("Copyright © DomiStyle 2012 - 2016 , NeiroN 2016 - 2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.3.0.2")]
-[assembly: AssemblyFileVersion("2.3.0.0")]
+[assembly: AssemblyVersion("2.3.1.0")]
+[assembly: AssemblyFileVersion("2.3.1.5")]
 [assembly: NeutralResourcesLanguage("en-US")]
 

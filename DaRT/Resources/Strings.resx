@@ -729,4 +729,10 @@ Console mode allows you to execute RCon commands directly on the server.</value>
   <data name="Web_Server" xml:space="preserve">
     <value>Web Server</value>
   </data>
+  <data name="Web_Enable" xml:space="preserve">
+    <value>Enable WebServer</value>
+  </data>
+  <data name="Web_Root" xml:space="preserve">
+    <value>Root dir</value>
+  </data>
 </root>

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using DaRT.Properties;
+using DaRT.Resources;
 using System.Diagnostics;
 
 namespace DaRT
@@ -142,6 +143,18 @@ namespace DaRT
             showWaypointStatementLog.Checked = Settings.Default.showWaypointStatementLog;
             filters.Text = Settings.Default.filters;
 
+            web_enable.Checked = Settings.Default.WebServer;
+            root_dir.Text = Settings.Default.WebRoot;
+            web_user.Text = Settings.Default.WebUser;
+            web_password.Text = Settings.Default.WebPassword;
+            web_port.Text = Settings.Default.WebPort.ToString();
+            root_dir.Enabled = Settings.Default.WebServer;
+            web_user.Enabled = Settings.Default.WebServer;
+            web_password.Enabled = Settings.Default.WebServer;
+            web_port.Enabled = Settings.Default.WebServer;
+            root_dir.Enabled = Settings.Default.WebServer;
+            root_select.Enabled = Settings.Default.WebServer;
+
             font = Settings.Default.font;
 
             updates.Checked = Settings.Default.Check_update;
@@ -219,9 +232,14 @@ namespace DaRT
             Settings.Default.font = font;
 
             Settings.Default.Check_update = updates.Checked;
-
+            Settings.Default.WebServer = web_enable.Checked;
+            Settings.Default.WebRoot = root_dir.Text;
+            Settings.Default.WebUser = web_user.Text;
+            Settings.Default.WebPassword = web_password.Text;
+            
             try
             {
+                Settings.Default.WebPort = int.Parse(web_port.Text);
                 Settings.Default.quickBan = int.Parse(quickBan.Text);
                 Settings.Default.interval = UInt32.Parse(interval.Text);
                 Settings.Default.playerTicks = UInt32.Parse(playerTicks.Text);
@@ -233,6 +251,20 @@ namespace DaRT
                 gui.Log(Resources.Strings.Error_occ, LogType.Debug, false);
             }
             Settings.Default.Save();
+            if (Settings.Default.WebServer)
+            {
+                if (gui.webService != null)
+                {
+                    gui.webService.Stop();
+                    gui.webService.Close();
+                }
+                gui.InitialazeWeb();
+            }
+            else if (gui.webService != null)
+            {
+                gui.webService.Stop();
+                gui.webService.Close();
+            }
 
             this.Close();
         }
@@ -283,6 +315,20 @@ namespace DaRT
             dbPassword.Enabled = dbRemote.Checked;
             syncBase.Enabled = dbRemote.Checked;
         }
-
+        private void web_enable_click(object sender, System.EventArgs e)
+        {
+            root_dir.Enabled = web_enable.Checked;
+            web_user.Enabled = web_enable.Checked;
+            web_password.Enabled = web_enable.Checked;
+            web_port.Enabled = web_enable.Checked;
+            root_dir.Enabled = web_enable.Checked;
+            root_select.Enabled = web_enable.Checked;
+        }
+        private void root_select_click(object sender, System.EventArgs e)
+        {
+            using (var fbd = new FolderBrowserDialog())
+                if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                    root_dir.Text = fbd.SelectedPath;
+        }
     }
 }
