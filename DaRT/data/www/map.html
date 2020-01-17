@@ -1,0 +1,55 @@
+<html>
+<head>
+  <title>Chernarusjuuuk Map</title>
+<script>
+var players;
+var AddPlayer = (name,pos)=>{
+  let x= (parseFloat(pos[1])-717.3)/4.76 - 25,y=(14971.66-parseFloat(pos[2]))/4.76 - 25;
+  document.querySelector("#map").innerHTML +=
+  `<g id="${name}" transform="matrix(1 0 0 1 ${x} ${y})">
+   <title>${name}</title>
+   <use id="${name}_icon" transform="matrix(0.8 0 0 0.8 0 0) rotate(${pos[0]} 25 25)" x="0" xlink:href="#player" y="0"/>
+   <rect fill="#ffffaa" height="30" id="svg_8" stroke="#555" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="round" width="${name.length*14}" x="15" y="40"/>
+   <text fill="#000" font-family="serif" font-size="24" id="svg_5" stroke="#000" stroke-width="0" text-anchor="start" x="20" y="62">${name}</text>
+  </g>`;
+};
+var GetPlayers = async function(){
+	let res = await fetch("/playersList");
+	res = await res.json();
+	players = res;
+	players.forEach(x=>AddPlayer(x.name,x.world));
+	setInterval(Update, 5000);
+	return res;
+};
+var Update = ()=>{
+	fetch("/pos?names="+players.map(x=>x.name).join(","))
+	.then(function(res){ return res.json() })
+	.then(function(res){ 
+		players.forEach((p,i)=>{
+			players[i].world=res[p.name];
+			let x= (parseFloat(res[p.name][1])-717.3)/4.76 - 25,
+			y=(14971.66-parseFloat(res[p.name][2]))/4.76 - 25;
+			document.querySelector("#"+p.name).setAttribute("transform",`matrix(1 0 0 1 ${x} ${y})`);
+			document.querySelector("#"+p.name+"_icon").setAttribute("transform",`matrix(0.8 0 0 0.8 0 0) rotate(${res[p.name][0]} 25 25)`);}) })
+	.catch(function(res){ console.log(res) });
+};
+setTimeout(GetPlayers,1000);
+</script>
+</head>
+<body>
+<svg width="3000" height="2900" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <symbol id="player" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+   <g id="player">
+    <circle cx="25" cy="25" fill="none" id="svg_2" r="15" stroke="#f22" stroke-width="5"/>
+    <line fill="none" id="svg_1" stroke="#f22" stroke-linecap="round" stroke-width="5" x1="25" x2="25" y1="25" y2="0"/>
+   </g>
+  </symbol>
+ </defs>
+ <g class="layer" id="map">
+  <title>Chernarus</title>
+  <image x="0" y="0" width="3000" height="2900" id="svg_0" xlink:href="img/Chernarus.jpg" />
+ </g>
+</svg>
+</body>
+</html>

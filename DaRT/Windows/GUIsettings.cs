@@ -251,19 +251,9 @@ namespace DaRT
                 gui.Log(Resources.Strings.Error_occ, LogType.Debug, false);
             }
             Settings.Default.Save();
-            if (Settings.Default.WebServer)
+            if (Settings.Default.WebServer && gui.webService == null)
             {
-                if (gui.webService != null)
-                {
-                    gui.webService.Stop();
-                    gui.webService.Close();
-                }
                 gui.InitialazeWeb();
-            }
-            else if (gui.webService != null)
-            {
-                gui.webService.Stop();
-                gui.webService.Close();
             }
 
             this.Close();

@@ -15,8 +15,10 @@ namespace DaRT
         public String status = "";
         public String lastseen = "";
         public String lastseenon = "";
-        public String location = "";
+        public String location = "unknown";
         public String comment = "";
+        public String world = "";
+
 
         public override string ToString()
         {
@@ -25,7 +27,7 @@ namespace DaRT
 
         public string ToJson()
         {
-            return String.Format("{{\"id\":{0},\"ip\":\"{1}\",\"ping\":{2},\"guid\":\"{3}\",\"name\":\"{4}\",\"status\":\"{5}\"}}", number, ip, ping, guid, name, status);
+            return String.Format("{{\"id\":{0},\"loc\":\"{6}\",\"ip\":\"{1}\",\"ping\":{2},\"guid\":\"{3}\",\"name\":\"{4}\",\"comment\":\"{8}\",\"status\":\"{5}\",\"world\":[{7}]}}", number, ip, ping, guid, name, status, location, world, comment);
         }
         public Player()
         { 
@@ -39,7 +41,7 @@ namespace DaRT
             this.ping = "-1";
             this.guid = "NOGUID";
             this.name = name;
-            this.status = "Lobby";
+            this.status = "Initializing";
         }
 
         public Player(int number, String ip, String ping, String guid, String name, String status)

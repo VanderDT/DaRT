@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography;
 using System.Text;
@@ -1203,33 +1204,37 @@ namespace DaRT
                 Response.Close();
                 return;
             }
-            string Extension = FilePath.Substring(FilePath.LastIndexOf('.'));
-            string ContentType = "";
-
+            string Extension = FilePath.Substring(FilePath.LastIndexOf('.')+1);
+            //Dictionary<String,String> mime = new Dictionary<String,String>();
+            //mime.Add("svg", "image/svg+xml");
+            string ContentType = "";// mime.FirstOrDefault(x => x.Value.Contains(Extension)).Value;
             switch (Extension)
             {
-                case ".htm":
-                case ".html":
+                case "svg":
+                    ContentType = "image/svg+xml";
+                    break;
+                case "htm":
+                case "html":
                     ContentType = "text/html";
                     break;
-                case ".css":
+                case "css":
                     ContentType = "text/stylesheet";
                     break;
-                case ".js":
+                case "js":
                     ContentType = "text/javascript";
                     break;
-                case ".jpg":
+                case "jpg":
                     ContentType = "image/jpeg";
                     break;
-                case ".jpeg":
-                case ".png":
-                case ".gif":
-                    ContentType = "image/" + Extension.Substring(1);
+                case "jpeg":
+                case "png":
+                case "gif":
+                    ContentType = "image/" + Extension;
                     break;
                 default:
                     if (Extension.Length > 1)
                     {
-                        ContentType = "application/" + Extension.Substring(1);
+                        ContentType = "application/" + Extension;
                     }
                     else
                     {
@@ -1286,7 +1291,7 @@ namespace DaRT
                 Response.Close();
                 return;
             }
-            this.Log(Request.Url.Query, LogType.Console, false);
+            //this.Log(Request.Url.Query, LogType.Console, false);
 
             String Path = Request.Url.AbsolutePath;
             if (Request.HttpMethod.Equals("POST"))
@@ -1316,7 +1321,7 @@ namespace DaRT
                 SendJson(Response, ob);
                 return;
             }
-            if (Path.Equals("/chat"))
+            if (Path.Equals("/logsList"))
             {
                 List<String> ob = new List<String>();
                 foreach (DaRT.LogItem o in loggingPool)
@@ -1330,14 +1335,44 @@ namespace DaRT
                 //context.Request.
                 return;
             }
+            if (Path.Equals("/pos"))
+            {
+                SendJson(Response, Request.QueryString["names"] != null ? GetWorldAll(Request.QueryString["names"]):"{}");
+                return;
+            }
+            if (Path.Equals("/exec") && Request.QueryString["cmd"] != null)
+            {
+                String cmd = Request.QueryString["cmd"];
+                List<String> cmds = new List<String>(new[] { "Ban","Kick","Lock","Unlock","Say","Restart","Shutdown","Reassign" });//wite list
+                //(Enum.GetNames(typeof(BattleNET.BattlEyeCommand)));
+                if (cmds.Contains(cmd))
+                {
+                    BattleNET.BattlEyeCommand b_cmd = (BattleNET.BattlEyeCommand)Enum.Parse(typeof(BattleNET.BattlEyeCommand), cmd);
+                    if (Request.QueryString["param"] != null)
+                    {
+                        int result = rcon.Execute(b_cmd,Request.QueryString["param"]);
+                        SendJson(Response, String.Format("{{\"cmd\":\"{0}\",\"result\":{1}}}",cmd, result));
+                    }
+                    else
+                    {
+                        rcon.Execute(b_cmd);
+                    }
+                }
+                else
+                {
+                    SendJson(Response, "{\"error\":\"cmd not in list\",\"cmds\":[\"Ban\",\"Kick\",\"Lock\",\"Unlock\",\"Say\",\"Restart\",\"Shutdown\",\"Reassign\"]}");
+                }
+                return;
+                
+            }
 
             if (Path.EndsWith("/"))
             {
                 Path += "index.html";
             }
-            if(Path.StartsWith("/flags/"))
+            if(Path.StartsWith("/img/"))
             {
-                Path = "data/img"+Path;
+                Path = "data"+Path;
             }
             else
             {
@@ -1558,7 +1593,10 @@ namespace DaRT
                     for (int i = 0; i < players.Count; i++)
                     {
                         PlayerToSql(players[i]);
-                        String[] entries = { "", players[i].number.ToString(), players[i].ip, players[i].ping, players[i].guid, players[i].name, players[i].status, GetComment(players[i].guid) };
+                        String comment = GetComment(players[i].guid);
+                        players[i].world = GetWorld(players[i].name);
+                        players[i].comment = comment;
+                        String[] entries = { "", players[i].number.ToString(), players[i].ip, players[i].ping, players[i].guid, players[i].name, players[i].status, comment };
                         items.Add(new ListViewItem(entries));
                         items[i].ImageIndex = i;
                     }
@@ -1598,6 +1636,7 @@ namespace DaRT
                         imageList.Images.Add(locations[i].flag);
                         playerList.Invoke((MethodInvoker)delegate
                         {
+                            players[i].location = locations[i].location;
                             playerList.Items[i].Text = " " + locations[i].location.ToUpper();
                         });
                     }
@@ -1605,7 +1644,7 @@ namespace DaRT
                     {
                         playerList.Refresh();
                     });
-
+                    /*
                     for (int i = 0; i < players.Count; i++)
                     {
                         String lastip = players[i].ip;
@@ -1619,7 +1658,7 @@ namespace DaRT
                         {
 
                         }
-                    }
+                    }*/
                 }
 
                 this.Invoke((MethodInvoker)delegate
@@ -2686,6 +2725,53 @@ namespace DaRT
             }
             return items;
         }
+        public String GetWorld(String name)
+        {
+
+            String world = "";
+            if (Settings.Default.dbRemote)
+            {
+                while (remoteconnection.State == ConnectionState.Fetching) Thread.Sleep(100);
+                using (MySqlCommand command = new MySqlCommand("SELECT replace(replace(d.Worldspace,'[',''),']','') FROM player_data s LEFT JOIN character_data d ON d.PlayerUID=s.playerUID WHERE s.playerName=@name AND d.InstanceID=1337 AND d.Alive=1", remoteconnection))
+                {
+                    command.Parameters.Add(new MySqlParameter("@name", name));
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (!reader.IsClosed && reader.HasRows && reader.Read())
+                            world = this.GetSafeString(reader, 0);
+                        reader.Close();
+                    }
+                }
+            }
+            //cur,x,y,z
+            //y = (15360-388.34-y)/4.76
+            //x = (x-717.3)/4.76
+            return world;
+        }
+        public String GetWorldAll(String names)
+        {
+            List<String> pos = new List<String>();
+            if (Settings.Default.dbRemote)
+            {
+                while (remoteconnection.State == ConnectionState.Fetching) Thread.Sleep(100);
+                using (MySqlCommand command = new MySqlCommand("SELECT s.playerName,replace(replace(d.Worldspace,'[',''),']','') FROM player_data s LEFT JOIN character_data d ON d.PlayerUID=s.playerUID WHERE FIND_IN_SET(s.playerName, @name) AND d.InstanceID=1337 AND d.Alive=1", remoteconnection))
+                {
+                    command.Parameters.Add(new MySqlParameter("@name", names));
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        while(reader.Read())
+                        {
+                            pos.Add("\"" + this.GetSafeString(reader, 0) + "\":[" + this.GetSafeString(reader, 1)+"]");
+                        }
+                        reader.Close();
+                    }
+                }
+            }
+            //cur,x,y,z
+            //y = (15360-388.34-y)/4.76
+            //x = (x-717.3)/4.76
+            return "{"+String.Join(",",pos)+"}";
+        }
         public String GetComment(String guid)
         {
             String comment = "";
@@ -2899,9 +2985,9 @@ namespace DaRT
                 if (target != null)
                 {
                     target = player;
-                    ListViewItem item = playerList.FindItemWithText(player.name, true, 0);
-                    item.SubItems[4].Text = player.guid;
-                    item.SubItems[7].Text = GetComment(player.guid);
+                    ListViewItem item = playerList.FindItemWithText(target.name, true, 0);
+                    item.SubItems[4].Text = target.guid;
+                    item.SubItems[7].Text = target.comment;
                 }
                 else
                 {

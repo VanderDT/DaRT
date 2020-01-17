@@ -152,7 +152,7 @@ namespace DaRT
             _client.BattlEyeMessageReceived += HandleMessage;
             _client.BattlEyeConnected += HandleConnect;
             _client.BattlEyeDisconnected += HandleDisconnect;
-            _client.ReconnectOnPacketLoss = false;
+            _client.ReconnectOnPacketLoss = true;
 
             _initialized = true;
             _client.Connect();
@@ -457,9 +457,17 @@ namespace DaRT
             _client.SendCommand(BattlEyeCommand.Kick, kick.id + " " + name + kick.reason);
             if (_form != null) _form.Log(String.Format(Resources.Strings.Kicked, kick.name), LogType.Console, false);
         }
-        public void Execute(string command)
+        public int Execute(BattlEyeCommand command, string param)
         {
-            _client.SendCommand(command);
+            return _client.SendCommand(command, param);
+        }
+        public int Execute(BattlEyeCommand command)
+        {
+            return  _client.SendCommand(command);
+        }
+        public int Execute(string command)
+        {
+            return _client.SendCommand(command);
         }
         public void Ban(Ban ban)
         {
@@ -501,7 +509,10 @@ namespace DaRT
             string message = args.Message;
             if (_initialized)
             {
-                //if (Settings.Default.showLogErrors) _form.Log(message, LogType.Debug, false);
+                //
+#if DEBUG
+                if (Settings.Default.showLogErrors) _form.Log(message, LogType.Debug, false);
+#endif
                 //if (message.Contains("Connected RCon admins:")) this.parseAdmins(message);
                 //if (message.Contains("Players on server:")) this.parsePlayers(message);
                 //if (message.StartsWith("GUID Bans:")) this.parseBans(message);
@@ -567,7 +578,8 @@ namespace DaRT
                             }
                             else if(message.EndsWith(" connected"))
                             {
-                                Player p = new Player(int.Parse(items[0]),items[2],items[1]);
+                                String ip = items[2].Split(':')[0].Remove(0,1);
+                                Player p = new Player(int.Parse(items[0]),ip,items[1]);
                                 _form.PlayerConnect(p);
                                 _players.Add(p);
 
