@@ -1125,6 +1125,33 @@ namespace DaRT.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Map.
+        /// </summary>
+        internal static string Map {
+            get {
+                return ResourceManager.GetString("Map", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Map image file.
+        /// </summary>
+        internal static string MapImage {
+            get {
+                return ResourceManager.GetString("MapImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Map coord recalculation.
+        /// </summary>
+        internal static string MapRecalc {
+            get {
+                return ResourceManager.GetString("MapRecalc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Honorable Mention:.
         /// </summary>
         internal static string Mention {

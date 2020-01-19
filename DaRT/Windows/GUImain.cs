@@ -109,6 +109,14 @@ namespace DaRT
                 this.Size = Settings.Default.WindowSize;
             }
         }
+        private void InitializeMap()
+        {
+            map.Invoke((MethodInvoker)delegate
+            {
+                map.BackgroundImage = Image.FromFile(Settings.Default.MapImage);
+                map.Size = map.BackgroundImage.PhysicalDimension.ToSize();
+            });
+        }
         private void InitializeText()
         {
             // Bringing text at the top to the front because it overlaps with the tab control
@@ -119,7 +127,6 @@ namespace DaRT
             setAdminCount(0);
             setPlayerCount(0);
             setBanCount(0);
-
         }
         private void InitializeDatabase()
         {
@@ -1393,11 +1400,22 @@ namespace DaRT
             webService.Realm = "DaRT@"+host.Text;
             webService.AuthenticationSchemes = AuthenticationSchemes.Basic;
             webService.Start();
- 
+            
             while (true)
             {
-                var context = webService.GetContext();
-                ThreadPool.QueueUserWorkItem(new WaitCallback(ClientThread), context);
+                try
+                {
+                    var context = webService.GetContext();
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(ClientThread), context);
+                }
+                catch (Exception e)
+                {
+                    this.Log(e.Message, LogType.Debug, false);
+                    this.Log(e.StackTrace, LogType.Debug, false);
+                    webService.Stop();
+                    Thread.Sleep(1000);
+                    webService.Start();
+                }
             }                    
         }
         public void thread_Connect()
@@ -1590,6 +1608,7 @@ namespace DaRT
                 if (players != null && players.Count > 0)
                 {
                     List<ListViewItem> items = new List<ListViewItem>();
+                    //panelMap.Controls.Clear();
                     for (int i = 0; i < players.Count; i++)
                     {
                         PlayerToSql(players[i]);
@@ -1599,6 +1618,34 @@ namespace DaRT
                         String[] entries = { "", players[i].number.ToString(), players[i].ip, players[i].ping, players[i].guid, players[i].name, players[i].status, comment };
                         items.Add(new ListViewItem(entries));
                         items[i].ImageIndex = i;
+                        string[] pos = players[i].world.Split(',');
+                        if (pos.Length > 3)
+                        {
+                            Control[] labels = panelMap.Controls.Find(players[i].name, true);
+                            int x = Convert.ToInt32((Double.Parse(pos[1], new CultureInfo("en-US").NumberFormat) - 717.3) / 4.76);
+                            int y = Convert.ToInt32((15360.0 - 388.34 - Double.Parse(pos[2], new CultureInfo("en-US").NumberFormat)) / 4.76);
+                            if (labels.Length == 0)
+                            {
+                                Label pl = new Label();
+                                pl.Text = players[i].name;
+                                pl.Name = players[i].name;
+                                //pl.Height = 32;
+                                //pl.Width = players[i].name.Length * 14;
+                                pl.Left = x - panelMap.HorizontalScroll.Value;
+                                pl.Top = y - panelMap.VerticalScroll.Value;
+                                pl.Font = new Font("Arial", 16, FontStyle.Bold);
+                                pl.ForeColor = Color.Red;
+                                pl.BackColor = Color.Yellow;
+                                pl.AutoSize = true;
+                                panelMap.Invoke((MethodInvoker)delegate { panelMap.Controls.Add(pl);});
+                                pl.BringToFront();
+                            }
+                            else
+                            {
+                                this.Invoke((MethodInvoker)delegate { labels[0].Location = new Point(x-panelMap.HorizontalScroll.Value, y-panelMap.VerticalScroll.Value); labels[0].Refresh(); });
+                                
+                            }
+                        }
                     }
                     ImageList imageList = new ImageList();
                     imageList.ColorDepth = ColorDepth.Depth32Bit;
@@ -2731,16 +2778,24 @@ namespace DaRT
             String world = "";
             if (Settings.Default.dbRemote)
             {
-                while (remoteconnection.State == ConnectionState.Fetching) Thread.Sleep(100);
-                using (MySqlCommand command = new MySqlCommand("SELECT replace(replace(d.Worldspace,'[',''),']','') FROM player_data s LEFT JOIN character_data d ON d.PlayerUID=s.playerUID WHERE s.playerName=@name AND d.InstanceID=1337 AND d.Alive=1", remoteconnection))
+                try
                 {
-                    command.Parameters.Add(new MySqlParameter("@name", name));
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    while (remoteconnection.State == ConnectionState.Fetching) Thread.Sleep(100);
+                    using (MySqlCommand command = new MySqlCommand("SELECT replace(replace(d.Worldspace,'[',''),']','') FROM player_data s LEFT JOIN character_data d ON d.PlayerUID=s.playerUID WHERE s.playerName=@name AND d.InstanceID=1337 AND d.Alive=1", remoteconnection))
                     {
-                        if (!reader.IsClosed && reader.HasRows && reader.Read())
-                            world = this.GetSafeString(reader, 0);
-                        reader.Close();
+                        command.Parameters.Add(new MySqlParameter("@name", name));
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (!reader.IsClosed && reader.HasRows && reader.Read())
+                                world = this.GetSafeString(reader, 0);
+                            reader.Close();
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    this.Log(e.Message, LogType.Debug, false);
+                    this.Log(e.StackTrace, LogType.Debug, false);
                 }
             }
             //cur,x,y,z
@@ -2753,18 +2808,26 @@ namespace DaRT
             List<String> pos = new List<String>();
             if (Settings.Default.dbRemote)
             {
-                while (remoteconnection.State == ConnectionState.Fetching) Thread.Sleep(100);
-                using (MySqlCommand command = new MySqlCommand("SELECT s.playerName,replace(replace(d.Worldspace,'[',''),']','') FROM player_data s LEFT JOIN character_data d ON d.PlayerUID=s.playerUID WHERE FIND_IN_SET(s.playerName, @name) AND d.InstanceID=1337 AND d.Alive=1", remoteconnection))
+                try
                 {
-                    command.Parameters.Add(new MySqlParameter("@name", names));
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    while (remoteconnection.State == ConnectionState.Fetching) Thread.Sleep(100);
+                    using (MySqlCommand command = new MySqlCommand("SELECT s.playerName,replace(replace(d.Worldspace,'[',''),']','') FROM player_data s LEFT JOIN character_data d ON d.PlayerUID=s.playerUID WHERE FIND_IN_SET(s.playerName, @name) AND d.InstanceID=1337 AND d.Alive=1", remoteconnection))
                     {
-                        while(reader.Read())
+                        command.Parameters.Add(new MySqlParameter("@name", names));
+                        using (MySqlDataReader reader = command.ExecuteReader())
                         {
-                            pos.Add("\"" + this.GetSafeString(reader, 0) + "\":[" + this.GetSafeString(reader, 1)+"]");
+                            while (reader.Read())
+                            {
+                                pos.Add("\"" + this.GetSafeString(reader, 0) + "\":[" + this.GetSafeString(reader, 1) + "]");
+                            }
+                            reader.Close();
                         }
-                        reader.Close();
                     }
+                }
+                catch (Exception e)
+                {
+                    this.Log(e.Message, LogType.Debug, false);
+                    this.Log(e.StackTrace, LogType.Debug, false);
                 }
             }
             //cur,x,y,z
@@ -3135,6 +3198,7 @@ namespace DaRT
                             banner.IsBackground = true;
                             banner.Start();
                         }
+
                     }
                     else
                     {
@@ -3344,6 +3408,7 @@ namespace DaRT
             InitializePlayerList();
             InitializeBansList();
             InitializePlayerDBList();
+            InitializeMap();
             InitializeFunctions();
             InitializeConsole();
             InitializeBanner();
@@ -3491,8 +3556,9 @@ namespace DaRT
         {
             if (args.KeyCode == Keys.Enter)
             {
-                args.Handled = true;
-                args.SuppressKeyPress = true;
+                searchButton_Click(sender, args);
+                //args.Handled = true;
+                //args.SuppressKeyPress = true;
             }
             else if (args.KeyCode == Keys.Escape)
             {
@@ -3596,6 +3662,18 @@ namespace DaRT
                 playerDBList.Items.AddRange(items.ToArray());
                 playerDBList.ListViewItemSorter = playerDatabaseSorter;
 
+            }
+            #endregion
+            #region Map
+            else if (tabControl.SelectedTab.Name == "mapTab")
+            {
+                Control[] re = panelMap.Controls.Find(search.Text, true);
+                if (re.Length > 0)
+                {
+                    panelMap.HorizontalScroll.Value = Math.Max(Math.Min( re[0].Left - panelMap.Width / 2, panelMap.HorizontalScroll.Maximum), panelMap.HorizontalScroll.Minimum);
+                    panelMap.VerticalScroll.Value = Math.Max(Math.Min(re[0].Top - panelMap.Height / 2, panelMap.VerticalScroll.Maximum), panelMap.VerticalScroll.Minimum);
+                    panelMap.Refresh();
+                }
             }
             #endregion
         }
@@ -3784,6 +3862,11 @@ namespace DaRT
             }
             this.Close();
             System.Windows.Forms.Application.Exit();
+        }
+
+        private void map_Click(object sender, EventArgs e)
+        {
+
         }
     }
     public class ReplaceString

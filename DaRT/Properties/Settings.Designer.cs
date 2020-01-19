@@ -1166,5 +1166,17 @@ namespace DaRT.Properties {
                 this["WebRoot"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("data/img/Chernarus.jpg")]
+        public string MapImage {
+            get {
+                return ((string)(this["MapImage"]));
+            }
+            set {
+                this["MapImage"] = value;
+            }
+        }
     }
 }

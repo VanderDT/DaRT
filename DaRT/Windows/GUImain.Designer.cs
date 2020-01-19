@@ -21,7 +21,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GUImain));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.dart = new System.Windows.Forms.PictureBox();
             this.nextRefresh = new System.Windows.Forms.ProgressBar();
@@ -47,6 +46,9 @@
             this.bansList = new System.Windows.Forms.ListView();
             this.playerdatabaseTab = new System.Windows.Forms.TabPage();
             this.playerDBList = new System.Windows.Forms.ListView();
+            this.mapTab = new System.Windows.Forms.TabPage();
+            this.panelMap = new System.Windows.Forms.Panel();
+            this.map = new System.Windows.Forms.PictureBox();
             this.playerCounter = new System.Windows.Forms.Label();
             this.news = new System.Windows.Forms.Label();
             this.banCounter = new System.Windows.Forms.Label();
@@ -88,6 +90,9 @@
             this.playersTab.SuspendLayout();
             this.bansTab.SuspendLayout();
             this.playerdatabaseTab.SuspendLayout();
+            this.mapTab.SuspendLayout();
+            this.panelMap.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.map)).BeginInit();
             this.logTabs.SuspendLayout();
             this.tabAll.SuspendLayout();
             this.tabConsole.SuspendLayout();
@@ -328,6 +333,7 @@
             this.tabControl.Controls.Add(this.playersTab);
             this.tabControl.Controls.Add(this.bansTab);
             this.tabControl.Controls.Add(this.playerdatabaseTab);
+            this.tabControl.Controls.Add(this.mapTab);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
@@ -419,6 +425,41 @@
             this.playerDBList.View = System.Windows.Forms.View.Details;
             this.playerDBList.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.playerDBList_ColumnClick);
             this.playerDBList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.playerDBList_MouseDown);
+            // 
+            // mapTab
+            // 
+            this.mapTab.Controls.Add(this.panelMap);
+            this.mapTab.Location = new System.Drawing.Point(4, 22);
+            this.mapTab.Name = "mapTab";
+            this.mapTab.Padding = new System.Windows.Forms.Padding(3);
+            this.mapTab.Size = new System.Drawing.Size(1033, 303);
+            this.mapTab.TabIndex = 3;
+            this.mapTab.Text = global::DaRT.Resources.Strings.Map;
+            this.mapTab.UseVisualStyleBackColor = true;
+            // 
+            // panelMap
+            // 
+            this.panelMap.AutoScroll = true;
+            this.panelMap.AutoSize = true;
+            this.panelMap.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.panelMap.Controls.Add(this.map);
+            this.panelMap.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelMap.Location = new System.Drawing.Point(3, 3);
+            this.panelMap.Name = "panelMap";
+            this.panelMap.Size = new System.Drawing.Size(1027, 297);
+            this.panelMap.TabIndex = 0;
+            // 
+            // map
+            // 
+            this.map.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.map.Location = new System.Drawing.Point(0, 0);
+            this.map.Margin = new System.Windows.Forms.Padding(0);
+            this.map.Name = "map";
+            this.map.Size = new System.Drawing.Size(0, 0);
+            this.map.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.map.TabIndex = 0;
+            this.map.TabStop = false;
+            this.map.Click += new System.EventHandler(this.map_Click);
             // 
             // playerCounter
             // 
@@ -653,7 +694,7 @@
             this.searchLabel.Name = "searchLabel";
             this.searchLabel.Size = new System.Drawing.Size(44, 13);
             this.searchLabel.TabIndex = 12;
-            this.searchLabel.Text = global::DaRT.Resources.Strings.Search+":";
+            this.searchLabel.Text = global::DaRT.Resources.Strings.Search;
             // 
             // input
             // 
@@ -716,8 +757,8 @@
             // notifyIcon
             // 
             this.notifyIcon.ContextMenuStrip = this.contextMenuStrip;
-            this.notifyIcon.Icon = global::DaRT.Properties.Resources.Icon; ;
             this.notifyIcon.Text = "DaRT";
+            this.notifyIcon.Icon = global::DaRT.Properties.Resources.Icon;
             this.notifyIcon.Visible = true;
             this.notifyIcon.Click += new System.EventHandler(this.notifyIcon_Click);
             this.notifyIcon.DoubleClick += new System.EventHandler(this.notifyIcon_DoubleClick);
@@ -742,12 +783,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1184, 572);
             this.Controls.Add(this.splitContainer1);
-            this.Icon = global::DaRT.Properties.Resources.Icon; ;
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "GUImain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DaRT";
+            this.Icon = global::DaRT.Properties.Resources.Icon;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GUI_FormClosing);
             this.Load += new System.EventHandler(this.GUI_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GUI_KeyDown);
@@ -769,6 +810,11 @@
             this.playersTab.ResumeLayout(false);
             this.bansTab.ResumeLayout(false);
             this.playerdatabaseTab.ResumeLayout(false);
+            this.mapTab.ResumeLayout(false);
+            this.mapTab.PerformLayout();
+            this.panelMap.ResumeLayout(false);
+            this.panelMap.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.map)).EndInit();
             this.logTabs.ResumeLayout(false);
             this.tabAll.ResumeLayout(false);
             this.tabConsole.ResumeLayout(false);
@@ -834,6 +880,9 @@
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.TabPage mapTab;
+        private System.Windows.Forms.Panel panelMap;
+        private System.Windows.Forms.PictureBox map;
     }
 }
 

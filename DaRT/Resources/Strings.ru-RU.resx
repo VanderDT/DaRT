@@ -727,6 +727,15 @@ DaRT нашол существующую базу и будет пытаться
   <data name="Web_Server" xml:space="preserve">
     <value>Веб сервер</value>
   </data>
+  <data name="Map" xml:space="preserve">
+    <value>Карта</value>
+  </data>
+  <data name="MapImage" xml:space="preserve">
+    <value>Файл карты</value>
+  </data>
+  <data name="MapRecalc" xml:space="preserve">
+    <value>Пересчет координат карты</value>
+  </data>
   <data name="Web_Enable" xml:space="preserve">
     <value>Включить Ваб Сервер</value>
   </data>

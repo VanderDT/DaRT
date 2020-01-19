@@ -216,6 +216,9 @@
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Strings.ru-RU.resx" />
+    <EmbeddedResource Include="Windows\GUImain.resx">
+      <DependentUpon>GUImain.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\GUImanualBans.resx">
       <DependentUpon>GUImanualBans.cs</DependentUpon>
     </EmbeddedResource>

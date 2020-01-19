@@ -729,6 +729,15 @@ Console mode allows you to execute RCon commands directly on the server.</value>
   <data name="Web_Server" xml:space="preserve">
     <value>Web Server</value>
   </data>
+  <data name="Map" xml:space="preserve">
+    <value>Map</value>
+  </data>
+  <data name="MapImage" xml:space="preserve">
+    <value>Map image file</value>
+  </data>
+  <data name="MapRecalc" xml:space="preserve">
+    <value>Map coord recalculation</value>
+  </data>
   <data name="Web_Enable" xml:space="preserve">
     <value>Enable WebServer</value>
   </data>

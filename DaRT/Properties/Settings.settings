@@ -301,5 +301,8 @@
     <Setting Name="WebRoot" Type="System.String" Scope="User">
       <Value Profile="(Default)">data/www</Value>
     </Setting>
+    <Setting Name="MapImage" Type="System.String" Scope="User">
+      <Value Profile="(Default)">data/img/Chernarus.jpg</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
