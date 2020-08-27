@@ -1943,10 +1943,13 @@ namespace DaRT
                 this.Log("Contacting remote SQL server...", LogType.Console, false);
                 using (MySqlCommand command = new MySqlCommand("SELECT id, lastip, lastseen, guid, name, lastseenon FROM players", remoteconnection))
                 {
+                    
                     using (MySqlDataReader reader = command.ExecuteReader())
                     {
+                        
                         while (reader.Read())
                         {
+                          //  this.Log("Внтури цикла Ридера", LogType.Console, false);
                             int id = reader.GetInt32(0);
                             String lastip = this.GetSafeString(reader, 1);
                             String lastseen = this.GetSafeString(reader, 2);
@@ -2013,6 +2016,7 @@ namespace DaRT
                     PlayerToSql(player, true);
                 }
                 syncPlayers.Clear();
+               
                 this.Log("Player sync complete.", LogType.Console, false);
                 Count = 0;
                 using (SqliteCommand command = new SqliteCommand("SELECT guid, date, reason FROM bans WHERE synced = 0 AND host=@host", connection))
@@ -2043,23 +2047,24 @@ namespace DaRT
 
                 this.Log(String.Format("Syncing {0} bans from local database...", Count), LogType.Console, false);
 
-                using (SqliteCommand command = new SqliteCommand("UPDATE bans SET synced=1 WHERE synced=0", connection)) command.ExecuteNonQuery();
+            using (SqliteCommand command = new SqliteCommand("UPDATE bans SET synced=1 WHERE synced=0", connection)) command.ExecuteNonQuery();
                 this.Log("Bans sync complete.", LogType.Console, false);
                 pendingSync = false;
             }
             catch(Exception e)
             {
-                
-                this.Log("Something went wrong.", LogType.Console, false);
-                this.Log("Restoring backup...", LogType.Console, false);
-
-                connection.Close();
-
                 if (File.Exists("data/db/dart.db_bak"))
                 {
                     File.Delete("data/db/dart.db");
                     File.Copy("data/db/dart.db_bak", "data/db/dart.db");
                 }
+
+                this.Log("Something went wrong.", LogType.Console, false);
+                this.Log("Restoring backup...", LogType.Console, false);
+                this.Log(e.Message, LogType.Debug, false);
+                this.Log(e.StackTrace, LogType.Debug, false);
+
+                connection.Close();
 
                 connection.Open();
 

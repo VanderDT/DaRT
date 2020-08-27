@@ -12,7 +12,7 @@ namespace DaRT.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "12.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -902,57 +902,6 @@ namespace DaRT.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
-            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
-            "tring>admin</string>\r\n  <string>help</string>\r\n</ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection hilight {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["hilight"]));
-            }
-            set {
-                this["hilight"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-  <string>^\(side\).*(fuck)</string>
-  <string>^\(side\).*(suka)</string>
-  <string>^\(side\).*(сука)</string>
-  <string>^\(side\).*(блядь)</string>
-  <string>^\(side\).*(пизда)</string>
-  <string>^\(side\).*([xkхк]\s*[yу]\s*[йёеue].*)\s*</string>
-</ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection autoKick {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["autoKick"]));
-            }
-            set {
-                this["autoKick"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-  <string>(fuck.*admin.[^!]*!+)</string>
-  <string>(fak.*admin.[^!]*!+)</string>
-  <string>([sсaа]\s*[eеёdд]\s*[rpрmм]\s*[vвiuий].*\s+[xkхк]\s*[yу]\s*[йёеue].*)\s*</string>
-</ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection autoBan {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["autoBan"]));
-            }
-            set {
-                this["autoBan"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool autoKicks {
             get {
@@ -1176,6 +1125,57 @@ namespace DaRT.Properties {
             }
             set {
                 this["MapImage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring>admin</string>\r\n  <string>help</string>\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection hilight {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["hilight"]));
+            }
+            set {
+                this["hilight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>^\(side\).*(fuck)</string>
+  <string>^\(side\).*(suka)</string>
+  <string>^\(side\).*(сука)</string>
+  <string>^\(side\).*(блядь)</string>
+  <string>^\(side\).*(пизда)</string>
+  <string>^\(side\).*([xkхк]\s*[yу]\s*[йёеue].*)\s*</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection autoKick {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["autoKick"]));
+            }
+            set {
+                this["autoKick"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>(fuck.*admin.[^!]*!+)</string>
+  <string>(fak.*admin.[^!]*!+)</string>
+  <string>([sсaа]\s*[eеёdд]\s*[rpрmм]\s*[vвiuий].*\s+[xkхк]\s*[yу]\s*[йёеue].*)\s*</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection autoBan {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["autoBan"]));
+            }
+            set {
+                this["autoBan"] = value;
             }
         }
     }
